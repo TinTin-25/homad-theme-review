@@ -1,0 +1,87 @@
+{%- liquid
+  assign variant_selected = product.selected_or_first_available_variant
+  assign is_single_product = false
+  assign on_sale = false
+  if product.variants.size == 1
+    assign is_single_product = true
+  endif
+  if variant_selected.available
+    assign classes = 'active'
+    assign checkbox_attr = 'checked'
+    assign input_attr = ''
+  else
+    assign classes = 'inactive'
+    assign checkbox_attr = 'disabled'
+    assign input_attr = 'disabled'
+  endif
+  if variant_selected.compare_at_price > variant_selected.price
+    assign on_sale = true
+	assign price_sale = variant_selected.compare_at_price | minus: variant_selected.price
+  endif
+-%}
+{%- if is_image_card -%}
+  	<div class="fbproduct-card__image position-relative col-auto {{ classes }}" data-product-id="{{ product.id }}" data-index="{{ index }}">
+		<a class="fbproduct-card__image-url position-absolute w-100 h-100 z-index-1" href="{{ product.url }}"></a>
+		<div class="fbproduct-card__image-wrap overflow-hidden rounded-2">
+			{% render 'img-global', image: product.featured_media, image_ratio: settings.image_ratio, crop: '', max_width: 400, image_style: true %}
+		</div>
+		{% unless variant_selected.available %}
+			<span class="fbproduct-card__label">({{ 'products.general.out_stock' | t }})</span>
+		{% endunless %}
+  	</div>
+{%- else -%}
+	<div class="fbproduct-card col d-flex justify-content-between {{ classes }}" data-product-id="{{ product.id }}">
+		<div class="fbproduct-card__box">
+			<input
+				id="{{ unique }}-{{ product.id }}"
+				class="fbproduct-card__checkbox form-check-input d-none"
+				type="checkbox"
+				data-main="{{ is_main_product }}"
+				{{ checkbox_attr }}
+			/>
+			<a class="line-clamp-2 fs-6 fw-medium" href="{{ product.url }}" title="">
+				{{ product.title }}		
+			</a>
+			<div class="fbproduct-card__info{% if is_single_product %} d-none{% endif %}">
+				<div class="fbproduct-card__select">
+					<hvduc-select class="hvduc-select">
+						<div class="hvduc-select__container" data-select="container"></div>
+						<select name="items[][id]" class="fbproduct-card__variants" {{ input_attr }}>
+							{%- for variant in product.variants -%}
+								<option
+									{% if variant == variant_selected %}selected{% endif %}
+									data-available="{{ variant.available }}"
+									data-price="{{ variant.price }}"
+									data-price-compare="{% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price }}{% else %}{{ variant.price }}{% endif %}"
+									value="{{ variant.id }}"
+								>
+									{{- variant.title -}}
+								</option>
+							{%- endfor -%}
+						</select>
+					</hvduc-select>
+					{%- if product.variants.size > 1 -%}
+						<div class="fbproduct-card__images d-none">
+							{%- for variant in product.variants -%}
+								{%- if variant.featured_media -%}
+									<div class="fbproduct-card__image" data-variant-id="{{ variant.id }}">
+									{% render 'img-global', image: variant.featured_media, image_ratio: settings.image_ratio, crop: '', max_width: 400, image_style: true %}
+									</div>
+								{%- endif -%}
+							{%- endfor -%}
+						</div>
+					{%- endif -%}
+				</div>
+				<input name="items[][quantity]" type="number" value="1" class="d-none" {{ input_attr }}>
+			</div>
+		</div>
+		<div class="fbproduct-card__prices d-flex flex-column ps-2 text-end">
+			<span class="fbproduct-card__price fs-6 fw-medium heading-color mb-1">{{ variant_selected.price | money }}</span>
+			<span class="d-flex flex-row-reverse fbproduct-price-save">
+				<span class="fbproduct-card__price-save fs-14 fw-medium {% unless on_sale %} d-none{% endunless %}">{{ price_sale | money }}</span>
+				<span class="text">{{ 'sections.frequently_bought.save' | t }}</span>
+			</span>
+			<span class="fbproduct-card__price-compare fbproduct-price fbproduct-price--compare position-relative{% unless on_sale %} d-none{% endunless %}">{{ variant_selected.compare_at_price | money }}</span>
+		</div>
+	</div>
+{%- endif -%}

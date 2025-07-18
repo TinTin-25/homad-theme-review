@@ -1,0 +1,389 @@
+{{ 'testimonial.css' | asset_url | stylesheet_tag }}
+{%- include 'carousel-settings' -%}
+{%- include 'section_style' -%}
+{%- liquid
+    assign image_size = 140
+    if section.settings.size != blank
+        assign image_size = section.settings.size | plus: 0
+    endif
+-%}
+<div class="vela-section testimonial overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-fluid{% endif %}">
+        <div class="vela-section__inner">
+            {%- if section.settings.heading != blank  -%}
+                <div class="heading-group pb-1 mb-3 mb-lg-4 {{ section.settings.text_align }}">
+                    <h2 class="heading mb-0">
+                        <span>{{ section.settings.heading }}</span>
+                    </h2>
+                    {%- if section.settings.sub_heading != blank -%}
+                        <div class="sub-heading pt-1">
+                            {{ section.settings.sub_heading }}
+                        </div>
+                    {%- endif -%}
+                </div>
+            {%- endif -%}
+            <div class="vela-section__content" >
+                <div class="vela-section__wrapper">
+                    <div class="js-carousel slick-carousel row g-3 g-lg-4"
+                    data-nav="{{ nav }}"
+                    data-dots="{{ pagination }}"
+                    data-infinite="{{ infinite }}"
+                    data-autoplay="{{ autoplay }}"
+                    data-autoplayspeed="{{ autoplay_speed }}"
+                    data-columnone="{{ owlColumn1 }}" 
+                    data-columntwo="{{ owlColumn2 }}" 
+                    data-columnthree="{{ owlColumn3 }}">
+                        {% for block in section.blocks %}
+                            <div class="slick-carousel__item testimonial__{{ section.settings.testi_style }}">
+                                {%- if section.settings.testi_style == "style1" -%}
+                                    <div class="testimonial__item text-center mt-2 px-xl-6">
+                                        {%- if section.settings.show_avatar -%}
+                                            <div class="testimonial__avatar d-flex justify-content-center mb-3">
+                                                <div class="d-block overflow-hidden rounded-circle" style="width: {{ image_size }}px; height: {{ image_size }}px;">
+                                                    {%- if block.settings.avatar != blank -%}
+                                                        {% render 'img-global', image: block.settings.avatar, max_width: image_size, image_ratio: 'square', crop: 'center', image_style: true %}
+                                                    {%- else -%}
+                                                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg ' }}
+                                                    {%- endif -%}
+                                                </div>
+                                            </div>
+                                        {%- endif -%}
+                                        {%- if section.settings.show_star -%}
+                                            <div class="testimonial__badge mb-2 pb-1">
+                                                <div class="jdgm-widget jdgm-preview-badge lh-1 jdgm--done-setup">
+                                                    <div class="jdgm-prev-badge d-block"> 
+                                                        <span class="jdgm-prev-badge__stars" data-score="5.00" tabindex="0" aria-label="5.00 stars" role="button"> 
+                                                            <span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span> 
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {%- endif -%}
+                                        {%- if block.settings.title != blank -%}
+                                            <div class="testimonial__title heading-color">{{ block.settings.title }}</div>
+                                        {%- endif -%}
+                                        {%- if block.settings.review != blank -%}
+                                            <div class="testimonial__review heading-color fw-medium mb-3 mb-md-4">{{ block.settings.review }}</div>
+                                        {%- endif -%}
+                                        <div class="testimonial__content d-flex flex-wrap align-items-center justify-content-center fw-medium fs-13">
+                                            {%- if block.settings.name != blank -%}
+                                                <div class="testimonial__name heading-color mb-0 ">{{ block.settings.name }}</div>
+                                            {%- endif -%}
+                                            {%- if block.settings.position != blank -%}
+                                                <div class="testimonial__position text-secondary fw-medium ms-1">{{ block.settings.position }}</div>
+                                            {%- endif -%}
+                                        </div>
+                                    </div>
+                                {%- else -%}
+                                    <div class="testimonial__item overflow-hidden rounded-2 bg-white p-4 p-lg-5">
+                                        <div class="m-lg-1">
+                                            {%- if section.settings.show_star -%}
+                                                <div class="testimonial__badge mb-1">
+                                                    <div class="jdgm-widget jdgm-preview-badge lh-1 jdgm--done-setup">
+                                                        <div class="jdgm-prev-badge d-block"> 
+                                                            <span class="jdgm-prev-badge__stars" data-score="5.00" tabindex="0" aria-label="5.00 stars" role="button"> 
+                                                                <span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span> 
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {%- endif -%}
+                                            {%- if block.settings.title != blank -%}
+                                                <h3 class="testimonial__title mb-2 mb-lg-3 pb-1">{{ block.settings.title }}</h3>
+                                            {%- endif -%}
+                                            {%- if block.settings.review != blank -%}
+                                                <div class="testimonial__review fw-medium mb-lg-4 pb-5">{{ block.settings.review }}</div>
+                                            {%- endif -%}
+                                            <div class="d-flex align-items-center">
+                                                {%- if section.settings.show_avatar -%}
+                                                    <div class="testimonial__avatar me-2">
+                                                        <div class="d-block overflow-hidden rounded-circle" style="width: {{ image_size }}px; height: {{ image_size }}px;">
+                                                            {%- if block.settings.avatar != blank -%}
+                                                                {% render 'img-global', image: block.settings.avatar, max_width: image_size, image_ratio: 'square', crop: 'center', image_style: true %}
+                                                            {%- else -%}
+                                                                {{ 'image' | placeholder_svg_tag: 'placeholder-svg ' }}
+                                                            {%- endif -%}
+                                                        </div>
+                                                    </div>
+                                                {%- endif -%}
+                                                <div class="testimonial__content d-flex flex-column">
+                                                    {%- if block.settings.name != blank -%}
+                                                        <div class="testimonial__name heading-color fw-semibold ">{{ block.settings.name }}</div>
+                                                    {%- endif -%}
+                                                    {%- if block.settings.position != blank -%}
+                                                        <div class="testimonial__position text-secondary fw-medium">{{ block.settings.position }}</div>
+                                                    {%- endif -%}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {%- endif -%}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+    {
+        "name": "Testimonial",
+        "tag": "section",
+        "class": "velaFramework",
+        "disabled_on": {
+            "groups": ["header", "footer"]
+        },
+        "settings":[
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "image_picker",
+                "id": "image_bg",
+                "label": "t:sections.global.settings.bg_image.label"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            },
+            {
+                "type": "text",
+                "id": "margin_block_m",
+                "label": "Margin on mobile",
+                "placeholder": "0px 0px",
+                "info": "Ex: 0px 0px 0px 0px and use mobile only"
+            },
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_settings.content"
+            },
+            {
+                "type": "html",
+                "id": "heading",
+                "label": "t:sections.global.settings.heading_section.label",
+                "default": "Heading"
+            },
+            {
+                "type": "text",
+                "id": "sub_heading",
+                "label": "t:sections.global.settings.subheading_section.label",
+                "default": "sub heading"
+            },
+            {
+                "type": "select",
+                "id": "text_align",
+                "label": "Text alignment",
+                "default": "text-start",
+                "options": [
+                    {
+                        "value": "text-start",
+                        "label": "Left"
+                    },
+                    {
+                        "value": "text-center",
+                        "label": "Center"
+                    },
+                    {
+                        "value": "text-end",
+                        "label": "Right"
+                    }
+                ]
+            },
+            {
+                "type": "header",
+                "content": "Layout Settings"
+            },
+            {
+                "type": "range",
+                "id": "column1",
+                "min": 1,
+                "max": 8,
+                "step": 1,
+                "label": "Number of columns on desktop",
+                "default": 4,
+                "info": "Desktops"
+            },
+            {
+                "type": "range",
+                "id": "column2",
+                "min": 1,
+                "max": 6,
+                "step": 1,
+                "label": "Number of columns on tablet",
+                "default": 3,
+                "info": "Tablets landscape"
+            },
+            {
+                "type": "range",
+                "id": "column3",
+                "min": 1,
+                "max": 5,
+                "step": 1,
+                "label": "Number of columns on mobile",
+                "default": 2,
+                "info": "Mobile phone landscape"
+            },
+            {
+                "type": "header",
+                "content": "Item settings"
+            },
+            {
+                "type": "text",
+                "id": "size",
+                "label": "Avata Size",
+                "placeholder": "100x100",
+                "default": "100x100",
+                "info": "100x100"
+            },
+            {
+                "type": "checkbox",
+                "id": "show_avatar",
+                "label": "Show avata?",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id": "show_star",
+                "label": "Show star?"
+            },
+            {
+                "type": "select",
+                "id": "testi_style",
+                "label": "Style",
+                "default": "style1",
+                "options": [
+                    {
+                        "value": "style1",
+                        "label": "Style 1"
+                    },
+                    {
+                        "value": "style2",
+                        "label": "Style2"
+                    }
+                ]
+            },
+            {
+                "type": "header",
+                "content": "Carousel settings"
+            },
+            {
+                "type": "checkbox",
+                "id": "navigation",
+                "label": "Show navigation",
+                "default": true
+            },
+            {
+				"type": "checkbox",
+				"id": "pagination",
+				"label": "Show dot indicators",
+				"default": true
+			},
+            {
+                "type": "checkbox",
+                "id": "infinite",
+                "label": "Infinite loop sliding",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id": "autoplay",
+                "label": "Enable autoplay",
+                "default": false
+            },
+            {
+                "type": "text",
+                "id": "autoplay_speed",
+                "label": "Autoplay speed",
+                "info": "Autoplay speed in milliseconds. Type: int(ms)",
+                "default": "10000"
+            }
+        ],
+		"blocks": [
+			{
+                "type": "item",
+                "name": "Testimonial Item",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "title",
+                        "label": "Title"
+                    },
+                    {
+                        "type": "textarea",
+                        "id": "review",
+                        "label": "Customer Review",
+                        "default": "Ipsum dolor sit amet, consectetur adipiscing elit. Fringilla vel tincidunt ipsum ac. Nam at et id leo pulvinar egestas mi lorem. Adipiscing felis, vel faucibus in. Hendrerit viverra elementum venenatis pellentesque pellentesque ornare"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "avatar",
+                        "label": "Avatar"
+                    },
+                    {
+                        "type": "text",
+                        "id": "name",
+                        "label": "Customer name",
+                        "default": "Customer name"
+                    },
+                    {
+                        "type": "text",
+                        "id": "position",
+                        "label": "Job",
+                        "default": "Job"
+                    }
+                ]
+            }
+		],
+        "presets": [
+            {
+                "name": "Testimonial",
+                "blocks": [
+                    {
+                        "type": "item"
+                    },
+                    {
+                        "type": "item"
+                    },
+                    {
+                        "type": "item"
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

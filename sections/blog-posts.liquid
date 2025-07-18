@@ -1,0 +1,369 @@
+
+{%- include 'carousel-settings' -%}
+{%- include 'section_style' -%}
+{%- liquid
+    assign image_crop = nil
+    if section.settings.crop
+        assign image_crop = 'center'
+    endif 
+    assign blogName = section.settings.blog_handle
+    assign blogLimit = section.settings.limit
+    assign show_date = section.settings.blog_date
+    assign show_tags = section.settings.blog_tags
+    assign show_author = section.settings.blog_author
+    assign show_excerpt = section.settings.blog_excerp  
+    assign show_readmore = section.settings.blog_readmore  
+-%}
+<div class="vela-section vela-section-blogs overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}"  style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-fluid{% endif %}">
+        <div class="vela-section__inner">
+            {%- if section.settings.heading != blank -%}
+                <div class="heading-group mb-3 mb-md-4 pb-1 {{ section.settings.text_align }}">
+                    <h2 class="heading mb-0">
+                        <span>{{ section.settings.heading }}</span>
+                    </h2>
+                    {%- if section.settings.sub_heading != blank -%}
+                        <div class="sub-heading pt-1">
+                            {{ section.settings.sub_heading }}
+                        </div>
+                    {%- endif -%}
+                </div>
+            {%- endif -%}
+            <div class="vela-section__content position-relative"> 
+                <div class="js-carousel slick-carousel row g-3 g-lg-{{ section.settings.space_between }}"
+                data-nav="{{ nav }}"
+                data-infinite="{{ infinite }}"
+                data-dots="{{ pagination }}"
+                data-autoplay="{{ autoplay }}"
+                data-autoplayspeed="{{ autoplay_speed }}"
+                data-columnone="{{ owlColumn1 }}" 
+                data-columntwo="{{ owlColumn2 }}" 
+                data-columnthree="{{ owlColumn3 }}">
+                    {%- if blogName == blank or blogs[blogName].articles == empty -%}
+                        {%- include 'onboarding-featured-blog', blogstyle: section.settings.blog_style, number: blogLimit, show_image: true, show_date: show_date,show_tags: show_tags,show_author: show_author, show_excerpt: show_excerpt, show_readmore: show_readmore -%}
+                    {%- else -%}
+                        {% for article in blogs[blogName].articles limit: blogLimit %}
+                            <div class="slick-carousel__item">
+                                {%- assign article_content = article.excerpt_or_content -%}
+                                {%- if section.settings.blog_style == 'grid' -%}
+                                    {%- include 'blog-grid-item' -%}
+                                {%- elsif section.settings.blog_style == 'grid1' -%}
+                                    {%- include 'blog-grid-item1' -%}
+                                {%- elsif section.settings.blog_style == 'grid2' -%}
+                                    {%- include 'blog-grid-item2' -%}
+                                {%- else -%}
+                                    {%- include 'blog-list-item1' -%}
+                                {%- endif -%}
+                            </div>
+                        {% endfor %}
+                    {%- endif -%}
+                </div>
+                {%- if section.settings.button_text != blank -%}
+                    <div class="text-center mt-4 mt-md-5">
+                        <a class="btn--viewall btn" href="{{ blogs[blogName].url }}" title="{{ section.settings.button_text | strip_html }}"><span>{{ section.settings.button_text }}</span></a>
+                    </div>
+                {%- endif -%}
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+    {
+        "name": "Blog posts",
+        "tag": "section",
+        "class": "velaFramework",
+        "disabled_on": {
+            "groups": ["header", "footer"]
+        },
+        "settings":[
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            },
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_settings.content"
+            },
+            {
+                "type": "html",
+                "id": "heading",
+                "label": "t:sections.global.settings.heading_section.label",
+                "default": "Heading"
+            },
+            {
+                "type": "text",
+                "id": "sub_heading",
+                "label": "t:sections.global.settings.subheading_section.label",
+                "default": "sub heading"
+            },
+            {
+                "type": "select",
+                "id": "text_align",
+                "label": "Text alignment",
+                "default": "text-start",
+                "options": [
+                    {
+                        "value": "text-start",
+                        "label": "Left"
+                    },
+                    {
+                        "value": "text-center",
+                        "label": "Center"
+                    },
+                    {
+                        "value": "text-end",
+                        "label": "Right"
+                    }
+                ]
+            },
+            {
+                "type": "blog",
+                "id": "blog_handle",
+                "label": "Blog"
+            },
+			{
+                "type": "range",
+                "id": "limit",
+                "min": 1,
+                "max": 12,
+                "step": 1,
+                "label": "Maximum item to show",
+                "default": 8
+            },
+            {
+                "type": "text",
+                "id": "button_text",
+                "label": "Button read more",
+                "placeholder": "View all",
+                "info": "Hidden, if it's blank"
+            },
+            {
+                "type": "header",
+                "content": "Layout Settings"
+            },
+            {
+                "type": "select",
+                "id": "space_between",
+                "label": "Space between item",
+                "default": "4",
+                "options": [
+                    {
+                        "value": "3",
+                        "label": "20px"
+                    },
+                    {
+                        "value": "4",
+                        "label": "30px"
+                    },
+                    {
+                        "value": "5",
+                        "label": "40px"
+                    },
+                    {
+                        "value": "6",
+                        "label": "50"
+                    }
+                ]
+            },
+            {
+                "type": "range",
+                "id": "column1",
+                "min": 1,
+                "max": 6,
+                "step": 1,
+                "label": "Number of columns on desktop",
+                "default": 4
+            },
+            {
+                "type": "range",
+                "id": "column2",
+                "min": 1,
+                "max": 5,
+                "step": 1,
+                "label": "Number of columns on tablet",
+                "default": 3
+            },
+            {
+                "type": "range",
+                "id": "column3",
+                "min": 1,
+                "max": 5,
+                "step": 1,
+                "label": "Number of columns on mobile",
+                "default": 2
+            },
+            {
+                "type": "header",
+                "content": "Blog card"
+            },
+            {
+                "type": "select",
+                "id": "blog_style",
+                "options": [
+                    {
+                        "value": "grid",
+                        "label": "Grid"
+                    },
+                    {
+                        "value": "grid1",
+                        "label": "Grid 1"
+                    },
+                    {
+                        "value": "grid2",
+                        "label": "Grid 2"
+                    },
+                    {
+                        "value": "list",
+                        "label": "List"
+                    }
+                ],
+                "default": "grid",
+                "label": "Blog Style"
+            },
+            {
+                "type": "checkbox",
+                "id": "blog_tags",
+                "label": "Show tags",
+                "default": true
+            },
+            {
+                "type": "range",
+                "id": "blog_tags_limit",
+                "min": 1,
+                "max": 10,
+                "step": 1,
+                "label": "Tags limit",
+                "default": 2
+            },
+            {
+                "type": "checkbox",
+                "id": "blog_date",
+                "label": "Show date",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id": "blog_author",
+                "label": "Show author",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id": "blog_excerp",
+                "label": "Show Excerp",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id": "blog_readmore",
+                "label": "Show readmore",
+                "default": true
+            },
+            {
+                "type": "select",
+                "id": "image_ratio",
+                "options": [
+                  {
+                    "value": "adapt",
+                    "label": "Adapt to image"
+                  },
+                  {
+                    "value": "portrait",
+                    "label": "Portrait"
+                  },
+                  {
+                    "value": "square",
+                    "label": "Square"
+                  }
+                ],
+                "default": "adapt",
+                "label": "Image ratio"
+            },
+            {
+                "type": "checkbox",
+                "id": "crop",
+                "label": "Crop Image",
+                "default": false,
+                "info": "Not use with Adapt to image"
+            },
+            {
+                "type": "header",
+                "content": "Carousel settings"
+            },
+            {
+                "type": "checkbox",
+                "id": "navigation",
+                "label": "Show navigation",
+                "default": true
+            },
+            {
+				"type": "checkbox",
+				"id": "pagination",
+				"label": "Show dot indicators",
+				"default": true
+			},
+            {
+                "type": "checkbox",
+                "id": "infinite",
+                "label": "Infinite loop sliding",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id": "autoplay",
+                "label": "Enable autoplay",
+                "default": false
+            },
+            {
+                "type": "text",
+                "id": "autoplay_speed",
+                "label": "Autoplay speed",
+                "info": "Autoplay speed in milliseconds. Type: int(ms)",
+                "default": "10000"
+            }
+        ],
+        "presets": [
+            {
+                "name": "Blog posts",
+                "category": "4. element"
+            }
+        ]
+    }
+{% endschema %}

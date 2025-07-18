@@ -1,0 +1,21 @@
+.template-404 {
+  min-height: calc( -1*(var(--header-height) + var(--header-group-height) + var(--footer-group-height)) + 100vh); }
+
+.template-404__heading {
+  font-size: 200px;
+  line-height: 1;
+  color: #cccccc; }
+  @media (max-width: 767.98px) {
+    .template-404__heading {
+      font-size: 160px; } }
+  .template-404__heading .card_wrap {
+    margin-left: auto;
+    margin-right: auto; }
+
+.template-404__sub-title {
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: uppercase; }
+
+.template-404__search {
+  max-width: 540px; }

@@ -1,0 +1,33 @@
+#qv-notify-popup .modal-dialog,
+.notify-me .modal-dialog {
+  max-width: 450px; }
+
+.notify-product {
+  padding: 32px 24px 24px; }
+
+.notify-product__form {
+  padding: 32px 24px; }
+
+.notify-product__description,
+.notify-product__description p {
+  margin-bottom: 0;
+  line-height: 28px;
+  letter-spacing: 0; }
+
+.notify-product__image {
+  height: 100px;
+  width: 100px;
+  overflow: hidden;
+  border-radius: 50%; }
+
+.notify-product__form input, .notify-product__form button {
+  margin-top: 24px; }
+
+.notify-product__price .product-single__price {
+  font-size: 16px;
+  color: var(--body-color);
+  font-family: var(--font-body-family); }
+
+.notify-product__price .product-single__price--compare-at {
+  font-size: 16px;
+  font-family: var(--font-body-family); }

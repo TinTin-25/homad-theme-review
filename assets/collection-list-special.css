@@ -1,0 +1,47 @@
+.collection-list-special {
+  min-height: auto;
+  display: block; }
+
+.collection-list__special a {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 10px;
+  align-items: center; }
+
+.collection-list__special .collection-list-special__title {
+  font-size: 64px;
+  white-space: nowrap; }
+  @media (max-width: 1379.98px) {
+    .collection-list__special .collection-list-special__title {
+      font-size: 56px; } }
+  @media (max-width: 991.98px) {
+    .collection-list__special .collection-list-special__title {
+      font-size: 42px; } }
+  @media (max-width: 767.98px) {
+    .collection-list__special .collection-list-special__title {
+      font-size: 38px; } }
+
+.collection-list__special .collection-list-special__count {
+  white-space: nowrap; }
+
+.collection-list__special .hover-image {
+  position: absolute;
+  top: 0;
+  width: 300px;
+  height: auto;
+  max-width: none;
+  object-fit: cover;
+  transform-origin: center center;
+  transform: translateY(-50%) translate(-50%) scale(0.8);
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  z-index: 1;
+  border-radius: 125px;
+  transition: opacity 0.2s cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.4s cubic-bezier(0.215, 0.61, 0.355, 1), visibility 0.4s cubic-bezier(0.215, 0.61, 0.355, 1); }
+
+.collection-list__special:hover .hover-image {
+  transform: translateY(-50%) translate(-50%) scale(1);
+  opacity: 1;
+  visibility: inherit; }

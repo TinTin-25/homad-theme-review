@@ -1,0 +1,70 @@
+{%- include 'section_style' -%}
+<div class="vela-section custom-liquid overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-full{% endif %}">
+		{{ section.settings.custom_liquid }}
+	</div>
+</div>
+
+{% schema %}
+{
+	"name": "Custom Liquid",
+	"settings": [
+		{
+			"type": "header",
+			"content": "t:sections.global.settings.header_section.content"
+		},
+		{
+			"type": "checkbox",
+			"id": "full_with",
+			"label": "t:sections.global.settings.full_width.label"
+		},
+		{
+			"type": "text",
+			"id": "max_with",
+			"label": "t:sections.global.settings.max_with.label",
+			"info": "t:sections.global.settings.max_with.info"
+		},
+		{
+			"type": "color",
+			"id": "color_bg",
+			"label": "t:sections.global.settings.bg_color.label",
+			"default": "rgba(0,0,0,0)"
+		},
+		{
+			"type": "text",
+			"id": "padding_block",
+			"label": "t:sections.global.settings.padding.label",
+			"placeholder": "0px 0px",
+			"info": "t:sections.global.settings.padding.info"
+		},
+		{
+			"type": "text",
+			"id": "padding_block_m",
+			"label": "t:sections.global.settings.padding_mobile.label",
+			"placeholder": "0px 0px",
+			"info": "t:sections.global.settings.padding_mobile.info"
+		},
+		{
+			"type": "text",
+			"id": "margin_block",
+			"label": "t:sections.global.settings.margin.label",
+			"placeholder": "0px 0px"
+		},
+		{
+			"type": "header",
+			"content": "t:sections.global.settings.header_settings.content"
+		},
+		{
+			"type": "liquid",
+			"id": "custom_liquid",
+			"label": "Custom Liquid",
+			"info": "Add app snippets or other Liquid code to create advanced customizations."
+		}
+	],
+	"presets": [
+		{
+			"name": "Custom Liquid"
+		}
+	]
+}
+{% endschema %}

@@ -1,0 +1,46 @@
+{% if recommendations.performed and recommendations.products_count > 0 and settings.cart_product_recommendations %}
+  <div class="js-minicart-recommended-container">
+    <div class="minicart-recommendations border-top mt-3">
+        {%- if settings.product_recommendations_title != blank  -%}
+            <h4 class="minicart-recommendations__heading mb-2">{{- settings.product_recommendations_title -}}</h4>
+        {%- endif -%}
+        <div class="minicart-recommendations__content">
+            <div class="js-minicart-recommendations slick-carousel row g-3"
+            data-nav="{{ true }}"
+            data-dots="{{ true }}"
+            data-infinite="{{ false }}"
+            data-autoplay="{{ true }}"
+            data-autoplayspeed="10000"
+            data-columnone="1"
+            data-columntwo="1"
+            data-columnthree="1"
+            style="--bs-gutter-x: 16px;"
+            >
+            {%- for product in recommendations.products -%}
+                <div class="slick-carousel__item">
+                    {%- assign image_crop = nil -%}
+                    {%- if section.settings.crop -%}
+                        {%- assign image_crop = 'center' -%}
+                    {%- endif -%}
+                    <div class="product-card d-flex">
+                        <div class="product-card__image-wrapper position-relative">
+                            <a class="product-card__image-link" href="{{ product.url }}" title="{{ product.title | strip_html }}">
+                                {% render 'img-global', image: product.featured_media.preview_image, image_ratio: settings.image_ratio, crop: image_crop, max_width: 200, image_style: true %}
+                            </a>
+                        </div>
+                        <div class="product-card__content ms-2 ps-1">
+                            <div class="product-card__name line-clamp-2 mb-2">
+                                <a class="line-title fw-normal fs-13" href="{{ product.url }}" title="{{ product.title | strip_html }}">{{ product.title }}</a>
+                            </div>
+                            <div class="product-group-price d-flex align-items-center lh-1">
+                                {% render 'product-card-price', product: product %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {%- endfor -%}
+            </div>
+      </div>
+    </div>
+  </div>
+{% endif %}

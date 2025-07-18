@@ -1,0 +1,995 @@
+<div class="toast ajaxcart-toast fade hide" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
+    <button type="button" class="ajaxcart-toast__close text-white btn-link p-0 border-0 top-0 end-0 position-absolute" data-bs-dismiss="toast" aria-label="Close">
+      {% render 'icons', icon: 'close-bold' %}
+    </button>
+  	<div class="toast-body"></div>
+</div>
+{%- if settings.cart_type == 'drawer' or settings.cart_type == 'modal' -%}
+  {%- if settings.pre-order -%}
+    <div class="pre_order-cart d-none">
+      {% for product in collections.all.products %}
+        {%- if product.metafields.custom.pre_order -%}
+          {%- assign preOrder = true -%}
+        {%- else -%}
+          {%- assign preOrder = false -%}
+        {%- endif -%}
+        {% if preOrder %}
+            <span data-handle="{{ product.handle }}"></span>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {%- endif -%}
+{%- endif -%}
+{%- if settings.cart_type == 'drawer' -%}
+	<div class="drawer__overlay js-drawer-close"></div>
+	<div class="js-drawer drawer drawer--right drawer--has-fixed-footer">
+		<div class="drawer__header position-relative">
+			<h4 class="drawer__title mb-0">{{ 'sections.cart.title' | t }}<span class="drawer__header__count" data-cart-count>3</span></h4>
+			<button type="button" class="drawer__close-button vela__btn-close js-drawer-close">
+        {% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+        {% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+      </button>
+      {%- if settings.shipping_bar and settings.shipping_value != blank -%}
+				{%- assign shipping_value = settings.shipping_value | times: 100 -%}
+				{%- assign price_start = shipping_value | money -%}
+				{%- assign spend = shipping_value | minus: cart.total_price -%}
+				{%- assign spend = spend | money -%}
+				<div class="shipping-bar-cart position-relative pb-md-1 mt-2 lh-1" data-shipping_value="{{ shipping_value }}">
+          <div class="title-start">{{ 'sections.cart.free_shipping_start_html' | t: price: price_start }}</div>
+          <div class="title-spend">{{ 'sections.cart.free_shipping_spend_html' | t: spend: spend }}</div>
+          <div class="title-shipping">{{ 'sections.cart.free_shipping_html' | t }}</div>
+          <div class="shipping-progress_bar progress my-2 overflow-visible">
+            <div class="progress-bar progress-bar-striped progress-bar-animated position-relative overflow-visible">
+              <span class="icon d-flex align-items-center justify-content-center position-absolute rounded-circle top-50 start-100 translate-middle">{%- render 'icons', icon: 'truck-fast', attr: 'width="14"' class: 'svg-shipping' -%}</span>
+            </div>
+          </div>
+				</div>
+			{%- endif -%}
+		</div>
+		<div class="drawer__inner position-absolute overflow-hidden w-100">
+			<div class="ajaxcart-container" data-cart-container></div>
+		</div>
+	</div>
+{%- endif -%}
+{% unless settings.saleCode_newsletter == 'none' %}
+	<div class="js-newsletter-popup adv-popup">
+		<div class="js-newsletter-popup-close adv-popup__overlay"></div>
+		<div class="adv-popup__inner position-relative overflow-hidden rounded-3" style="--nlt-popup-bg-cl: {{ settings.newsletter_popup_color_bg}};{% if settings.newsletter_width != blank %}--nlt-popup-w: {{ settings.newsletter_width }};{% endif %}{% if settings.newsletter_width_mobile != blank  %}--nlt-popup-w-m: {{ settings.newsletter_width_mobile }};{% endif %}">
+      <div class="scroll-style">
+        <button
+          class="js-newsletter-popup-close adv-popup__close vela__btn-close position-absolute"
+          type="button"
+          {% if settings.saleCode_newsletter == 'handpicked' %}
+            data-newsletter="dontshowagain"
+          {% endif %}
+          aria-label="{{ 'accessibility.close' | t }}"
+        >
+          {% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+          {% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+        </button>
+        <div class="adv-popup__content">
+          {%- if settings.saleCode_newsletter == 'newsletter' -%}
+            <div class="row gx-0 w-100 h-100 align-items-center">
+              <div class="newsletter-popup__image col-auto d-none d-md-block" style="--plh-svg-h: 400px;">
+                {%- if settings.newsletter_popup_image -%}
+                  <img src="{{ settings.newsletter_popup_image | img_url: 'master' }}" loading="lazy" class="img-fluid" alt="{{ settings.newsletter_popup_image.alt | default: shop.name | escape }}" />
+                {%- else -%}
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+              </div>
+              <div class="newsletter-popup__content col d-flex justify-content-center align-items-center">
+                <div class="newsletter-popup__wrapper p-4 py-md-5">
+                    {%- if settings.newsletter_popup_title != blank -%}
+                      <h4 class="newsletter-popup__title mb-2" style="--nlt-popup-h-cl: {{ settings.newsletter_title_color }};">{{ settings.newsletter_popup_title }}</h4>
+                    {%- endif -%}
+                    {%- if settings.newsletter_sub_html != blank -%}
+                      <div class="newsletter-popup__subTitle mb-4" style="--nlt-popup-subtitle-cl: {{ settings.newsletter_html_color }};">
+                        {{ settings.newsletter_sub_html }}
+                      </div>
+                    {%- endif -%}
+                    {%- assign mailchimp = settings.newsletter_popup_mailchimp -%}
+                    {%- assign mailchimp_action = settings.newsletter_popup_form_action | replace: '/post?', '/post-json?' | append: '&amp;c=?' -%}
+                    {%- if mailchimp -%}
+                      <form class="js-vela-newsletter" action="{{ mailchimp_action }}" method="post" name="mc-embedded-subscribe-form" target="_blank">
+                        <div class="newsletter-form__wrap">
+                          <input
+                            class="js-input-newsletter form-control newsletter-form__input"
+                            type="email"
+                            name="EMAIL"
+                            value="{% if customer %}{{ customer.email }}{% endif %}"
+                            placeholder="{{ 'newsletter.newsletter_email' | t }}"
+                            required
+                          />
+                          <button class="btn newsletter-form__submit w-100 mt-2" type="submit">
+                            <span>{{ 'newsletter.button_label' | t }}</span>
+                          </button>
+                        </div>
+                      </form>
+                    {%- else -%}
+                      {% form 'customer' %}
+                        {{ form.errors | default_errors }}
+                        {%- if form.posted_successfully? -%}
+                          <div class="js-newsletter-popup-success alert alert-success">{{ 'newsletter.newsletter_confirmation' | t }}</div>
+                        {%- else -%}
+                          <input type="hidden" name="contact[tags]" value="newsletter">
+                          <div class="newsletter-form__wrap flex-wrap">
+                            <input
+                            value="{% if customer %}{{ customer.email }}{% endif %}"
+                            placeholder="{{ 'newsletter.newsletter_email' | t }}"
+                            name="contact[email]"
+                            class="form-control newsletter-form__input"
+                            type="email" 
+                            autocorrect="off"
+                            autocapitalize="off"/>
+                            <button class="btn newsletter-form__submit w-100 mt-2" type="submit">
+                              <span>{{ 'newsletter.button_label' | t }}</span>
+                            </button>
+                          </div>
+                        {%- endif -%}
+                      {% endform %}
+                    {%- endif -%}
+                    {%- if settings.newsletter_desc_html != blank -%}
+                      <div class="newsletter-popup__desc mt-2" style="--nlt-popup-desc-cl: {{ settings.newsletter_desc_color }};">
+                        {{- settings.newsletter_desc_html -}}
+                      </div>
+                    {%- endif -%}
+                    <button data-newsletter="dontshowagain" class="border-0 bg-transparent p-0 mt-3 mt-sm-4 text-decoration-underline text-color" type="button">{{ 'newsletter.no_thank' | t }}</button>
+                </div>
+              </div>
+            </div>
+          {%- elsif settings.saleCode_newsletter == 'saleCode' -%}
+            {%- capture sc-bg-color -%}
+              {%- assign opacity = settings.opacity | times: 0.01 -%}
+              {%- assign overlay = settings.saleCode_color_bg | color_modify: 'alpha', opacity -%}
+                --sc-ct-bg: {{ overlay }};
+            {%- endcapture -%}
+            {%- capture sc-bg-image -%}
+              {%- if settings.saleCode_image != blank -%}
+                  background-image: url({{ settings.saleCode_image | img_url: 'master' }}); background-size: cover; background-repeat: no-repeat;
+              {%- endif -%}
+            {%- endcapture -%}
+            <div class="row g-0 h-100">
+              <div class="col-12 col-md-auto" style="{{ sc-bg-image }}">
+                <div class="saleCode-popup__form d-flex align-items-center w-100 h-100" style="{{- sc-bg-color -}}">
+                  <div class="saleCode-popup__form-wrap text-center w-100 p-4 my-3 my-md-0">
+                    {%- if settings.saleCode_title != blank -%}
+                      <h2 class="saleCode-popup__title mb-3" style="--sc-t-cl: {{ settings.saleCode_title_color }};">{{ settings.saleCode_title }}</h2>
+                    {%- endif -%}
+                    {%- if settings.saleCode_code != blank -%}
+                      <div class="d-flex w-100 mx-auto position-relative saleCode__input">
+                        <input class="form-control fs-13 fw-semibold text-center text-white text-uppercase pe-5" type="text" value="{{ settings.saleCode_code }}" id="saleCode">
+                        <button id="saleCodeBtnCopy" class="show-tooltip position-absolute border-0 rounded-circle d-flex align-items-center justify-content-center bg-white end-0 top-0" onclick="copyToClipboard()" data-title-success="{{ 'gift_cards.issued.copy_code_success' | t }}">
+                            <svg width="16" height="16" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.92 4H2V17H13.92V4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 1H17V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <div class="tooltip bs-tooltip-top" role="tooltip">
+                                <div class="tooltip-arrow"></div>
+                                <div class="tooltip-inner">
+                                    {{ 'gift_cards.issued.copy_code' | t }}
+                                </div>
+                            </div>
+                        </button>                                             
+                      </div>
+                    {%- endif -%}
+                    {%- if settings.saleCode_desc_html != blank -%}
+                      <div class="saleCode-popup__desc mt-2 mx-auto" style="--sc-dsc-cl: {{ settings.saleCode_desc_color }};">
+                        {{- settings.saleCode_desc_html -}}
+                      </div>
+                    {%- endif -%}
+                    <button class="js-newsletter-popup-close saleCode-popup__btn btn bg-white heading-color px-4 mt-4" type="button">
+                      {{ settings.saleCode_button_label }}
+                    </button>
+                    <button data-newsletter="dontshowagain" class="border-0 bg-transparent p-0 mt-3 mt-sm-4 text-decoration-underline text-white" type="button">{{ 'newsletter.no_thank' | t }}</button>
+                  </div>
+                </div>
+              </div>
+              <div class="saleCode-popup__content col">
+                <div class="saleCode-popup__product p-4">
+                  {%- if settings.saleCode_product_title != blank -%}
+                    <div class="fw-medium fs-4 mb-3 lh-1 heading-color">{{ settings.saleCode_product_title }}</div>
+                  {%- endif -%}
+                  <div class="saleCode-popup__product-content">
+                    {%- assign proCollection = settings.saleCode_collection -%}
+                    {%- if proCollection == blank or collections[proCollection] == empty or collections[proCollection].products_count == 0 -%}
+                      {% include 'onboarding-featured-products', product_style: "style1", number: '3' %}
+                    {%- else -%}
+                      <div class="row g-0" style="--bs-gutter-y: 16px;">
+                        {%- for product in collections[proCollection].products limit: settings.saleCode_product_limit -%}
+                            {% render 'product-list__style1', product: product %}
+                        {%- endfor -%}
+                      </div>
+                    {%- endif -%}
+                    <div class="pt-1 pb-2">
+                      <a href="{{ routes.all_products_collection_url }}" class="btn btn-default w-100 mt-3">
+                        {{ 'general.continue_shopping' | t }}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <script>
+              function copyToClipboard() {
+                  var saleCode = document.getElementById("saleCode");
+                  saleCode.select();
+                  saleCode.setSelectionRange(0, 99999); 
+                  navigator.clipboard.writeText(saleCode.value);
+                  var saleCodeTooltip = document.getElementById("saleCodeBtnCopy");
+                  let textSuccess = saleCodeTooltip.getAttribute("data-title-success");
+                  saleCodeTooltip.setAttribute("title", textSuccess);
+                  const tooltipText = saleCodeTooltip.querySelector('.tooltip-inner');
+                  if (tooltipText) {
+                      tooltipText.innerHTML = textSuccess;
+                  }
+              }
+            </script>
+          {% else %}
+            <div class="handpicked p-4">
+              {%- if settings.handpicked_product_title != blank -%}
+                <div class="mb-3 text-center">
+                    <h3 class="lh-1 mb-2">{{ settings.handpicked_product_title }}</h3>
+                  {%- if settings.handpicked_product_subtitle != blank -%}
+                    <div class="fs-6">{{ settings.handpicked_product_subtitle }}</div>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+              <div class="handpicked__content">
+                {%- assign proCollection = settings.handpicked_collection -%}
+                <div class="js-carousel slick-carousel row g-3"
+                  data-nav="true"
+                  data-autoplay="true"
+                  data-columnone="4" 
+                  data-columntwo="3" 
+                  data-columnthree="2" style="--bs-gutter-x: 16px;">
+                  {%- if proCollection == blank or collections[proCollection] == empty or collections[proCollection].products_count == 0 -%}
+                    {% render 'onboarding-featured-products', slide_variableWidth: false, number: 4 %}
+                  {%- else -%}
+                    {%- for product in collections[proCollection].products limit: settings.handpicked_product_limit -%}
+                      <div class="slick-carousel__item">
+                        {% render 'product-grid-item', product: product %}
+                      </div>
+                    {%- endfor -%}
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+		</div>
+	</div>
+{%- endunless -%}
+{%- if settings.scroll_to_top -%}
+		<div class="js-scroll-to-top scroll-to-top">
+			<span class="rounded-circle d-flex align-items-center justify-content-center">{% render 'icons', icon: 'arrow_top', attr: 'width="10" height="18"' %}</span>
+		</div>
+	{%- endif -%}
+{%- if settings.quickview_enable -%}
+  <div class="quickview modal fade"
+    data-quickview
+    data-bs-keyboard="false"
+    data-stock-show="{{ settings.quickview_availability }}"
+    data-type-show="{{ settings.quickview_protype }}"
+    data-vendor-show="{{ settings.quickview_vendor }}"
+  >
+    <div class="quickview__close" data-quickview-close></div>
+    <div class="quickview__content modal-dialog modal-dialog-centered">
+      <div class="modal-content overflow-hidden">
+        <div class="quickview__wrapper">
+          <button type="button" class="quickview__btn-close vela__btn-close" data-quickview-close>
+            {% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+            {% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+          </button>
+          <div class="quickview__content__inner" data-quickview-container></div>
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+  <div class="quickadd modal fade"
+    data-quickadd
+    data-stock-show="{{ settings.quickadd_availability }}"
+    data-type-show="{{ settings.quickadd_protype }}"
+    data-vendor-show="{{ settings.quickadd_vendor }}"
+  >
+    <div class="quickadd__content modal-dialog modal-dialog-centered">
+      <div class="modal-content overflow-hidden">
+        <div class="scroll-style">
+          <button type="button" class="quickadd__btn-close vela__btn-close" data-bs-dismiss="modal">
+            {% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+            {% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+          </button>
+          <div class="quickadd__content__inner" data-quickadd-container></div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% if settings.outofstock_enable %}
+  <div class="modal fade" id="qv-notify-popup" tabindex="-1" aria-labelledby="qv-notify-popup-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        {% form 'contact' %}
+          <div class="notify-product position-relative border-bottom">
+            <button type="button" class="vela__btn-close position-absolute top-0 end-0 mt-3 me-4" data-bs-dismiss="modal" aria-label="Close">
+                {% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+                {% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+            </button>
+            <div class="row g-0">
+                <div class="notify-product__image position-relative col-auto" data-product-image>
+                    {%- render 'preloading', preload_class: 'position-absolute' -%}
+                </div>
+                <div class="notify-product__content col ps-2 ms-1">
+                    <div class="notify-product__title fs-6 heading-color me-5" data-product-title></div>
+                    <div class="notify-product__variants mt-2 text-secondary" data-product-options></div>
+                    <div class="notify-product__price lh-1 mt-2" data-product-price>
+                      <span class="js-price notify-product__price"></span>
+                      <span class="js-price-compare notify-product__price notify-product__price--compare"></span>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="notify-product__form position-relative">
+              <input type="hidden" name="contact[title]" value="{{ settings.outofstock_title | escape }}">
+              <input type="hidden" name="contact[product_id]" data-input-id value="">
+              <input type="hidden" name="contact[variant_id]" data-variant-id value="">
+              <input type="hidden" name="contact[product]" data-input-title value="">
+              <input type="hidden" name="contact[variant]" data-variant value="">
+              <input type="hidden" name="contact[product_url]" data-input-url value="">
+              {%- if settings.outofstock_modal_content != blank -%}
+                <div class="notify-product__description h4 text-center">{{ settings.outofstock_modal_content }}</div>
+              {%- endif -%}
+              <input
+                class="form-control"
+                type="email"
+                name="contact[email]"
+                value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+                placeholder="{{ 'templates.contact.form.email_placeholder' | t }}"
+                required
+              />
+              <button class="btn btn-default w-100" type="submit">{{ settings.outofstock_modal_title }}</button>
+          </div>
+        {% endform %}
+      </div>
+    </div>
+  </div>
+  <div id="product-card-bis" class="bis-notify modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content oveflow-hidden">
+        <div class="scroll-style">
+            {% form 'contact' %}
+              {%- if form.posted_successfully? -%}
+                <p class="alert alert-success">{{ 'templates.contact.bis_notify_success' | t }}</p>
+              {%- else -%}
+                <div class="bis-notify__content"></div>
+              {%- endif -%}
+            {% endform %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+{%- render 'vela-swatches' -%}
+{%- if settings.cart_type == 'modal' -%}
+  <script id="ajaxcart-header-template" type="text/template">
+  {% raw %}
+    <div class="js-cart-modal cart-modal fade">
+      <div class="js-cart-modal-close cart-modal__overlay"></div>
+      <div class="cart-modal__inner modal-content row gx-0 m-auto">
+  {% endraw %}
+        <button type="button" class="js-cart-modal-close cart-modal__close vela__btn-close" href="javascript:void(0)">
+          {% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+          {% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+        </button>
+  {% raw %}
+		<div class="col-12 col-sm-5">
+			<div class="cart-modal__image overflow-hidden me-sm-3 me-lg-4 position-relative">
+				<img class="img-fluid position-relative" alt="{{name}}" src="{{image}}"/>
+				{% endraw %}
+					{% render "preloading", preload_class: "position-absolute" %}
+				{% raw %}
+			</div>
+		</div>
+        <div class="cart-modal__content col-12 col-sm-7">
+          <div class="cart-modal__name">{{name}}</div>
+          {{#if pre_order}}
+            <div class="ajaxcart__product-meta text-info pro_preorder mb-1">{% endraw %}{{ 'products.general.status' | t }}: {{ 'products.general.label_pre_order' | t }}{% raw %}</div>
+          {{/if}}
+          {{#if variation}}
+            <div class="ajaxcart__product-meta text-secondary d-flex flex-wrap mb-2">
+              {{#each options}}
+                <span>{{ this.name }}: {{ this.value }}</span>
+              {{/each}}
+            </div>
+          {{/if}}
+          <div class="ajaxcart__product-price-wrapper d-flex product-price mb-2">
+            <span class="ajaxcart__price">{{{price}}}</span>
+          </div>
+  {% endraw %}
+          <div class="cart-modal__messenger">{{ 'sections.cart.added_to_cart' | t }}</div>
+          <form action="{{ routes.cart_url }}" method="post" class="ajaxcart">
+            <div class="mt-2">
+              {%- capture terms_conditions -%}
+                {%- if settings.terms_conditions != blank -%}
+                  {{ 'sections.cart.terms_conditions_html' | t: link: settings.terms_conditions }}
+                {%- elsif shop.terms_of_service.body != blank  -%}
+                  {{ 'sections.cart.terms_conditions_html' | t: link: shop.terms_of_service.url }}
+                {%- else -%}
+                  {{ 'sections.cart.terms_conditions_html' | t: link: '#' }}
+                {%- endif -%}
+              {%- endcapture -%}
+              <input class="form-check-input rounded-circle" type="checkbox" value="" id="cart-modal__terms">
+              <label class="form-check-label" for="cart-modal__terms">
+                {{ terms_conditions }}
+              </label>
+              <button class="btn btn-default cart-modal__btn cart-modal__btn--checkout mt-2 w-100" type="submit" name="checkout">
+                <span>{{ 'sections.cart.checkout' | t }}</span>
+              </button>
+            </div>
+            <div class="cart-modal__funcs">
+              <button class="btn btn-outline cart-modal__btn cart-modal__btn--viewcart w-100" type="submit">
+                <span>{{ 'sections.cart.viewcart' | t }}</span>
+              </button>
+            </div>
+          </form>
+  {% raw %}
+        </div>
+      </div>
+    </div>
+  {% endraw %}
+  </script>
+{%- endif -%}
+<script id="ajaxcart-template" type="text/template">
+{% raw %}
+  <form action="{% endraw %}{{ routes.cart_url }}{% raw %}" method="post" novalidate class="cart ajaxcart ajaxcart--header">
+    <div class="ajaxcart__inner scroll-style {% endraw %}{% if settings.cart_type == 'drawer' %}d-flex flex-column pb-3 pt-1 {% if settings.cart_type == 'drawer' %} justify-content-between{% endif %}{% endif %}{% raw %}">
+      <div class="ajaxcart__inner--wrapp">
+        {{#items}}
+        <div class="ajaxcart__product" data-line="{{line}}">
+          <div class="ajaxcart__line-item d-flex">
+            <div class="ajaxcart__line-item--left me-1 pe-2">
+              <div class="ajaxcart__product-image-wrapper position-relative">
+                <a href="{{url}}" class="ajaxcart__product-image"><img class="img-fluid" loading="lazy" src="{{img}}" alt="{{name}}"></a>
+              </div>
+            </div>
+            <div class="ajaxcart__line-item--right">
+              <div class="ajaxcart__product-description">
+                <div class="ajaxcart__product-name-wrapper">
+                  <a href="{{url}}" class="ajaxcart__product-name line-clamp-1 mb-2" title="{{{name}}}"><span>{{{name}}}</span></a>
+                  <div class="ajaxcart__product-meta text-info pro_preorder mb-1 d-none">{% endraw %}{{ 'products.general.status' | t }}: {{ 'products.general.label_pre_order' | t }}{% raw %}</div>
+                  {{#if variation}}
+                    <div class="ajaxcart__product-meta text-secondary d-flex flex-wrap mb-2">
+                      <div class="ajaxcart__meta-inner d-flex pe-1">
+                        {{#each options}}
+                          <span>{{ this.value }}</span>
+                        {{/each}}
+                      </div>
+                      {% endraw %}
+                      <button
+                        class="js-ajaxcart-edit border-0 p-0 bg-transparent ms-2 text-color"
+                        data-line="{% raw %}{{line}}{% endraw %}"
+                        data-qty="{% raw %}{{itemQty}}{% endraw %}"
+                        data-pre-order=""
+                        data-handle="{% raw %}{{prodHandle}}{% endraw %}"
+                        data-variant-id="{% raw %}{{variant_id}}{% endraw %}"
+                        data-color-label="{{ settings.product_cart_swatch_label | escape }}"
+                      >{%- render 'icons', icon: 'pen', attr: 'width="18" height="18"' -%}</button>{% raw %}
+                    </div>
+                  {{/if}}
+                  {{#properties}}
+                    {{#each this}}
+                      {{#if this}}
+                        <span class="ajaxcart__product-meta">{{@key}}: {{this}}</span>
+                      {{/if}}
+                    {{/each}}
+                  {{/properties}}
+                  <div class="ajaxcart__product-price-wrapper d-flex product-price mb-2">
+                    {{#if discountsApplied}}
+                    <del class="ajaxcart__price ajaxcart__price--regular me-1">{{{price}}}</del>
+                    <span class="ajaxcart__price ajaxcart__price--sale">{{{discountedPrice}}}</span>
+                    {{else}}
+                      <span class="ajaxcart__price">{{{price}}}</span>
+                    {{/if}}
+                    {{#if unitPrice}}
+                      <span class="d-none">{% endraw %}{{ 'products.general.unit_price' | t }}{% raw %}</span>
+                      <span class="cart__unit-price">
+                        {% endraw %}
+                          {%- capture unit_price_separator -%}
+                            <span aria-hidden="true">/</span><span class="d-none">&nbsp;{{ 'general.accessibility.unit_price_separator' | t }}&nbsp;</span>
+                          {%- endcapture -%}
+                        {% raw %}
+                        <span>{{{ unitPrice.price }}}</span>{% endraw %}{{- unit_price_separator -}}{% raw %}{{#if unitPrice.addRefererenceValue }}{{{ unitPrice.reference_value }}}{{/if}}{{{ unitPrice.reference_unit }}}
+                      </span>
+                    {{/if}}
+                  </div>
+                  <div class="drawer__quantity d-flex">
+                    <div class="ajaxcart__qty d-flex align-items-end pe-1">
+                      <button type="button" class="ajaxcart__qty-adjust ajaxcart__qty--minus border rounded-1 d-flex align-items-center justify-content-center vela-qty__adjust--minus" data-id="{{key}}" data-qty="{{itemMinus}}" data-line="{{line}}" aria-label="{% endraw %}{{ 'sections.cart.reduce_quantity' | t }}{% raw %}">
+                        {% endraw %}{% render 'icons', icon: 'minus', class: 'icon-minus' %}{% raw %}
+                      </button>
+                      <input type="text" name="updates[]" class="ajaxcart__qty-num border-0 text-center" value="{{itemQty}}" min="0" data-id="{{key}}" data-line="{{line}}" aria-label="quantity" pattern="[0-9]*">
+                      <button type="button" class="ajaxcart__qty-adjust ajaxcart__qty--plus border rounded-1 d-flex align-items-center justify-content-center vela-qty__adjust--plus" data-id="{{key}}" data-line="{{line}}" data-qty="{{itemAdd}}" aria-label="{% endraw %}{{ 'sections.cart.increase_quantity' | t }}{% raw %}">                       
+                        {% endraw %}{% render 'icons', icon: 'plus', class: 'icon-plus' %}{% raw %}
+                      </button>
+                    </div>
+                    <a class="ajaxcart__remove ms-2" href="javascript:void(0)" data-line="{{line}}" data-cart-remove>{% endraw %}{{ 'sections.cart.remove' | t }}{% raw %}</a>
+                  </div>
+                  {{#if discountsApplied}}
+                    <ul class="product-discount product-discount--ajax-cart" aria-label="{% endraw %}{{ 'customer.order.discount' | t }}{% raw %}">
+                      {{#each discounts}}
+                        <li class="product-discount__item">
+                          <span class="fa fa-tag" aria-hidden="true"></span>{{ this.discount_application.title }} (-{{{ this.formattedAmount }}})
+                        </li>
+                      {{/each}}
+                    </ul>
+                  {{/if}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{/items}}
+      </div>
+      {% endraw %}
+      {% if settings.cart_product_recommendations and settings.cart_type == 'drawer' %}
+        <cart-recommendations
+          class="cart-recommendations"
+          data-url="{{ routes.product_recommendations_url }}"
+          data-section-id="minicart-recommendations"
+          data-limit="{{ settings.products_to_show }}"
+          {% raw %}
+          data-product-id="{{lastLineItemID}}"
+          {% endraw %}
+        ></cart-recommendations>
+      {% endif %}
+      {% raw %}
+    </div>
+    <div class="ajaxcart__footer">
+      {{#if cartDiscountsApplied}}
+        <div class="ajaxcart__footer-discount">
+          {{#each cartDiscounts}}
+            <div class="order-discount order-discount--ajax-cart">
+              <i class="fa fa-tag" aria-hidden="true"></i>
+              <span class="d-none">{% endraw %}{{ 'customer.order.discount' | t }}{% raw %}:</span> {{ this.title }}
+            </div>
+            <div class="order-discount__value text-right">
+              <span class="ajaxcart__price">-{{{ this.formattedAmount }}}</span>
+            </div>
+          {{/each}}
+        </div>
+      {{/if}}
+      {% endraw %}
+      {%- if settings.cart_type == 'drawer' -%}
+        {%- if settings.cart_notes_enable or settings.cart_coupon_enable or settings.cart_gift_enable or settings.cart_shipping_enable -%}
+          <div id="ajaxcart__info" class="ajaxcart__info bg-white">
+            <div class="ajaxcart__info--header d-flex justify-content-between">
+              {% if settings.cart_notes_enable %}
+                <a href="#ajaxcart__note" class="ajaxcart__note--button d-flex flex-column text-center w-100" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="ajaxcart__note">
+                  <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ 'sections.cart.add_order_note' | t }}">
+                    {% render 'icons', icon: 'note', class: 'icon-note', attr: 'width="18" height="18"' %}
+                  </span>
+                </a>
+              {% endif %}
+              {% if settings.cart_gift_enable and settings.cart_gift_product != blank %}
+                {% assign gift_product-handle = settings.cart_gift_product %}
+                <a href="#ajaxcart__gift" class="ajaxcart__gift--button d-flex flex-column text-center w-100" data-proHandle="{{ gift_product-handle }}" title="{{ 'sections.cart.add_gift' | t }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="ajaxcart__gift">
+                  <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ 'sections.cart.add_gift' | t }}">
+                    {% render 'icons', icon: 'gift', class: 'icon-gift', attr: 'width="19" height="18"' %}
+                  </span>
+                </a>
+              {% endif %}
+              {% if settings.cart_shipping_enable %}
+                <a href="#ajaxcart__estimate" class="ajaxcart__shipping--button d-flex flex-column text-center w-100" title="{{ 'sections.cart.estimate_shipping_title' | t }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="ajaxcart__estimate">
+                  <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ 'sections.cart.estimate_shipping_title' | t }}">
+                    <svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_11047_59538)"><path d="M14.168 15C14.9964 15 15.668 14.3284 15.668 13.5C15.668 12.6716 14.9964 12 14.168 12C13.3395 12 12.668 12.6716 12.668 13.5C12.668 14.3284 13.3395 15 14.168 15Z" stroke="#515167" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M1.66797 5V12C1.66797 12.55 2.11797 13 2.66797 13H3.75797C3.96797 12.42 4.51797 12 5.16797 12C5.81797 12 6.36797 12.42 6.57797 13H12.668V5C12.668 3.9 11.768 3 10.668 3H3.66797C2.56797 3 1.66797 3.9 1.66797 5Z" fill="#EFF0F2" stroke="#515167" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.16797 15C5.9964 15 6.66797 14.3284 6.66797 13.5C6.66797 12.6716 5.9964 12 5.16797 12C4.33954 12 3.66797 12.6716 3.66797 13.5C3.66797 14.3284 4.33954 15 5.16797 15Z" stroke="#515167" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.668 7H12.668V13H12.758C12.968 12.42 13.518 12 14.168 12C14.818 12 15.368 12.42 15.578 13H17.668V9L15.668 7Z" fill="#EFF0F2" stroke="#515167" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g><defs><clipPath id="clip0_11047_59538"><rect width="18" height="18" fill="white" transform="translate(0.667969)"/></clipPath></defs></svg>
+                  </span>
+                </a>
+              {% endif %}
+              {% if settings.cart_coupon_enable %}
+                <a href="#ajaxcart__coupon" class="ajaxcart__coupon--button d-flex flex-column text-center w-100" title="{{ 'sections.cart.add_coupon' | t }}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="ajaxcart__coupon">
+                  <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ 'sections.cart.add_coupon' | t }}">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.40922 11.41L6.57922 15.58C7.35922 16.36 8.62922 16.36 9.40922 15.58L15.1192 9.87C15.6792 9.31 15.9992 8.54 15.9992 7.75V3C15.9992 2.45 15.5492 2 14.9992 2H10.2392C9.43922 2 8.67922 2.32 8.11922 2.88L2.40922 8.59C1.62922 9.37 1.62922 10.64 2.40922 11.42V11.41Z" fill="#EFF0F2" stroke="#515167" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7C12.5523 7 13 6.55228 13 6C13 5.44772 12.5523 5 12 5C11.4477 5 11 5.44772 11 6C11 6.55228 11.4477 7 12 7Z" stroke="#515167" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </a>
+              {% endif %}
+            </div>
+            <div class="ajaxcart__info--content">
+              {% if settings.cart_notes_enable %}
+                <div class="ajaxcart__info--wrapper ajaxcart__note--content position-absolute w-100 collapse" id="ajaxcart__note">
+                  <div class="row g-0" style="--bs-gutter-y: 16px;">
+                    <label class="ajaxcart__note-label heading-color fs-16 col-12">{% render 'icons', icon: 'note', class: 'icon-note me-1', attr: 'width="18" height="18"' %}{{ 'sections.cart.add_order_note' | t }}</label>
+                    {% raw %}
+                    <textarea name="note" class="ajaxcart__note-input form-control col-12" rows="4" {% endraw %}placeholder="{{ 'sections.cart.add_order_note' | t }}"{% raw %}>{{note}}</textarea>
+                    {% endraw %}
+                    <a href="#ajaxcart__note" class="ajaxcart__note--save btn btn-default col-12" data-bs-toggle="collapse"  role="button" aria-expanded="false" aria-controls="ajaxcart__note">{{ 'sections.cart.save' | t }}</a>
+                    <a href="#ajaxcart__note" class="btn btn-outline text-center col-12" data-bs-toggle="collapse"  role="button" aria-expanded="false" aria-controls="ajaxcart__note">{{ 'sections.cart.cancel' | t }}</a>
+                  </div>
+                </div>
+                <a href="#ajaxcart__note" class="collapse-backdrop position-absolute" data-bs-toggle="collapse"  role="button" aria-expanded="false" aria-controls="ajaxcart__note"></a>
+              {% endif %}
+              
+              {% if settings.cart_coupon_enable %}
+                <div class="ajaxcart__info--wrapper ajaxcart__coupon--content position-absolute w-100 collapse" id="ajaxcart__coupon">
+                  <div class="row g-0" style="--bs-gutter-y: 16px;">
+                    <label for="coupon" class="ajaxcart__coupon-label heading-color fs-16 col-12">
+                      <svg class="me-1" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.40922 11.41L6.57922 15.58C7.35922 16.36 8.62922 16.36 9.40922 15.58L15.1192 9.87C15.6792 9.31 15.9992 8.54 15.9992 7.75V3C15.9992 2.45 15.5492 2 14.9992 2H10.2392C9.43922 2 8.67922 2.32 8.11922 2.88L2.40922 8.59C1.62922 9.37 1.62922 10.64 2.40922 11.42V11.41Z" fill="#EFF0F2" stroke="#515167" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7C12.5523 7 13 6.55228 13 6C13 5.44772 12.5523 5 12 5C11.4477 5 11 5.44772 11 6C11 6.55228 11.4477 7 12 7Z" stroke="#515167" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      {{- 'sections.cart.add_coupon_title' | t -}}
+                    </label>
+                    {% raw %}<input class="coupon_code_input form-control col-12" autocomplete="off" type="text" name="coupon" value="{{ coupon_code }}" />{% endraw %}
+                    <a href="#ajaxcart__coupon" class="coupon_code--save btn btn-default col-12" data-bs-toggle="collapse"  role="button" aria-expanded="false" aria-controls="ajaxcart__coupon">{{ 'sections.cart.save' | t }}</a>
+                    <a href="#ajaxcart__coupon" class="btn btn-outline d-block text-center col-12" data-bs-toggle="collapse"  role="button" aria-expanded="false" aria-controls="ajaxcart__coupon">{{ 'sections.cart.cancel' | t }}</a>
+                  </div>
+                </div>
+                <a href="#ajaxcart__coupon" class="collapse-backdrop position-absolute" data-bs-toggle="collapse"  role="button" aria-expanded="false" aria-controls="ajaxcart__coupon"></a>
+              {% endif %}
+              {% if settings.cart_shipping_enable %}
+                <div class="ajaxcart__info--wrapper ajaxcart__coupon--content position-absolute w-100 collapse" id="ajaxcart__estimate">
+                  {% render 'shipping-calculator' %}
+                </div>
+                <a href="#ajaxcart__estimate" class="collapse-backdrop position-absolute" data-bs-toggle="collapse"  role="button" aria-expanded="false" aria-controls="ajaxcart__estimate"></a>
+              {% endif %}
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endif -%}
+      <div class="ajaxcart__footer--action">
+        <div class="ajaxcart__policies mb-2 pb-1 lh-1">
+          {%- capture taxes_shipping_checkout -%}
+            {%- if shop.taxes_included and shop.shipping_policy.body != blank -%}
+              {{ 'sections.cart.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
+            {%- elsif shop.taxes_included -%}
+              {{ 'sections.cart.taxes_included_but_shipping_at_checkout' | t }}
+            {%- elsif shop.shipping_policy.body != blank -%}
+              {{ 'sections.cart.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
+            {%- else -%}
+              {{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}
+            {%- endif -%}
+          {%- endcapture -%}
+          {{ taxes_shipping_checkout }}
+          </div>
+        {%- capture terms_conditions -%}
+          {%- if settings.terms_conditions != blank -%}
+            {{ 'sections.cart.terms_conditions_html' | t: link: settings.terms_conditions }}
+          {%- elsif shop.terms_of_service.body != blank  -%}
+            {{ 'sections.cart.terms_conditions_html' | t: link: shop.terms_of_service.url }}
+          {%- else -%}
+            {{ 'sections.cart.terms_conditions_html' | t: link: '#' }}
+          {%- endif -%}
+        {%- endcapture -%}
+        <input class="form-check-input rounded-circle" type="checkbox" value="" id="terms_conditions">
+        <label class="form-check-label" for="terms_conditions">
+          {{ terms_conditions }}
+        </label>
+        <button class="btn cart-modal__btn btn-default d-flex align-items-center justify-content-center cart-modal__btn--checkout w-100 fs-6" type="submit" name="checkout">
+          <span class="icon-key">
+            {% render 'icons', icon: 'key', class: 'icon-key', attr: 'width="19" height="18"' %}
+            {{ 'sections.cart.checkout' | t }}
+          </span> 
+          <span class="icon-dot"></span>
+          {% raw %}<span class="ajaxcart__subtotal">{{{totalPrice}}}</span>{% endraw %}
+        </button>
+        {% if settings.view_cart_button %}
+          <div class="mt-1 pt-2">
+            <button class="btn btn-outline cart-modal__btn cart-modal__btn--viewcart w-100" type="submit">
+              <span>{{ 'sections.cart.viewcart' | t }}</span>
+            </button>
+          </div>
+        {% endif %}
+      </div>
+      {% raw %}
+    </div>
+  </form>
+{% endraw %}
+{%- if settings.cart_type == 'drawer' -%}
+  <div class="ajaxcart__info--content">
+    {% if settings.cart_gift_enable and settings.cart_gift_product != blank %}
+      <div class="ajaxcart__info--wrapper ajaxcart__gift--content position-absolute w-100 collapse text-center bottom-0 bg-white" id="ajaxcart__gift">
+        <div class="row g-0" style="--bs-gutter-y: 16px;">
+          <div class="ajaxcart__gift-icon col-12"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_12875_52746)"><path d="M2.22266 20H37.7782V31.1111C37.7782 34.8 34.8004 37.7778 31.1115 37.7778H8.88932C5.20043 37.7778 2.22266 34.8 2.22266 31.1111V20Z" fill="#EFF0F2" stroke="#515167" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.55599 11.1111H34.4449C36.2893 11.1111 37.7782 12.6 37.7782 14.4444V20H2.22266V14.4444C2.22266 12.6 3.71155 11.1111 5.55599 11.1111Z" fill="#EFF0F2" stroke="#515167" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20.0004 4.44439C20.0004 4.44439 17.8671 2.22217 13.5782 2.22217C11.4449 2.22217 9.28934 6.66661 13.5782 8.88883C17.8671 11.1111 20.0004 11.1111 20.0004 11.1111V4.44439Z" fill="#EFF0F2" stroke="#515167" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4.44439C20 4.44439 22.1333 2.22217 26.4222 2.22217C28.5556 2.22217 30.7111 6.66661 26.4222 8.88883C22.1333 11.1111 20 11.1111 20 11.1111V4.44439Z" fill="#EFF0F2" stroke="#515167" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 13.3334V37.7778" stroke="#515167" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g><defs><clipPath id="clip0_12875_52746"><rect width="40" height="40" fill="white"/></clipPath></defs></svg></div>
+          {% assign gift_product = all_products[gift_product-handle]%}
+          {% assign gift_price = gift_product.price | money %}
+          <div class="ajaxcart__gift-title col-12">{{ 'sections.cart.add_gift_text_html' | t: price: gift_price }}</div>
+          {%- assign variant_count = gift_product.variants | size -%}
+          {%- assign variant = gift_product.selected_or_first_available_variant -%}
+          {%- if gift_product.available -%}
+            <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="form-addtocart col-12" data-product-form>
+              <input type="hidden" name="id" value="{{ variant.id }}" />
+              <button class="btn btn-default d-block js-btn-giftcart w-100" type="submit" value="Submit" title="{{ 'sections.cart.add_gift_button' | t }}">
+                  {% render 'icons', icon: 'plus', class: 'icon-cart d-none', attr: 'width="18" height="18"' %}
+                  <span class="text">{{ 'sections.cart.add_gift_button' | t }}</span>
+              </button>
+            </form>
+          {%- endif -%}
+          <a href="#ajaxcart__gift" class="btn btn-outline d-block text-center col-12" data-bs-toggle="collapse"  role="button" aria-expanded="false" aria-controls="ajaxcart__gift">{{ 'sections.cart.cancel' | t }}</a>
+        </div>
+      </div>
+      <a href="#ajaxcart__gift" class="collapse-backdrop position-absolute" data-bs-toggle="collapse"  role="button" aria-expanded="false" aria-controls="ajaxcart__gift"></a>
+    {% endif %}
+  </div>
+{%- endif -%}
+</script>
+<script id="quickview-template" type="text/template">
+    <div class="product-quickview position-relative">
+        <div class="product-quickview__images position-relative">
+          {% raw %}
+            <div class="quickview-images overflow-hidden d-block position-relative">{{{images}}}</div>
+          {% endraw %}
+          {%- render 'preloading', preload_class: 'position-absolute' -%}       
+        </div>
+        <div class="product-quickview__content position-absolute h-100 top-0 scroll-style">
+          {%- if settings.quickview_vendor -%}
+              {% raw %}<div class="product-quickview__product__vendor fs-13 fw-meidum">{{{vendor}}}</div>{% endraw %}
+          {%- endif -%}
+          {% raw %}
+            <h3 class="product-quickview__title mb-3">{{title}}</h3>
+          {% endraw %}
+          <div class="d-flex justify-content-between mb-3">
+            <div class="d-flex align-items-center">
+              {% raw %}
+              <div class="product-quickview__price">{{{price}}}</div>
+              {% endraw %}
+              {%- if shop.taxes_included and settings.product_card_tax -%}
+                <span class="ms-2">
+                    {{ 'products.general.include_taxes' | t }}
+                </span>
+              {%- endif -%}
+            </div>
+            <div class="product-quickview__reviews"></div>
+          </div>
+          {%- if settings.quickview_proshortdesc -%}
+            {% raw %}
+              <div class="product-quickview__description mb-3 pb-1">{{{shortDescription}}}</div>
+            {% endraw %}
+          {%- endif -%}
+          {%- if settings.quickview_countdown -%}
+            <div class="product-quickview__countdown d-none mb-3">
+              {%- if settings.quickview_countdown_title != blank  -%}
+                <p class="countdown-title mb-2">
+                  <span class="icon">
+                      <svg width="16" height="16" enable-background="new 0 0 128 128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><radialGradient id="a" cx="68.8839" cy="124.2963" gradientTransform="matrix(-1 -.00434301 -.00712592 1.6408 131.9857 -79.3452)" gradientUnits="userSpaceOnUse" r="70.587"><stop offset=".3144" stop-color="#ff9800"></stop><stop offset=".6616" stop-color="#ff6d00"></stop><stop offset=".9715" stop-color="#f44336"></stop></radialGradient><radialGradient id="b" cx="64.9211" cy="54.0621" gradientTransform="matrix(-.0101 .9999 .7525 .00760378 26.1538 -11.2668)" gradientUnits="userSpaceOnUse" r="73.8599"><stop offset=".2141" stop-color="#fff176"></stop><stop offset=".3275" stop-color="#fff27d"></stop><stop offset=".4868" stop-color="#fff48f"></stop><stop offset=".6722" stop-color="#fff7ad"></stop><stop offset=".7931" stop-color="#fff9c4"></stop><stop offset=".8221" stop-color="#fff8bd" stop-opacity=".804"></stop><stop offset=".8627" stop-color="#fff6ab" stop-opacity=".529"></stop><stop offset=".9101" stop-color="#fff38d" stop-opacity=".2088"></stop><stop offset=".9409" stop-color="#fff176" stop-opacity="0"></stop></radialGradient><path d="m35.56 40.73c-.57 6.08-.97 16.84 2.62 21.42 0 0-1.69-11.82 13.46-26.65 6.1-5.97 7.51-14.09 5.38-20.18-1.21-3.45-3.42-6.3-5.34-8.29-1.12-1.17-.26-3.1 1.37-3.03 9.86.44 25.84 3.18 32.63 20.22 2.98 7.48 3.2 15.21 1.78 23.07-.9 5.02-4.1 16.18 3.2 17.55 5.21.98 7.73-3.16 8.86-6.14.47-1.24 2.1-1.55 2.98-.56 8.8 10.01 9.55 21.8 7.73 31.95-3.52 19.62-23.39 33.9-43.13 33.9-24.66 0-44.29-14.11-49.38-39.65-2.05-10.31-1.01-30.71 14.89-45.11 1.18-1.08 3.11-.12 2.95 1.5z" fill="url(#a)"></path><path d="m76.11 77.42c-9.09-11.7-5.02-25.05-2.79-30.37.3-.7-.5-1.36-1.13-.93-3.91 2.66-11.92 8.92-15.65 17.73-5.05 11.91-4.69 17.74-1.7 24.86 1.8 4.29-.29 5.2-1.34 5.36-1.02.16-1.96-.52-2.71-1.23-2.15-2.05-3.7-4.72-4.44-7.6-.16-.62-.97-.79-1.34-.28-2.8 3.87-4.25 10.08-4.32 14.47-.22 13.57 10.99 24.57 24.55 24.57 17.09 0 29.54-18.9 19.72-34.7-2.85-4.6-5.53-7.61-8.85-11.88z" fill="url(#b)"></path></svg>
+                  </span>
+                  {{  settings.quickview_countdown_title }}
+                </p>
+              {%- endif -%}
+              <div class="product-quickview__countdown--list d-flex text-center" data-countdown=""></div>
+            </div>
+          {%- endif -%}
+          <div class="product-quickview__variants row g-3" style="--bs-gutter-x: 16px; --bs-gutter-y: 16px;">{% raw %}{{{variants}}}{% endraw %}</div>
+          <form class="formQuickview form-ajaxtocart mb-4" data-product-form="quickview" action="{{ routes.cart_add_url }}" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
+            {% raw %}
+              <input type="hidden" data-quickview-variant data-buynow-variant={{ variantID }} name="id" value="{{variantID}}">
+            {% endraw %}
+            <div class="product-quickview__buttons d-flex row g-2 mb-3">
+              <div class="product-quantity col-auto d-flex align-items-center">
+                <label class="product-quantity__label d-none">{{ 'products.product.quantity' | t }}:</label>
+                <div class="product-quantity__selector">
+                  {%- if settings.quickview_quantity_selector == 'text' -%}
+                    <div class="vela-qty">
+                      <button type="button" class="js-qty-adjust vela-qty__adjust vela-qty__adjust--minus disable" aria-label="{{ 'sections.cart.reduce_quantity' | t }}">
+                        {% render 'icons', icon: 'minus' %}
+                      </button>
+                      <input type="text" name="quantity" class="js-qty-number vela-qty__number" value="1" min="1" aria-label="quantity" pattern="[0-9]*">
+                      <button type="button" class="js-qty-adjust vela-qty__adjust vela-qty__adjust--plus" aria-label="{{ 'sections.cart.increase_quantity' | t }}">
+                        {% render 'icons', icon: 'plus' %}
+                      </button>
+                    </div>
+                  {%- else -%}
+                    <select name="quantity" class="product-quantity__select form-select">
+                      {%- for i in (1..10) -%}
+                        <option {% if forloop.first %}selected="selected"{% endif %} value="{{ i }}">{{ i }}</option>
+                      {%- endfor -%}
+                    </select>
+                  {%- endif -%}
+                </div>
+              </div>
+              <div class="product-quickview__add-to-cart product-quickview__buttons col">
+                <button class="btn btn--add-to-cart" type="submit" name="add">
+                  <span class="btn__text">{{ 'products.product.add_to_cart' | t }}</span>
+                </button>
+                {% if settings.outofstock_enable %}
+                  <div class="qv-notify-me d-none">
+                    <button
+                      class="qv-notify-me__btn btn btn-default w-100"
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#qv-notify-popup"
+                      data-bs-backdrop="static"
+                    ><span class="btn__text">{{ settings.outofstock_title | escape }}</span></button>
+                  </div>
+                {% endif %}
+              </div>
+              <div class="col-auto">
+                <button
+                  type="button"
+                  aria-label="{{ 'products.product.wishlist' | t }}"
+                  class="js-btn-wishlist product-quickview__btn--wishlist show-tooltip top-0 {% if settings.badge_position == 'start' %}end-0{% else %}start-0{% endif %}"
+                  data-product-handle="{% raw %}{{handle}}{% endraw %}"
+                >
+                    {% render 'icons', icon: 'heart', class: 'heart', attr: 'width="18" height="18"' %}
+                    {% render 'icons', icon: 'heart-fill', class: 'heart-fill', attr: 'width="18" height="18"' %}
+                  <div class="tooltip bs-tooltip-top" role="tooltip">
+                      <div class="tooltip-arrow"></div>
+                      <div class="tooltip-inner">
+                          {{ 'products.product.add_to_wishlist' | t }}
+                      </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+            <vela-buynow class="vela-buynow">
+              {%- capture terms_conditions -%}
+                {%- if settings.terms_conditions != blank -%}
+                {{ 'sections.cart.terms_conditions_html' | t: link: settings.terms_conditions }}
+                {%- elsif shop.terms_of_service.body != blank  -%}
+                {{ 'sections.cart.terms_conditions_html' | t: link: shop.terms_of_service.url }}
+                {%- else -%}
+                {{ 'sections.cart.terms_conditions_html' | t: link: '#' }}
+                {%- endif -%}
+              {%- endcapture -%}
+              <input class="vela-buynow__checkbox form-check-input rounded-circle" type="checkbox" id="quickview-terms-condition">
+              <label class="form-check-label" for="quickview-terms-condition">
+                {{ terms_conditions }}
+              </label>
+              <div class="vela-buynow__content mt-3">
+                <button class="js-button btn btn-buynow" type="button">
+                  <span class="btn__text">{{ 'products.product.buy_now' | t }}</span>
+                </button>
+              </div>
+            </vela-buynow>
+          </form>
+          <div class="product-quickview__organization--wrap">
+            {%- if settings.quickview_availability -%}
+              <div class="product-quickview__organization product-avaiable product-avaiable--active product-avaiable--instock">
+                <div class="product-avaiable__label product-quickview__organization__label">{{ 'products.product.availability' | t }}:</div>
+                <div class="js-product-avaiable-text product-avaiable__text product-avaiable__text--instock">{{'products.product.in_stock' | t }}</div>
+              </div>
+              <div class="product-quickview__organization product-avaiable product-avaiable--outstock">
+                <div class="product-avaiable__label product-quickview__organization__label">{{ 'products.product.availability' | t }}:</div>
+                <div class="js-product-avaiable-text product-avaiable__text product-avaiable__text--outstock">{{'products.product.out_stock' | t }}</div>
+              </div>
+            {%- endif -%}
+            {%- if settings.quickview_prosku -%}
+              <div class="product-quickview__organization">
+                <div class="product-quickview__organization__label label_sku">{{ 'products.product.sku' | t }}</div>
+                {% raw %}<div class="product-quickview__organization__text" data-quickview-sku>{{sku}}</div>{% endraw %}
+              </div>
+            {%- endif -%}
+            {%- if settings.quickview_protype -%}
+              <div class="product-quickview__organization mb-1">
+                <div class="product-quickview__organization__label">{{ 'products.product.type' | t }}</div>
+                {% raw %}<div class="product-quickview__organization__text">{{{type}}}</div>{% endraw %}
+              </div>
+            {%- endif -%}
+            {%- if settings.quickview_tags -%}
+              <div class="product-quickview__organization mb-1">
+                <div class="product-quickview__organization__label">{{ 'products.product.tags' | t }}</div>
+                {% raw %}<div class="product-quickview__organization__text d-flex flex-wrap">{{{tags}}}</div>{% endraw %}
+              </div>
+            {%- endif -%}
+          </div>
+          {%- if settings.quickview_text != blank -%}
+            <div class="quickview__btn-viewfull d-flex justify-content-center mt-4">
+              <a class="fs-13 fw-medium d-flex align-items-center" {% raw %}href="{{{ url }}}"{% endraw %}>
+                {{ settings.quickview_text }}
+                <svg class="ms-1" width="16" height="10" viewBox="0 0 16 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.5 1L15 5L10.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M1.5 5H13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            </div>
+          {%- endif -%}
+        </div>
+    </div>
+</script>
+<script id="quickadd-template" type="text/template">
+  <div class="product-quickadd">
+    <form class="js-form-quickadd formQuickadd form-ajaxtocart" data-product-form="quickadd" action="{{ routes.cart_add_url }}" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
+      <div class="row g-0 product-quickadd__media">
+        <div class="col-3">
+          <div class="product-quickadd__images position-relative">
+            {% raw %}
+              <div class="quickadd-images overflow-hidden d-block position-relative rounded-1">{{{images}}}</div>
+            {% endraw %}
+          </div>
+        </div>
+        <div class="product-quickadd__info col-9 ps-3">
+          {%- if settings.quickadd_vendor -%}
+            {% raw %}<div class="product-quickadd__product__vendor fs-13 lh-1 fw-meidum">{{{vendor}}}</div>{% endraw %}
+          {%- endif -%}
+          {% raw %}
+          <p class="product-quickadd__title mb-2 fs-6 heading-color fw-medium">{{title}}</p>
+          {% endraw %}
+          <div class="d-flex align-items-center lh-1">
+            {% raw %}
+            <div class="product-quickadd__price fw-medium fs-6">{{{price}}} </div>
+            {% endraw %}
+            {%- if shop.taxes_included and settings.product_card_tax -%}
+              <span class="ms-2">
+                  {{ 'products.general.include_taxes' | t }}
+              </span>
+            {%- endif -%}
+          </div>
+          <div class="product-quantity quickadd__product-quantity  d-flex align-items-center mt-2 pt-1">
+            <label class="product-quantity__label d-none">{{ 'products.product.quantity' | t }}:</label>
+            <div class="product-quantity__selector">
+              {%- if settings.quickadd_quantity_selector == 'text' -%}
+                <div class="vela-qty">
+                  <button type="button" class="js-qty-adjust vela-qty__adjust vela-qty__adjust--minus disable" aria-label="{{ 'sections.cart.reduce_quantity' | t }}">
+                    {% render 'icons', icon: 'minus' %}
+                  </button>
+                  <input type="text" name="quantity" class="js-qty-number vela-qty__number" value="1" min="1" aria-label="quantity" pattern="[0-9]*">
+                  <button type="button" class="js-qty-adjust vela-qty__adjust vela-qty__adjust--plus" aria-label="{{ 'sections.cart.increase_quantity' | t }}">
+                    {% render 'icons', icon: 'plus' %}
+                  </button>
+                </div>
+              {%- else -%}
+                <select name="quantity" class="product-quantity__select form-select">
+                  {%- for i in (1..10) -%}
+                    <option {% if forloop.first %}selected="selected"{% endif %} value="{{ i }}">{{ i }}</option>
+                  {%- endfor -%}
+                </select>
+              {%- endif -%}
+            </div>
+          </div>
+          <div class="product-quickadd__organization--wrap">
+            {%- if settings.quickadd_availability -%}
+              <div class="product-avaiable product-quickadd__organization product-avaiable--active product-avaiable--instock">
+                <div class="product-avaiable__label product-quickadd__organization__label">{{ 'products.product.availability' | t }}:</div>
+                <div class="js-product-avaiable-text product-avaiable__text product-avaiable__text--instock">{{'products.product.in_stock' | t }}</div>
+              </div>
+              <div class="product-avaiable product-quickadd__organization product-avaiable--outstock">
+                <div class="product-avaiable__label product-quickadd__organization__label">{{ 'products.product.availability' | t }}:</div>
+                <div class="js-product-avaiable-text product-avaiable__text product-avaiable__text--outstock">{{'products.product.out_stock' | t }}</div>
+              </div>
+            {%- endif -%}
+            {%- if settings.quickadd_prosku -%}
+              <div class="product-quickadd__organization product-quickadd__organization">
+                <div class="product-quickadd__organization__label label_sku">{{ 'products.product.sku' | t }}</div>
+                {% raw %}<div class="product-quickadd__organization__text" data-quickadd-sku>{{sku}}</div>{% endraw %}
+              </div>
+            {%- endif -%}
+            {%- if settings.quickadd_protype -%}
+              <div class="product-quickadd__organization mb-1">
+                <div class="product-quickadd__organization__label">{{ 'products.product.type' | t }}</div>
+                {% raw %}<div class="product-quickadd__organization__text">{{{type}}}</div>{% endraw %}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+      <div class="product-quickadd__content border-top">
+        <div class="product-quickadd__variants row g-3" style="--bs-gutter-x: 16px; --bs-gutter-y: 16px;">{% raw %}{{{variants}}}{% endraw %}</div>
+        <button class="js-hvduc-lineitem-button btn btn-default w-100 d-none" type="button">
+          <span class="btn__text">{{ 'products.product.replace' | t }}</span>
+        </button>
+
+        {% raw %}
+          <input type="hidden" data-quickadd-variant data-buynow-variant={{ variantID }} name="id" value="{{variantID}}">
+        {% endraw %}
+        <div class="product-quickadd__buttons d-flex row g-2">
+         
+          <div class="product-quickadd__add-to-cart product-quickadd__buttons col">
+            <button class="btn btn--add-to-cart" type="submit" name="add">
+              <span class="btn__text">{{ 'products.product.add_to_cart' | t }}</span>
+            </button>
+          </div>
+          
+        </div>
+        <vela-buynow class="vela-buynow">
+          {%- capture terms_conditions -%}
+            {%- if settings.terms_conditions != blank -%}
+            {{ 'sections.cart.terms_conditions_html' | t: link: settings.terms_conditions }}
+            {%- elsif shop.terms_of_service.body != blank  -%}
+            {{ 'sections.cart.terms_conditions_html' | t: link: shop.terms_of_service.url }}
+            {%- else -%}
+            {{ 'sections.cart.terms_conditions_html' | t: link: '#' }}
+            {%- endif -%}
+          {%- endcapture -%}
+          <input class="vela-buynow__checkbox form-check-input rounded-circle" type="checkbox" id="quickadd-terms-condition">
+          <label class="form-check-label" for="quickadd-terms-condition">
+            {{ terms_conditions }}
+          </label>
+          <div class="vela-buynow__content">
+            <button class="js-button btn btn-buynow" type="button">
+              <span class="btn__text">{{ 'products.product.buy_now' | t }}</span>
+            </button>
+          </div>
+        </vela-buynow>
+      </div>
+    </form>
+  </div>
+</script>

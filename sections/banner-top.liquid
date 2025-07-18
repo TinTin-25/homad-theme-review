@@ -1,0 +1,140 @@
+{{ 'banner-top.css' | asset_url | stylesheet_tag }}
+{%- include 'section_style' -%}
+{%- capture bt_style -%}
+	--bnt-t-cl: {{ section.settings.bannertop_text_color }}; --btn-cd-cl: {{ section.settings.bannertop_countdown_color }};
+{%- endcapture -%}
+<div id="bannerTop" class="vela-section flash-sale overflow-hidden bannerTop text-center active {% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}{{- bt_style -}}">
+	<div class="container{% if section.settings.full_with %}-full{% endif %}">
+        <div class="vela-section__inner position-relative">
+			<span class="btn-bannerTop vela__btn-close position-absolute border-0 top-50 end-0 translate-middle-y me-5 lh-1">
+				{% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+        		{% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+			</span>
+				<div class="vela-section__content"> 
+				{%- if section.settings.bannertop_image -%} 
+					<a href="{{ section.settings.bannertop_link }}" title="">
+						{% render 'img-global', image: section.settings.bannertop_image, image_style: true %}
+					</a>
+				{%- endif -%}
+				<div class="d-flex justify-content-center flex-wrap">
+					{%- if section.settings.countdown_timeend != blank -%}
+						{% assign countdownTime = section.settings.countdown_timeend %}
+					{%- else -%}
+						{% assign date_now = 'now' | date: '%s' %}
+						{% assign   endate = date_now | plus: 2592000 %}
+						{% assign countdownTime = endate | date: '%Y/%m/%d' %}
+					{%- endif -%}
+					<div class="bannerTop__text">{{ section.settings.bannertop_text }}</div>
+					<div class="bannerTop__countdown d-flex justify-content-between align-items-center ms-2" data-countdown="{{ countdownTime }}"></div>
+				</div> 
+			</div>
+		</div>
+	</div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.banner-top.name",
+  "tag": "section",
+  "class": "header-banner-top",
+  "enabled_on": {
+	  "groups": ["header"]
+  },
+  "settings": [
+    {
+			"type": "header",
+			"content": "t:sections.global.settings.header_section.content"
+		},
+		{
+			"type": "checkbox",
+			"id": "full_with",
+			"label": "t:sections.global.settings.full_width.label"
+		},
+		{
+			"type": "text",
+			"id": "max_with",
+			"label": "t:sections.global.settings.max_with.label",
+			"info": "t:sections.global.settings.max_with.info"
+		},
+		{
+			"type": "color",
+			"id": "color_bg",
+			"label": "t:sections.global.settings.bg_color.label",
+			"default": "rgba(0,0,0,0)"
+		},
+		{
+			"type": "text",
+			"id": "padding_block",
+			"label": "t:sections.global.settings.padding.label",
+			"placeholder": "0px 0px",
+			"info": "t:sections.global.settings.padding.info"
+		},
+		{
+			"type": "text",
+			"id": "padding_block_m",
+			"label": "t:sections.global.settings.padding_mobile.label",
+			"placeholder": "0px 0px",
+			"info": "t:sections.global.settings.padding_mobile.info"
+		},
+		{
+			"type": "text",
+			"id": "margin_block",
+			"label": "t:sections.global.settings.margin.label",
+			"placeholder": "0px 0px"
+		},
+		{
+			"type": "header",
+			"content": "Banner"
+		},
+		{
+			"type": "image_picker",
+			"id": "bannertop_image",
+			"label": "t:sections.banner-top.settings.banner.label"
+		},
+		{
+			"type": "url",
+			"id": "bannertop_link",
+			"label": "t:sections.global.settings.url.label"
+		},
+		{
+			"type": "header",
+			"content": "Text"
+		},
+		{
+			"type": "html",
+			"id": "bannertop_text",
+			"label": "Text"
+		},
+		{
+			"type": "color",
+			"id": "bannertop_text_color",
+			"label": "Color",
+			"default": "#1f2021"
+		},
+		{
+			"type": "header",
+			"content": "Countdown"
+		},
+		{
+			"type": "text",
+			"id": "Bannertop_timeend",
+			"label": "Time End",
+			"placeholder": "YYYY\/MM\/DD"
+		},
+		{
+			"type": "paragraph",
+			"content": "Format: 'Year\/Month\/Day'"
+		},
+		{
+			"type": "paragraph",
+			"content": "Example: '2028\/12\/30'"
+		},
+		{
+			"type": "color",
+			"id": "bannertop_countdown_color",
+			"label": "Color",
+			"default": "#1f2021"
+		}
+  	]
+}
+{% endschema %}

@@ -1,0 +1,39 @@
+{% comment %} Footer JS {% endcomment %}
+<script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer="defer"></script>
+<script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'bootstrap.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'enquire.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'slick.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'handlebars.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'jquery.countdown.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'magnific-popup.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'lazysizes.min.js' | asset_url }}" async="async"></script>
+<script src="{{ 'vela.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'quickadd.js' | asset_url }}" defer="defer"></script>
+
+{%- if template.name == 'product' -%}
+  <script src="{{ 'vela-product.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{%- if settings.cart_shipping_enable -%}
+  <script src="{{ 'estimate-shipping.min.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+{%- if settings.product_reviews_enable -%}
+  <script src="{{ 'vela-review.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{%- if settings.product_wishlist -%}
+  <script src="{{ 'wishlist.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{%- if settings.predictive_search_enabled -%}
+  <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{%- if settings.quickview_enable -%}
+  <script src="{{ 'quickview.js' | asset_url }}" defer="defer"></script>
+{%- endif-%}
+
+{%- if request.design_mode -%}
+  <script src="{{ 'design-mode.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}

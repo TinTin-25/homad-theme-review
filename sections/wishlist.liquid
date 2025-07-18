@@ -1,0 +1,81 @@
+{%- include 'section_style' -%}
+<div class="js-wishlist-page wishlist-page vela-section overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-fluid{% endif %}">
+        <div class="vela-section__inner">
+            {%- if section.settings.heading != blank -%}
+                <div class="heading-group text-center mb-4 mb-md-5 text-center">
+                    <h2 class="heading mb-0">
+                        <span>{{ section.settings.heading }}</span>
+                    </h2>
+                    {%- if section.settings.sub_heading != blank -%}
+                        <div class="sub-heading pt-1">
+                            {{ section.settings.sub_heading }}
+                        </div>
+                    {%- endif -%}
+                </div>
+            {%- endif -%}
+            <div class="wishlist-page__content position-relative loading" style="min-height: 200px;" data-wishlist-page>
+                {% render 'preloading', preload_class: 'position-absolute' %}
+                <div class="js-wishlist-empty wishlist-empty position-absolute translate-middle start-50 top-50">
+                    <span class="alert alert-info d-block">{{ 'products.product.empty_wishlist' | t }}.<a class="h6 d-inline-block ms-1" href="{{ routes.all_products_collection_url }}" title="{{ 'general.continue_shopping' | t }}">{{ 'general.continue_shopping' | t }}</a></span>
+                </div>
+                <div class="wishlist-grid row gx-3 g-lg-4 gy-4 gy-lg-5 row-cols-2 row-cols-md-3 row-cols-lg-4" data-wishlist-grid></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+    {
+        "name": "Wishlist",
+        "tag": "section",
+        "settings": [
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_settings.content"
+            },
+            {
+                "type": "html",
+                "id": "heading",
+                "label": "t:sections.global.settings.heading_section.label"
+            },
+            {
+                "type": "text",
+                "id": "sub_heading",
+                "label": "t:sections.global.settings.subheading_section.label"
+            }
+        ]
+    }
+{% endschema %}
+
+
+
+

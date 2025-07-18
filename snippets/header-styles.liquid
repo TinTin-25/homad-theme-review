@@ -1,0 +1,40 @@
+{%- if settings.type_special_type == "upload_fonts" or settings.type_header_font_select == 'custom_header_fonts' or settings.type_body_font_select == 'custom_body_fonts' -%} 
+    {{- 'customfont.css' | asset_url | stylesheet_tag -}}
+{%- endif -%}
+{%- if settings.font_icon -%}
+    {{- 'font-awesome.min.css' | asset_url | stylesheet_tag -}}
+{%- endif -%}
+{{- 'bootstrap-grid.css' | asset_url | stylesheet_tag -}}
+{{- 'bootstrap.css' | asset_url | stylesheet_tag -}}
+{{- 'theme.css' | asset_url | stylesheet_tag -}}
+{{- 'topbar.css' | asset_url | stylesheet_tag -}}	
+{{- 'header.css' | asset_url | stylesheet_tag -}}	
+{{- 'footer.css' | asset_url | stylesheet_tag -}}	
+{{- 'vendor.min.css' | asset_url | stylesheet_tag -}}
+{%- if settings.predictive_search_enabled -%}
+    <link rel="stylesheet" href="{{ 'component-predictive-search.css' | asset_url }}" onload="this.media='all'">
+{%- endif -%}
+{%- if settings.cart_type == "drawer" -%}
+  <link rel="stylesheet" href="{{ 'component-cart-drawer.css' | asset_url }}" onload="this.media='all'">
+{%- elsif settings.cart_type == "modal" -%}
+  <link rel="stylesheet" href="{{ 'component-cart-modal.css' | asset_url }}" onload="this.media='all'">
+{%- endif -%}
+{%- if request.page_type == 'policy' -%}
+    {{- 'template-policy.css' | asset_url | stylesheet_tag -}}
+{%- endif -%}
+{%- if settings.product_reviews_enable -%}
+	{{ 'product-reviews.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
+{% unless settings.saleCode_newsletter == 'none' %}
+	{{ 'newsletter-popup.css' | asset_url | stylesheet_tag }}
+{%- endunless -%}
+{%- if settings.quickview_enable -%}
+  <link rel="stylesheet" href="{{ 'quickview.css' | asset_url }}" onload="this.media='all'">
+{%- endif -%}
+<link rel="stylesheet" href="{{ 'quickadd.css' | asset_url }}" onload="this.media='all'">
+{%- if settings.saleNotifi_enable and settings.collection_notification != blank -%}
+    {{ 'sale-notification.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
+{%- if settings.outofstock_enable -%}
+    {{ 'back-in-stock-notification.css' | asset_url | stylesheet_tag }}
+{%- endif -%}

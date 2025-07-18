@@ -1,0 +1,85 @@
+#shopify-section-announcement-bar {
+  position: relative; }
+
+.announcement-bar {
+  color: var(--tb-cl);
+  font-size: var(--tb-fs);
+  letter-spacing: .8px;
+  font-weight: 500; }
+  @media (max-width: 767.98px) {
+    .announcement-bar {
+      font-size: var(--tb-fs-m); } }
+  .announcement-bar a {
+    color: var(--tb-link-cl); }
+  .announcement-bar .disclosure__button {
+    color: var(--tb-cl) !important;
+    font-size: var(--tb-fs);
+    white-space: nowrap;
+    margin-left: 12px; }
+    .announcement-bar .disclosure__button > span {
+      font-weight: 500 !important;
+      text-transform: inherit !important; }
+    .announcement-bar .disclosure__button svg {
+      transform: rotate(180deg); }
+    @media (max-width: 767.98px) {
+      .announcement-bar .disclosure__button {
+        font-size: var(--tb-fs-m); } }
+    .announcement-bar .disclosure__button[aria-expanded=true] svg {
+      transform: rotate(0deg); }
+    .announcement-bar .disclosure__button:hover {
+      color: var(--tb-link-cl) !important; }
+  .announcement-bar .disclosure label {
+    display: none; }
+
+.announcement-bar__center p {
+  margin-bottom: 0; }
+
+.announcement-bar__center .slick-carousel:not(.slick-initialized) {
+  display: block; }
+  .announcement-bar__center .slick-carousel:not(.slick-initialized) .announcement-bar__center-item {
+    display: none; }
+    .announcement-bar__center .slick-carousel:not(.slick-initialized) .announcement-bar__center-item:first-child {
+      display: block; }
+
+.announcement-bar__center .slick-carousel .slick-arrow {
+  visibility: visible;
+  opacity: 1;
+  width: 24px;
+  height: 24px;
+  margin-top: -12px;
+  background-color: transparent !important; }
+  .announcement-bar__center .slick-carousel .slick-arrow::before {
+    background-color: var(--secondary); }
+
+.announcement-bar__center .slick-carousel .slick-prev {
+  left: -10px !important; }
+
+.announcement-bar__center .slick-carousel .slick-next {
+  right: -10px !important; }
+
+.announcement-bar__quicklink li {
+  display: block;
+  position: relative;
+  line-height: 14px; }
+  .announcement-bar__quicklink li:not(:last-child) {
+    margin-right: 10px;
+    padding-right: 10px; }
+
+.announcement-bar__quicklink a {
+  display: block;
+  position: relative;
+  color: var(--tb-cl); }
+  .announcement-bar__quicklink a:hover {
+    color: var(--tb-link-cl); }
+
+.announcement-bar__social .social-icons-item {
+  position: relative; }
+  .announcement-bar__social .social-icons-item:not(:last-child) {
+    margin-right: 15px; }
+
+.announcement-bar__social .social-icons--link svg {
+  width: 16px;
+  height: 16px; }
+
+.announcement-bar__social .social-icons--link .text {
+  display: none; }

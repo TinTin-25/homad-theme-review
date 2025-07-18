@@ -1,0 +1,122 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+{%- include 'section_style' -%}
+<div class="customer register vela-section overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+	<div class="container{% if section.settings.full_with %}-fluid{% endif %}">
+		<div class="customer__inner">
+			<div class="d-none page-header page-account__header text-center">
+				<h1 class="main-page-title page-title m-0">
+					{{ 'customer.register.title' | t }}
+				</h1>
+			</div>
+			{%- form 'create_customer', novalidate: 'novalidate' -%}
+				{%- if form.errors -%}
+					<div class="form__message form__message--error mb-3">
+						<h2 class="form-message__title" tabindex="-1" autofocus>
+							{{ 'templates.contact.form.error_heading' | t }}
+						</h2>
+						<ul> 
+							{%- for field in form.errors -%}
+							<li>
+								{%- if field == 'form' -%}
+								{{ form.errors.messages[field] }}
+								{%- else -%}
+								<a href="#RegisterForm-{{ field }}">
+									{{ form.errors.translated_fields[field] | capitalize }}
+									{{ form.errors.messages[field] }}
+								</a>
+								{%- endif -%}
+							</li>
+							{%- endfor -%}
+						</ul>
+					</div>
+				{%- endif -%}
+				<div class="mb-2 mb-lg-3 mt-1 position-relative"> 
+					<input class="form-control hidden-label" type="text" name="customer[first_name]" id="RegisterForm-FirstName" required {% if form.first_name %}value="{{ form.first_name }}"{% endif %} autocomplete="given-name" placeholder="{{ 'customer.register.first_name' | t }}">
+					<label class="form-label" for="RegisterForm-FirstName">
+						{{ 'customer.register.first_name' | t }}
+					</label>    
+				</div>
+				<div class="mb-2 mb-lg-3 position-relative">
+					<input class="form-control hidden-label" type="text" name="customer[last_name]" id="RegisterForm-LastName" required {% if form.last_name %}value="{{ form.last_name }}"{% endif %} autocomplete="family-name" placeholder="{{ 'customer.register.last_name' | t }}">
+					<label class="form-label" for="RegisterForm-LastName">
+						{{ 'customer.register.last_name' | t }}
+					</label>
+				</div>
+				<div class="mb-2 mb-lg-3 position-relative">   
+					<input class="form-control hidden-label" type="email" name="customer[email]" id="RegisterForm-email" {% if form.email %} value="{{ form.email }}"{% endif %} spellcheck="false" autocapitalize="off" autocomplete="email" aria-required="true" required {% if form.errors contains 'email' %} aria-invalid="true" aria-describedby="RegisterForm-email-error" {% endif %} placeholder="{{ 'customer.register.email' | t }}">
+					<label class="form-label" for="RegisterForm-email">
+						{{ 'customer.register.email' | t }}
+					</label>   
+				</div>
+				<div class="mb-2 mb-lg-3 position-relative">  
+					<input class="form-control hidden-label" type="password" name="customer[password]" id="RegisterForm-password" aria-required="true" required {% if form.errors contains 'password' %} aria-invalid="true" aria-describedby="RegisterForm-password-error" {% endif %} placeholder="{{ 'customer.register.password' | t }}">
+					<label class="form-label" for="RegisterForm-password">
+						{{ 'customer.register.password' | t }}
+					</label> 
+					<div class="showPass position-absolute top-0 end-0 mt-2 me-3">
+						<span class="eye d-none"> {% render 'icons', icon: 'eye-bold', attr: 'width="18" height="18"' %}</span>
+						<span class="eye-blind"> {% render 'icons', icon: 'eye-blind', attr: 'width="18" height="18"' %}</span>
+					</div>  
+				</div>
+				<button class="btn btn-default w-100">
+					<span>{{ 'customer.register.submit' | t }}</span>
+				</button>
+				<div class="text-center pt-5 mt-lg-5">
+					<a class="d-inline-block text-uppercase btn-link-outline fs-13 fw-semibold" href="{{ routes.account_login_url }}">
+						{{ 'customer.register.back_to_login' | t }}
+					</a>
+				</div>
+			{%- endform -%}
+		</div>
+	</div>
+</div>
+{% schema %}
+    {
+        "name": "Register",
+        "tag": "section",
+        "class": "velaFramework",
+        "settings": [
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            }
+        ]
+	}
+{% endschema %}

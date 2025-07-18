@@ -1,0 +1,230 @@
+{{- 'collapse-banner.css' | asset_url | stylesheet_tag -}}
+{%- include 'section_style' -%}
+<div class="vela-section collapse-banner overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-fluid{% endif %}">
+        <div class="vela-section__inner overflow-hidden {{ section.settings.border_radius }}">
+            <div class="row g-0">
+                <div class="col-12 col-lg-6">
+                    <div class="collapse-banner__image">
+                        {% if section.settings.banner != blank %}
+                            {% render 'img-global' with image: section.settings.banner %}
+                        {% else %}
+                            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div  class="col-12 col-lg-6 collapse-banner__content d-flex align-items-center">
+                    <div class="collapse-banner__collapse w-100">
+                        {%- if section.settings.heading != blank -%}
+                            <div class="heading-group mb-3 mb-md-4 pb-1 {{ section.settings.text_align }}">
+                                <h2 class="heading mb-0">
+                                    <span>{{ section.settings.heading }}</span>
+                                </h2>
+                                {%- if section.settings.sub_heading != blank -%}
+                                    <div class="sub-heading pt-1">
+                                        {{ section.settings.sub_heading }}
+                                    </div>
+                                {%- endif -%}
+                            </div>
+                        {%- endif -%}
+                        <div id="collapse-banner{{ section.id }}">
+                            {% for block in section.blocks %}
+                                <div class="collapse-banner__item {% unless forloop.last %}mb-2{% endunless %}">
+                                    <a class="collapse-banner__heading d-block position-relative {% unless block.settings.item_active %}collapsed{% endunless %}" data-bs-toggle="collapse" href="#collapseItem{{ forloop.index }}{{ section.id }}" role="button" aria-expanded="false" aria-controls="collapseItem{{ forloop.index }}">
+                                        <span class="number">{{ forloop.index }}.</span> {{ block.settings.title }}
+                                        {%- if section.settings.collapse_style == "style1" -%}
+                                            {% render 'icons', icon: 'angle-down', attr: 'width="14" height="7"' class: 'position-absolute end-0 top-50' %}
+                                        {%- else -%}
+                                            {% render 'icons', icon: 'plus', attr: 'width="12" height="12"' class: 'icon-plus position-absolute end-0 top-50 translate-middle-y' %}
+                                            {% render 'icons', icon: 'minus', attr: 'width="12" height="12"' class: 'icon-minus position-absolute end-0 top-50 translate-middle-y' %}
+                                        {%-  endif -%}
+                                    </a>
+                                    <div class="collapse {% if block.settings.item_active %}collapse show{% endif %}" id="collapseItem{{ forloop.index }}{{ section.id }}" data-bs-parent="#collapse-banner{{ section.id }}">
+                                        <div class="collapse-banner__wrapper">
+                                            {{ block.settings.content }}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div> 
+            </div>           
+		</div>
+	</div>
+</div>
+{% schema %}
+  	{
+        "name": "Collapse - banner",
+        "tag": "section",
+        "class": "velaFramework",
+        "disabled_on": {
+            "groups": ["header", "footer"]
+        },
+        "settings": [
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            },
+            {
+                "type": "select",
+                "id": "border_radius",
+                "label": "Border radius",
+                "default": "rounded-0",
+                "options": [
+                    {
+                        "value": "rounded-0",
+                        "label": "Rounded 0"
+                    },
+                    {
+                        "value": "rounded-1",
+                        "label": "Rounded 1"
+                    },
+                    {
+                        "value": "rounded-2",
+                        "label": "Rounded 2"
+                    },
+                    {
+                        "value": "rounded-3",
+                        "label": "Rounded 3"
+                    },
+                    {
+                        "value": "rounded-pill",
+                        "label": "Rounded pill"
+                    },
+                    {
+                        "value": "rounded-circle",
+                        "label": "Rounded circle"
+                    }
+                ]
+            },
+            {
+                "type": "header",
+                "content": "General Settings"
+            },
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_settings.content"
+            },
+            {
+                "type": "html",
+                "id": "heading",
+                "label": "t:sections.global.settings.heading_section.label",
+                "default": "Heading"
+            },
+            {
+                "type": "text",
+                "id": "sub_heading",
+                "label": "t:sections.global.settings.subheading_section.label",
+                "default": "sub heading"
+            },
+            {
+                "type": "header",
+                "content": "Banner"
+            },
+            {
+                "type": "image_picker",
+                "id": "banner",
+                "label": "Banner"
+            }
+		],
+        "blocks": [
+            {
+                "type": "collapse",
+                "name": "Collapse Item",
+                "settings": [
+                    {
+                        "type": "checkbox",
+                        "id": "item_active",
+                        "label": "is active?",
+                        "default": false
+                    },
+                    {
+                        "type": "text",
+                        "id": "title",
+                        "label": "Title",
+                        "default": "Heading"
+                    },
+                    {
+                        "type": "html",
+                        "id": "content",
+                        "label": "Item content",
+                        "default": "Lorem Khaled Ipsum is a major key to success. They don’t want us to win. Always remember in the jungle there’s a lot of they in there, after you overcome they, you will make it to paradise"
+                    }
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name": "Collapse - banner",
+                "blocks": [
+                    {
+                        "type":"collapse",
+                        "settings":{
+                            "title": "What does Shopify do?",
+                            "content": "Lorem Khaled Ipsum is a major key to success. They don’t want us to win. Always remember in the jungle there’s a lot of they in there, after you overcome they, you will make it to paradise. Major key, don’t fall for the trap, stay focused. It’s the ones closest to you that want to see you fail. Major key, don’t fall for the trap, stay focused"
+                        }
+                    },
+                    {
+                        "type":"collapse",
+                        "settings":{
+                            "title": "What does Shopify do?",
+                            "content": "Lorem Khaled Ipsum is a major key to success. They don’t want us to win. Always remember in the jungle there’s a lot of they in there, after you overcome they, you will make it to paradise. Major key, don’t fall for the trap, stay focused. It’s the ones closest to you that want to see you fail. Major key, don’t fall for the trap, stay focused"
+                        }
+                    },
+                    {
+                        "type":"collapse",
+                        "settings":{
+                            "title": "What does Shopify do?",
+                            "content": "Lorem Khaled Ipsum is a major key to success. They don’t want us to win. Always remember in the jungle there’s a lot of they in there, after you overcome they, you will make it to paradise. Major key, don’t fall for the trap, stay focused. It’s the ones closest to you that want to see you fail. Major key, don’t fall for the trap, stay focused"
+                        }
+                    },
+                    {
+                        "type":"collapse",
+                        "settings":{
+                            "title": "What does Shopify do?",
+                            "content": "Lorem Khaled Ipsum is a major key to success. They don’t want us to win. Always remember in the jungle there’s a lot of they in there, after you overcome they, you will make it to paradise. Major key, don’t fall for the trap, stay focused. It’s the ones closest to you that want to see you fail. Major key, don’t fall for the trap, stay focused"
+                        }
+                    }
+                ]
+            }
+        ]
+  	}
+{% endschema %}

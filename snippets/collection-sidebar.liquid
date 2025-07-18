@@ -1,0 +1,279 @@
+<div class="js-sidebar-toggle collection-sidebar__overlay {% unless section.settings.sidebar_template == 'sidebarnone' %}d-block d-lg-none{% endunless %}"></div>
+<div class="collection-sidebar__wapper{% if section.settings.sticky-top %} sticky-top{% endif %}">
+        <div class="collection-sidebar__heading position-relative block-sidebar__title d-flex align-items-center justify-content-between {% unless section.settings.sidebar_template == 'sidebarnone' %} d-flex d-lg-none{% endunless %}">
+            <span >{{ 'collections.filter.filter' | t }}</span>
+            <button class="js-sidebar-toggle collection-sidebar__close vela__btn-close position-relative {% unless section.settings.sidebar_template == 'sidebarnone' %}d-block d-lg-none{% endunless %}" type="button">
+                {% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+                {% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+            </button>
+        </div>
+        {%- for block in section.blocks -%}
+            {%- case block.type -%}
+                {%- when 'categories' -%}
+                    <div  class="block-sidebar catalog border-bottom pt-0">
+                        {%- if block.settings.categories_title != blank -%}
+                            <h6 class="block-sidebar__title">
+                                {{ block.settings.categories_title }}
+                                <a class="btn-arrow d-flex align-items-center justify-content-end position-absolute top-0 end-0" data-bs-toggle="collapse" href="#sidebar-catalog" role="button" aria-expanded="true" aria-controls="collapseExample">
+                                    {%- render 'icons', icon: 'angle-down', attr: 'width="10" height="6"' -%}
+                                </a>
+                            </h6>
+                        {%- endif -%}
+                        <div id="sidebar-catalog" class="block-sidebar__content position-relative collapse show">
+                            <div class="block-sidebar__inner product-categories__list">
+                                {%- if linklists[collection.handle].levels != empty -%}
+                                    {%- assign categoriesHandle = collection.handle -%}
+                                {%- else -%}
+                                    {%- assign categoriesHandle = block.settings.categories_handle -%}
+                                {%- endif -%}
+                                {% if linklists[collection.handle].levels != empty %}
+                                    <ul class="sidebarListCategories sub-categories m-0 list-unstyled">
+                                        <li class="sidebarBlogCateItem">
+                                            <a class="active" href="{{ routes.all_products_collection_url }}?{{ layoutview }}">
+                                                {% render 'icons', icon: 'square', class: 'icon square', attr: 'width="18" height="18"' %}
+                                                {% render 'icons', icon: 'square-checked', class: 'icon square-checked', attr: 'width="18" height="18"' %}
+                                                <span class="line-clamp-1">{{- 'sections.collection_template.all_categories' | t -}}</span>
+                                                {%- if block.settings.categories_count -%}
+                                                    <span class="cat-count float-end">{{ collection.all_products_count }}</span>
+                                                {%- endif -%}
+                                            </a>
+                                        </li>
+                                        <li class="sidebarBlogCateItem">
+                                            <a class="active" href="#">
+                                                {% render 'icons', icon: 'square', class: 'icon square', attr: 'width="18" height="18"' %}
+                                                {% render 'icons', icon: 'square-checked', class: 'icon square-checked', attr: 'width="18" height="18"' %}
+                                                <span class="line-clamp-1">{{- linklists[categoriesHandle].title -}}</span>
+                                                {%- if block.settings.categories_count -%}
+                                                    <span class="cat-count float-end">{{ collections[categoriesHandle].products_count }}</span>
+                                                {% endif %}
+                                            </a>
+                                            <div class="sub-categories__item">
+                                {%-  endif -%}
+                                    {%- if linklists[categoriesHandle].levels != empty -%}
+                                        <ul class="sidebarListCategories m-0 list-unstyled">
+                                            {% for linkItem in linklists[categoriesHandle].links %}
+                                                {%- assign hasDropdown = false -%}
+                                                {%- assign subItem = forloop.index -%}
+                                                {%- if linklists[linkItem.handle] != empty -%}
+                                                    {%- assign hasDropdown = true -%}
+                                                {%- endif -%}
+                                                <li class="sidebarBlogCateItem">
+                                                    <a class="{% if linkItem.active %}active{% endif %}{% if hasDropdown %} pe-4{% endif %}" href="{{ linkItem.url }}?{{ layoutview }}">
+                                                        {% render 'icons', icon: 'square', class: 'icon square', attr: 'width="18" height="18"' %}
+                                                        {% render 'icons', icon: 'square-checked', class: 'icon square-checked', attr: 'width="18" height="18"' %}
+                                                        <span class="line-clamp-1">{{- linkItem.title -}}</span>
+                                                        {% if block.settings.categories_count %}
+                                                            {%- assign cat-handle = linkItem.url | split: "/collections/" | last -%}
+                                                            <span class="cat-count float-end">{% if collections[cat-handle].products_count != empty %}{{ collections[cat-handle].products_count }}{% else %}0{% endif %}</span>
+                                                        {% endif %}
+                                                    </a>
+                                                    {%- if hasDropdown -%}
+                                                        <span class="arrow collapsed" data-bs-toggle="collapse" data-bs-target="#subCategory{{ forloop.index }}" aria-expanded="false"  aria-controls="#subCategory{{ forloop.index }}">
+                                                            {% render 'icons', icon: 'arrow-down', class: 'icon arrow-down' %}
+                                                        </span>
+                                                        <div id="subCategory{{ forloop.index }}" class="collapse">
+                                                            <ul class="sidebarListCategories subListCategories m-0 list-unstyled">
+                                                                {% for linkChildItem in linklists[linkItem.handle].links %}
+                                                                    {%- assign hasDropdown = false -%}
+                                                                    {%- if linklists[linkChildItem.handle] != empty -%}
+                                                                        {%- assign hasDropdown = true -%}
+                                                                    {%- endif -%}
+                                                                    <li class="sidebarBlogCateItem">
+                                                                        <a  class="{% if linkChildItem.active %} active{% endif %}{% if hasDropdown %} pe-4{% endif %}" href="{{ linkChildItem.url }}?{{ layoutview }}">
+                                                                            {% render 'icons', icon: 'square', class: 'icon square', attr: 'width="18" height="18"' %}
+                                                                            {% render 'icons', icon: 'square-checked', class: 'icon square-checked', attr: 'width="18" height="18"' %}
+                                                                            <span class="line-clamp-1">{{- linkChildItem.title -}}</span>
+                                                                            {% if block.settings.categories_count %}
+                                                                                {%- assign cat-handle = linkChildItem.url | split: "/collections/" | last -%}
+                                                                                <span class="cat-count float-end">{% if collections[cat-handle].products_count != empty %}{{ collections[cat-handle].products_count }}{% else %}0{% endif %}</span>
+                                                                            {% endif %}
+                                                                        </a>
+                                                                        {%- if hasDropdown -%}
+                                                                            <span class="arrow collapsed" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#subCategory{{ subItem }}{{ forloop.index }}" aria-controls="#subCategory{{ subItem }}{{ forloop.index }}">
+                                                                                {% render 'icons', icon: 'arrow-down', class: 'icon arrow-down' %}
+                                                                            </span>
+                                                                            <div id="subCategory{{ subItem }}{{ forloop.index }}" class="collapse">
+                                                                                <ul class="sidebarListCategories subListCategories m-0 list-unstyled">
+                                                                                    {% for linkChildItem2 in linklists[linkChildItem.handle].links %}
+                                                                                        <li class="sidebarBlogCateItem">
+                                                                                            <a href="{{ linkChildItem2.url }}?{{ layoutview }}">
+                                                                                                {% render 'icons', icon: 'square', class: 'icon square', attr: 'width="18" height="18"' %}
+                                                                                                {% render 'icons', icon: 'square-checked', class: 'icon square-checked', attr: 'width="18" height="18"' %}
+                                                                                                <span class="line-clamp-1">{{- linkChildItem2.title -}}</span>
+                                                                                                {% if block.settings.categories_count %}
+                                                                                                    {%- assign cat-handle = linkChildItem2.url | split: "/collections/" | last -%}
+                                                                                                    <span class="cat-count float-end">{% if collections[cat-handle].products_count != empty %}{{ collections[cat-handle].products_count }}{% else %}0{% endif %}</span>
+                                                                                                {% endif %}
+                                                                                            </a>
+                                                                                        </li>
+                                                                                    {% endfor %}
+                                                                                </ul>
+                                                                            </div>
+                                                                        {%- endif -%}
+                                                                    </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </div>
+                                                    {%- endif -%}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {%- endif -%}
+                                {% if linklists[collection.handle].levels != empty %}
+                                            </div>
+                                        </li>
+                                    </ul>
+                                {%- endif -%}
+                            </div>
+                        </div>
+                    </div>
+                {%- when 'filter' -%}
+                    <div class="product-filter">
+                        {%- include 'product-filter' -%}
+                    </div>
+                {%- when 'productlist' -%}
+                    {%- assign pro_limit = block.settings.limit | plus: 0 -%}
+                    <div class="block-sidebar product-sidebar border-top">
+                        {%- if block.settings.product_title != blank -%}
+                            <h6 class="block-sidebar__title">
+                                {{ block.settings.product_title }}
+                                <a class="btn-arrow d-flex align-items-center justify-content-end position-absolute top-0 end-0" data-bs-toggle="collapse" href="#products{{ forloop.index }}" role="button" aria-expanded="true" aria-controls="collapseExample">
+                                    {%- render 'icons', icon: 'angle-down', attr: 'width="10" height="6"' -%}
+                                </a>
+                            </h6>
+                        {%- endif -%}
+                        <div id="products{{ forloop.index }}" class="block-sidebar__content  collapse show">
+                            <div class="block-sidebar__inner">
+                                {%- assign collection_sidebar = collections[block.settings.collection_handle] -%}
+                                {%- for product in collection_sidebar.products limit: pro_limit -%}
+                                    {%- assign on_sale = false -%}
+                                    {%- if product.compare_at_price > product.price -%}
+                                        {%- assign on_sale = true -%}
+                                    {%- endif -%}
+                                    <div class="product-sidebar__item d-flex {% unless forloop.first %}pt-3 mt-md-1{% endunless %}">
+                                        <div class="product-sidebar__card clearfix">
+                                            <div class="product-sidebar__card-image float-start">
+                                                <a class="overflow-hidden d-block" href="{{ product.url }}">
+                                                    {% render 'img-global', image: product.featured_media, max_width: 100, crop: 'center', image_style: true %}
+                                                </a>
+                                            </div>
+                                            <div class="product-sidebar__card-content float-start">
+                                                <div class="product-sidebar__name line-clamp-2 mb-1">
+                                                    <a class="product-sidebar__title d-block" href="{{ product.url }}" title="{{ product.title | strip_html }}"><span>{{ product.title }}</span></a>
+                                                </div>
+                                                {%- if settings.product_reviews_enable and settings.product_card_review -%}
+                                                    <div class="product-card__review product-sidebar__review  pt-1">
+                                                        {% include 'product-review-card' %}
+                                                    </div>
+                                                {%- endif -%}
+                                                <div class="product-sidebar__price d-flex align-items-center pt-1">
+                                                    {%- if on_sale -%}
+                                                        <div class="product-price product-price--regular me-1">{{ product.compare_at_price | money }}</div>
+                                                    {%- endif -%}
+                                                    <div class="product-price{% if on_sale %}  product-price__has-sale{% endif %}">{{ product.price | money }}</div>
+                                                    
+                                                    {%- if product.price_varies == false and variant.unit_price_measurement -%}
+                                                        {%- capture unit_price_separator -%}
+                                                            <span>/</span><span class="d-none">&nbsp;{{ 'general.accessibility.unit_price_separator' | t }}&nbsp;</span>
+                                                        {%- endcapture -%}
+                                                        {%- capture unit_price_base_unit -%}
+                                                            <span>
+                                                            {%- if variant.unit_price_measurement.reference_value != 1 -%}
+                                                                {{- variant.unit_price_measurement.reference_value -}}
+                                                            {%- endif -%}
+                                                            {{ variant.unit_price_measurement.reference_unit }}
+                                                            </span>
+                                                        {%- endcapture -%}
+                                                        <span class="product-unit-price">
+                                                            <span class="d-none">{{ 'products.general.unit_price' | t }}</span>
+                                                            <span>{{ variant.unit_price | money }}</span>{{- unit_price_separator -}}{{- unit_price_base_unit -}}
+                                                        </span>
+                                                    {%- endif -%}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {%- endfor -%}
+                            </div>
+                        </div>
+                    </div> 
+                {%- when 'tags' -%}
+                    {%- assign limit = block.settings.tags_limit -%}
+                    <div class="block-sidebar product-tags border-top">
+                        {%- if block.settings.tags_title != blank -%}
+                            <h6 class="block-sidebar__title product-tags__title">
+                                {{ block.settings.tags_title}}
+                                <a class="btn-arrow d-flex align-items-center justify-content-end position-absolute top-0 end-0" data-bs-toggle="collapse" href="#tags{{ forloop.index }}" role="button" aria-expanded="true" aria-controls="collapseExample">
+                                    {%- render 'icons', icon: 'angle-down', attr: 'width="10" height="6"' -%}
+                                </a>
+                            </h6>
+                        {%- endif -%}
+                        <div id="tags{{ forloop.index }}" class="block-sidebar__content product-tags__content position-relative  collapse show">
+                            <ul class="block-sidebar__inner blog-tags__list mb-0">
+                                {% for tag in collection.all_tags limit: limit %}
+                                      <li class="blog-tags__item{% if current_tags contains  tag %} active{% endif %}">{{ tag | link_to_tag: tag }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {%- when 'html' -%}
+                    <div class="block-sidebar block-html border-top">
+                        {%- if block.settings.html_title != blank -%}
+                            <h6 class="block-sidebar__title block-html__title">
+                                {{ block.settings.html_title }}
+                                <a class="btn-arrow d-flex align-items-center justify-content-end position-absolute top-0 end-0" data-bs-toggle="collapse" href="#html{{ forloop.index }}" role="button" aria-expanded="true" aria-controls="collapseExample">
+                                    {%- render 'icons', icon: 'angle-down', attr: 'width="10" height="6"' -%}
+                                </a>
+                            </h6>
+                        {%- endif -%}
+                        <div id="html{{ forloop.index }}" class="block-sidebar__content block-html__content collapse show">
+                            <div class="block-sidebar__inner">
+                                <div class="rte">
+                                    {{ block.settings.html_content }}    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {%- when 'gallery' -%}
+                        <div class="block-sidebar block-gallery border-top">
+                            {%- if block.settings.gallery_title != blank -%}
+                                <h6 class="block-sidebar__title block-gallery__title">
+                                    {{ block.settings.gallery_title }}
+                                    <a class="btn-arrow d-flex align-items-center justify-content-end position-absolute top-0 end-0" data-bs-toggle="collapse" href="#gallery{{ forloop.index }}" role="button" aria-expanded="true" aria-controls="collapseExample">
+                                        {%- render 'icons', icon: 'angle-down', attr: 'width="10" height="6"' -%}
+                                    </a>
+                                </h6>
+                            {%- endif -%}
+                            <div id="gallery{{ forloop.index }}" class="block-sidebar__content collapse show">
+                                <div class="block-sidebar__inner gallery-image">
+                                    <div class="row g-1 row-cols-3" style="--bs-gutter-x: 4px;--bs-gutter-y: 4px;">
+                                        {% for i in (1..9) %}
+                                            {%- assign img = "gallery_image" | append: forloop.index -%}
+                                            {% assign url = 'url' | append: forloop.index %}
+                                            {% if block.settings[img] != blank %}
+                                                <div class="col">
+                                                    <a class="overflow-hidden d-block rounded-1{% unless block.settings.popup %} img-link{% endunless %}" target="_blank" href="{% if block.settings.popup %}{{ block.settings[img] | img_url: 'master' }}{% else%}{{ block.settings[url] }}{% endif %}">
+                                                        {% render 'img-global', image: block.settings[img] %}
+                                                    </a>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {%- when 'banner' -%}
+                        {%- assign url = block.settings.banner_url -%}
+                        {%- assign image = block.settings.banner_img -%}
+                        <div class="block-sidebar product-banner">
+                            <a href="{{ url }}" title="{{ image.alt | default: shop.name }}">
+                                {%- if image -%}
+                                    {% render 'img-global', image: image %}
+                                {%- else -%}
+                                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                {%- endif -%}
+                            </a>
+                        </div> 
+            {%- endcase -%}
+        {%- endfor -%}
+    </div>

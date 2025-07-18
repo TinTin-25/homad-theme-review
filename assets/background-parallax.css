@@ -1,0 +1,20 @@
+@media (min-width: 768px) {
+  .section-background-parallax {
+    margin: var(--et-mg); } }
+
+@media (max-width: 767.98px) {
+  .section-background-parallax {
+    margin: var(--et-mg-mb); } }
+
+.background-parallax {
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat; }
+  .background-parallax.img-bg-parallax {
+    background-image: none; }
+
+.background-parallax__content {
+  padding: var(--ct-pd, 0); }
+  @media (max-width: 767.98px) {
+    .background-parallax__content {
+      padding: var(--ct-pd-m, 0); } }

@@ -1,0 +1,66 @@
+{%- if product != blank -%}
+    <div class="lookbook-card__item position-absolute" style="top: {{ top }}%; left: {{ left }}%;">
+        <div class="lookbook-card__point position-absolute lookbook-card--{{ alignment }}">
+            <div class="lookbook-card__button position-absolute">
+                <button class="lookbook-card__btn bg-transparent p-0 d-block border-0 position-relative" type="button" data-bs-toggle="modal" data-bs-target="#lookbook-{{ id }}">
+                    <span class="position-relative d-flex justify-content-center align-items-centerposition-relative d-flex justify-content-center align-items-center">
+                        {% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="8" height="8"' %}
+                        {% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="8" height="8"' %}
+                    </span>
+                </button>
+            </div>
+            <div class="lookbook-card__content position-absolute d-none d-lg-block">
+                <div class="lookbook-product overflow-hidden rounded-1">
+                    <a class="lookbook-product__img d-block overflow-hidden rounded-1 mb-2" href="{{ product.url }}" title="{{ product.title | strip_html }}">
+                        {% render 'img-global', image: product.featured_media, crop: 'center', max_width: 360, image_style: true %}
+                    </a>
+                    <div class="lookbook-product__content">
+                        <div class="product-card__name fs-6 line-clamp-2">
+                            <a class="lookbook-product__title" href="{{ product.url }}" title="{{ product.title | strip_html }}">{{ product.title | escape }}</a>
+                        </div>
+                        <div class="lookbook-product__price pt-1 d-flex">
+                            <div class="product-price fs-14 {% if product.compare_at_price > product.price %} product-price__has-sale{% endif %}">{{ product.price | money }}</div>
+                            {% if product.compare_at_price > product.price %}
+                                <div class="product-price product-price--regular fs-14 ms-1">{{ product.compare_at_price | money }}</div>
+                            {%- endif -%}
+                            {%- if shop.taxes_included and settings.product_card_tax -%}
+                                <span class="ms-2">
+                                    {{ 'products.general.include_taxes' | t }}
+                                </span>
+                            {%- endif -%}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+{%- else -%}
+    <div class="lookbook-card__item position-absolute" style="top: {{ top }}%; left: {{ left }}%;">
+        <div class="lookbook-card__point position-absolute lookbook-card--{{ alignment }}">
+            <div class="lookbook-card__button position-absolute">
+                <button class="lookbook-card__btn bg-transparent p-0 d-block border-0 position-relative" type="button" data-bs-toggle="modal" data-bs-target="#lookbook-{{ id }}">
+                    <span class="position-relative d-flex justify-content-center align-items-centerposition-relative d-flex justify-content-center align-items-center">
+                        {% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="8" height="8"' %}
+                        {% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="8" height="8"' %}
+                    </span>
+                </button>
+            </div>
+            <div class="lookbook-card__content position-absolute d-none d-lg-block">
+                <div class="lookbook-product overflow-hidden rounded-1">
+                    <a class="lookbook-product__img d-block overflow-hidden rounded-1 mb-2" href="" style="--plh-svg-h: 225px;">
+                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                    </a>
+                    <div class="lookbook-product__content">
+                        <div class="product-card__name fs-6 line-clamp-2">
+                            <a class="lookbook-product__title" href="">Denim mini skirt</a>
+                        </div>
+                        <div class="lookbook-product__price pt-1 d-flex">
+                            <div class="product-price">{{ '6990' | money }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{%- endif -%}

@@ -1,0 +1,61 @@
+{%- assign main_menu = section.settings.menu -%}
+<div id="header-menu" class="main-menu d-none d-lg-flex">
+	<nav class="main-menu__wrap scroll-style w-100">
+		<ul class="main-menu__nav list-unstyled m-0 position-relative">
+            {%- assign timeDelay = 0.3-%}
+		{%- for menu_link in linklists[main_menu].links -%}
+			{%- assign is_mega = false -%}
+			{%- for block in section.blocks -%}
+			{%- assign menu_item = menu_link.title | strip_html | handle -%}
+			{%- assign mega_menu_item = block.settings.title | strip_html | handle -%}
+			{%- if mega_menu_item == menu_item -%}
+				{%- assign is_mega = true -%}
+                    {%- assign timeDelay = timeDelay | plus: 0.12 -%}
+                    <li class="main-menu__nav-item menu-dropdown" style="--animate-duration: {{ timeDelay }}s">
+                        <span class="main-menu__link">
+                            {% render 'icons', icon: 'arrow-right-long', attr: 'width="21" height="12"' %}
+                            <span>{{ menu_link.title }}</span>
+                        </span>
+                        {% include 'header-megamenu' %}
+                    </li>    
+				{%- break -%}
+			{%- endif -%}
+			{%- endfor -%}
+			{%- if is_mega == false -%}
+				{%- if menu_link.links != blank -%}
+                    {%- assign timeDelay = timeDelay | plus: 0.12 -%}
+					{% comment %}====== MENU DROPDOWN LEVEL I ======{% endcomment %}
+					<li class="main-menu__nav-item menu-dropdown" style="--animate-duration: {{ timeDelay }}s">
+						<span class="main-menu__link">
+                            {% render 'icons', icon: 'arrow-right-long', attr: 'width="21" height="12"' %}
+                            <span>{{ menu_link.title }}</span>
+                        </span>
+						<ul class="menu-dropdown__content menu-dropdown__content--megamenu list-unstyled">
+                            <li class="megamenu-links__item megamenu-heading mb-2 pb-1">
+                                <span class="main-menu__link">
+                                    <span>{{ menu_link.title }}</span>
+                                </span>
+                            </li>
+							{%- for menu_link_child in menu_link.links -%}
+                                <li class="{% if menu_link_child.active %}active{% endif %}">
+                                    <a  class="main-menu__link" href="{{ menu_link_child.url }}" title="{{ menu_link_child.title | strip_html }}">
+                                        <span>{{ menu_link_child.title }}</span>
+                                    </a>
+                                </li>
+							{%- endfor -%}
+						</ul>
+					</li>
+				{%- else -%}
+                    {%- assign timeDelay = timeDelay | plus: 0.12 -%}
+					<li class="main-menu__nav-item" style="--animate-duration: {{ timeDelay }}s">
+						<a  class="main-menu__link" href="{{ menu_link.url }}" title="{{ menu_link.title | strip_html }}">
+                            {% render 'icons', icon: 'arrow-right-long', attr: 'width="21" height="12"' %}
+                            <span>{{ menu_link.title }}</span>
+                        </a>
+					</li>
+				{%- endif -%}
+			{%- endif -%}
+      	{%- endfor -%}
+    	</ul>
+  	</nav>
+</div>

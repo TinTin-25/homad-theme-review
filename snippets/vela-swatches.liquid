@@ -1,0 +1,20 @@
+<style type="text/css" id="hvductest">
+  {%- for color in shop.metaobjects['shopify--color-pattern'].values -%}
+    .vela-swatch--{{ color.label | handleize }} {
+      {%- if color.color != blank -%}background-color: {{ color.color | downcase }} !important;{%- endif -%}
+      {%- if color.image != blank -%}background-image: url({{ color.image | image_url: width: 100 }}) !important;{%- endif -%}
+    }
+
+    {%- unless color.image -%}
+      .vela-swatch--{{ color.label | handleize }}[data-variantimage] {
+        width: auto !important;
+        height: auto !important;
+        border-radius: 50% !important;
+      }
+
+      .vela-swatch--{{ color.label | handleize }}[data-variantimage]::after {
+        border-radius: 50% !important;
+      }
+    {%- endunless -%}
+  {%- endfor -%}
+</style>

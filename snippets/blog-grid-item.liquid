@@ -1,0 +1,38 @@
+<article class="article blog__grid">
+    <div class="article__image mb-3">
+        <a class="article__featured-image-link d-block overflow-hidden rounded-2" href="{{ article.url }}">
+            {% render 'img-global', image: article.image, image_ratio: section.settings.image_ratio, crop: image_crop %}
+        </a>
+    </div>
+    <div class="article__content">
+        {%- if article.tags.size > 0 and show_tags -%}
+            <div class="article__meta-tags d-flex flex-wrap mb-2">
+                {% for tag in article.tags limit: section.settings.blog_tags_limit %}
+                    <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="tags__item">{{ tag }}</a>{% unless forloop.last %}<span class="lh-1 me-1">,</span>{% endunless %}
+                {% endfor %}
+            </div>
+        {%- endif -%}
+        <h3 class="article__title mb-2 pb-lg-1 line-clamp-2">
+            <a class="line-title" href="{{ article.url }}" title="{{ article.title | strip_html }}"><span>{{ article.title }}</span></a>
+        </h3>
+        {%- if show_excerpt -%}
+            <div class="rte article__excerpt mb-2 pb-lg-1 line-clamp-3">
+                {{ article_content | strip_html | truncate: 146 }}
+            </div>
+        {%- endif -%}
+        <div class="d-flex justify-content-between">
+            <div class="article__meta d-flex flex-wrap align-items-center">
+                {%- if section.settings.blog_date -%}
+                    <div class="article__meta-date d-flex align-items-center"><span class="icon">{% render 'icons', icon: 'calender', attr: 'width="20" height=20' %}</span>{{ article.published_at | time_tag: format: 'date_month_year' }}</div>
+                {%- endif -%}
+                {%- if section.settings.blog_author -%}
+                    {%- capture author -%}{{ article.author }}{%- endcapture -%}
+					<div class="article__meta-author d-flex align-items-center">{{ 'blogs.article.author_html' | t: author: author }}</div>
+                {%- endif -%}	
+            </div>
+            {%- if show_readmore -%}
+                <a class="article__btn link fw-medium" href="{{ article.url }}"><span class="d-inline-block">{{ 'blogs.article.read_more' | t }}</span>{% render 'icons', icon: 'arrow-right-top', class: 'icon-arrow-right-top ms-2 position-relative text-primary', attr: 'width="9" height="9"' %}</a>
+            {%- endif -%}
+        </div>
+    </div>
+</article>

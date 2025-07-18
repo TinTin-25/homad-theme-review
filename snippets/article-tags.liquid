@@ -1,0 +1,10 @@
+{%- if article.tags.size > 0 -%}
+	<div class="article__tags tags d-flex">
+		<span class="tags__title">{{ 'blogs.article.tags_title' | t }}:</span>
+		<div class="d-flex flex-wrap">
+			{% for tag in article.tags limit: 3 %}
+				<a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="tags__item">{{ tag }}</a>
+			{% endfor %}
+		</div>
+	</div>
+{%- endif -%}

@@ -1,0 +1,82 @@
+{%- if section.settings.menu != blank -%}
+    <div class="header-menu-mobile d-flex d-lg-none align-items-center col">
+        <div class="d-flex align-items-center">
+            {%- render 'header-menu-mobile' -%}
+        </div>
+    </div>
+{%- endif -%}
+<div class="header-left col d-flex justify-content-center justify-content-md-start">
+    {%- if request.page_type == 'index' -%}
+        <h1 class="header__heading mb-0">
+        {%- endif -%}
+            {%- assign mw_logo = section.settings.logo_width | append: 'px' -%}
+            <a href="{{ routes.root_url }}" class="header__heading-link d-flex" style="max-width: {{ mw_logo }}">
+                {%- assign logo_size = section.settings.logo_width -%}
+                {%- assign size_rentina = section.settings.logo_width | times: 2 -%}
+                {%- if section.settings.header-white  and section.settings.logo_white != blank -%}
+                    <img class="header__heading-logo img-fluid logo-white"{% unless section.settings.logo_white.width < size_rentina %} srcset="{{ section.settings.logo_white | image_url: width: logo_size }} 1x, {{ section.settings.logo_white | image_url: width: section.settings.logo_white.width }} 2x" {% endunless %}
+                        src="{{ section.settings.logo_white | image_url: width: logo_size }}"
+                        loading="lazy"
+                        width="{{ section.settings.logo_width }}"
+                        alt="{{ section.settings.logo_white.alt | default: shop.name | escape }}"
+                        >
+                {%- endif -%}
+                {%- if section.settings.logo -%}
+                    <img class="header__heading-logo img-fluid{% if section.settings.header-white  and section.settings.logo_white != blank %} has-logo-white{% endif %}"{% unless section.settings.logo.width < size_rentina %} srcset="{{ section.settings.logo | image_url: width: logo_size }} 1x, {{ section.settings.logo | image_url: width: section.settings.logo.width }} 2x" {% endunless %}
+                      src="{{ section.settings.logo | image_url: width: logo_size }}"
+                      loading="lazy"
+                      width="{{ section.settings.logo.width }}"
+                      height="{{ section.settings.logo.height }}"
+                      alt="{{ section.settings.logo.alt | default: shop.name | escape }}"
+                    >
+                {%- else -%}
+                    <span class="h2">{{ shop.name }}</span>
+                {%- endif -%}
+            </a>
+    {%- if request.page_type == 'index' -%}
+        </h1>
+    {%- endif -%}
+</div>
+<div class="header-center col-auto d-none d-lg-flex">
+    {%- if section.settings.menu != blank -%}
+        <div class="header-main-menu">
+            {%- include 'header-menu' -%}
+        </div>
+    {%- endif -%}
+</div>
+<div class="col header-right header__icon d-flex align-items-center justify-content-end">
+    <div class="header__search">
+        <button type="button" class="header__icon--search modal__toggle header__icon d-flex align-items-end p-0 border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#searchTop" aria-label="{{ 'general.search.search' | t }}">
+            {%- render 'icons', icon: 'search', attr: 'width="18" height="18" ' -%}
+        </button>
+    </div>
+    {%- assign pageType = request.page_type | handle -%}
+    {%- if shop.customer_accounts_optional or shop.customer_accounts_enabled -%}
+        <{% if customer or pageType == 'customers-login' %}a href="{{routes.account_url}}" title="{{ 'customer.account.title' | t }}"{% else %}div type="button" data-bs-toggle="offcanvas" data-bs-target="#velaTopLinks"{% endif  %} class="top-link__title header__icon d-none d-lg-flex px-1 mx-3">
+            {%- render 'icons', icon: 'user', attr: 'width="18" height="18" ' -%}
+        </{% if customer or pageType == 'customers-login'  %}{% else %}div{% endif  %}>
+        {%- if pageType != 'customers-login'  -%}
+            {%- render "vela-toplinks" -%}
+        {%- endif -%}
+    {%- endif -%}
+    {%- if settings.product_wishlist -%}
+        <a class="wishlist-count header__icon d-none d-lg-flex position-relative" href="{{root_url}}/pages/wishlist" title="{{ 'products.product.wishlist' | t }}">
+            {%- render 'icons', icon: 'heart', attr: 'width="18" height="18" ' -%}
+	        <span class="count" data-wishlist-count>0</span>
+        </a> 
+    {%- endif -%}
+    <div class="header-cart{% unless template == 'cart' %} cart-hover{% endunless %}">
+        <a class="{% unless template == 'cart' %}js-header-cart{% endunless %} position-relative d-flex" href="{% if settings.cart_type == "modal" or settings.cart_type == "draw" %}javascript:void(0){% else %}{{ routes.cart_url }}{% endif %}" id="cart-icon-bubble">
+          {%- render 'icons', icon: 'bag', attr: 'width="18" height="18" ' -%}
+          <span class="header-cart__span d-none">{{ 'general.cart.cart_title' | t }}</span>
+          <span class="header-cart__count cart-count-bubble" data-cart-count>{{ cart.item_count }}</span>
+          <span class="header-cart__span d-none">{{ 'general.cart.cart_items_count' | t:count:cart.item_count }}</span>
+          <span class="header-cart__span d-none" data-cart-cost>{{ cart.total_price | money }}</span>
+        </a>
+        {%- if settings.cart_type == "modal" -%}
+          <div class="header-cart__content">
+            <div class="ajaxcart-container" data-cart-container></div>
+          </div>
+        {%- endif -%}
+      </div>
+</div>

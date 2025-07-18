@@ -1,0 +1,179 @@
+{{- 'collection-list-special.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'collection-list-special.js' | asset_url }}" defer="defer"></script>
+{%- include 'section_style' -%}
+<div class="vela-section collection-list-special {% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-full{% endif %}">
+        <div class="vela-section__inner position-relative">
+            <div class="vela-section__content colleciton_special" data-color-hover="#ffffff">
+                <div class="row g-ct justify-content-center" style="--gutter-md-x: 60px;--gutter-md-y: 60px;--gutter-x: 36px;--gutter-y: 36px;" >
+                    {% for block in section.blocks %}
+                        <div class="col-auto">
+                            {%- assign proCollection = block.settings.collection_handle -%}
+                            <div class="position-relative collection-list__special">
+                                <a  href="{{ collections[proCollection].url }}">
+                                    {%- assign title_words = '' -%}
+                                    {%- assign count_words = '' -%}
+                                    {%- if block.settings.collection_title != blank -%}
+                                        {%- assign title_words = block.settings.collection_title | split: '' -%}
+                                    {%- else -%}
+                                        {%- assign title_words = collections[proCollection].title | split: '' -%}
+                                    {%- endif -%}
+                                    <div class="collection-list-special__title lh-sm"> 
+                                        {% for word in title_words -%}
+                                            <span>{{ word }}</span>
+                                        {%- endfor %}
+                                    </div>
+                                    {%- if proCollection == blank or collections[proCollection] == empty or collections[proCollection].products_count == 0 -%}
+                                        {%- assign count_words = 'collections.general.product_count.other' | t: product_count: 20 | split: '' -%}
+                                        {%- if section.settings.collection_count -%}
+                                            <div class="collection-list-special__count fs-6 fw-medium text-secondary lh-1">
+                                                {% for word in count_words -%}
+                                                    <span>{{ word }}</span>
+                                                {%- endfor %}
+                                            </div>
+                                        {%- endif -%}
+                                    {%- else -%}
+                                        {%- assign product_counts = collections[proCollection].products_count -%}
+                                        {%- if section.settings.collection_count -%}
+                                            {% if product_counts > 1 %}
+                                                {%- assign count_words = 'collections.general.product_count.other' | t: product_count: product_counts | split: '' -%}
+                                            {% else %}
+                                                {%- assign count_words = 'collections.general.product_count.one' | t: product_count: product_counts | split: '' -%}
+                                            {% endif %}
+                                            <div class="collection-list-special__count fs-6 fw-medium text-secondary lh-1">
+                                                {% for word in count_words -%}
+                                                    <span>{{ word }}</span>
+                                                {%- endfor %}
+                                            </div>
+                                        {%- endif -%}
+                                    {%- endif -%}
+                                </a>
+                                {%- if block.settings.collection_image != blank -%}
+                                    <img class="hover-image" src="{{ block.settings.collection_image | img_url: 'master' }}" atl="{{ block.settings.collection_image.alt }}">
+                                {%- elsif  collections[proCollection].image != blank -%}
+                                    <img class="hover-image" src="{{ collections[proCollection].image | img_url: 'master' }}" atl="{{ collections[proCollection].image.alt }}">
+                                {%- else -%}
+                                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg hover-image' }}
+                                {%- endif -%}
+                            </div>
+                        </div>
+                    {%- endfor -%}
+                </div>
+            </div>
+        </div>       
+    </div>
+</div>
+{% schema %}
+{
+	"name": "Collection list special",
+    "tag": "section",
+    "class": "velaFramework",
+    "disabled_on": {
+        "groups": ["header", "footer"]
+    },
+	"settings": [
+		{
+            "type": "header",
+            "content": "t:sections.global.settings.header_section.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "full_with",
+            "label": "t:sections.global.settings.full_width.label"
+        },
+        {
+            "type": "text",
+            "id": "max_with",
+            "label": "t:sections.global.settings.max_with.label",
+            "info": "t:sections.global.settings.max_with.info"
+        },
+        {
+            "type": "color",
+            "id": "color_bg",
+            "label": "t:sections.global.settings.bg_color.label",
+            "default": "rgba(0,0,0,0)"
+        },
+        {
+            "type": "text",
+            "id": "padding_block",
+            "label": "t:sections.global.settings.padding.label",
+            "placeholder": "0px 0px",
+            "info": "t:sections.global.settings.padding.info"
+        },
+        {
+            "type": "text",
+            "id": "padding_block_m",
+            "label": "t:sections.global.settings.padding_mobile.label",
+            "placeholder": "0px 0px",
+            "info": "t:sections.global.settings.padding_mobile.info"
+        },
+        {
+            "type": "text",
+            "id": "margin_block",
+            "label": "t:sections.global.settings.margin.label",
+            "placeholder": "0px 0px"
+        },
+        {
+            "type": "text",
+            "id": "margin_block_m",
+            "label": "Margin on mobile",
+            "placeholder": "0px 0px",
+            "info": "Ex: 0px 0px 0px 0px and use mobile only"
+        },
+        {
+            "type": "header",
+            "content": "Item settings"
+        },
+        {
+            "type": "checkbox",
+            "id": "collection_count",
+            "label": "Show product count?",
+            "default": true
+        }
+	],
+	"blocks": [
+		{
+            "type": "collection",
+            "name": "Collection",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "collection_title",
+                    "label": "Title",
+                    "default": "Heading"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "collection_image",
+                    "label": "Collection Image"
+                },
+                {
+                    "type": "collection",
+                    "id": "collection_handle",
+                    "label": "Collection"
+                }
+            ]
+		}
+	],
+	"presets": [
+		{
+			"name": "Collection list special",
+            "category": "4. element",
+            "blocks": [
+                {
+                    "type": "collection"
+                },
+                {
+                    "type": "collection"
+                },
+                {
+                    "type": "collection"
+                },
+                {
+                    "type": "collection"
+                }
+            ]
+		}
+  	]
+}
+{% endschema %}

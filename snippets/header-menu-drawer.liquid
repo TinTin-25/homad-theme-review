@@ -1,0 +1,43 @@
+
+<div id="link-{{ link.title | escape }}" class="menu-drawer__submenu has-submenu gradient motion-reduce" tabindex="-1">
+    <div class="menu-drawer__inner-submenu">
+        <button class="menu-drawer__close-button border-0 border-bottom bg-white fs-13 fw-semibold text-uppercase d-flex align-items-center text-secondary w-100" aria-expanded="true">
+            {% render 'icons', icon: 'angle-left', class: "icon icon-arrow me-2", attr: 'width="6" height="12"' %}
+            {{ link.title  }}
+        </button>
+        <ul class="menu-drawer__menu list-menu" role="list"  tabindex="-1">
+            {%- for childlink in link.links -%}
+                <li>
+                    {%- if childlink.links == blank -%}
+                        <a href="{{ childlink.url }}" id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}" class="menu-drawer__menu-item list-menu__item focus-inset{% if childlink.current %} menu-drawer__menu-item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                            {{ childlink.title }}
+                        </a>
+                    {%- else -%}
+                            <details id="Details-menu-drawer-{{ link.handle }}-{{ childlink.handle }}">
+                                <summary id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}" class="menu-drawer__menu-item list-menu__item focus-inset">
+                                    <a href="{{ childlink.url }}" title="{{ childlink.title | escape }}">{{ childlink.title }}</a>
+                                    {% render 'icons', icon: 'angle-right', class: "icon icon-arrow", attr: 'width="6" height="12"' %}
+                                </summary>
+                                <div id="childlink-{{ childlink.title | handleize }}" class="menu-drawer__submenu  has-submenu motion-reduce">
+                                    <button class="menu-drawer__close-button border-0 border-bottom bg-white fs-13 fw-semibold text-uppercase d-flex align-items-center text-secondary  w-100" aria-expanded="true">
+                                        {% render 'icons', icon: 'angle-left', class: "icon icon-arrow me-2", attr: 'width="6" height="12"' %}
+                                        {{ childlink.title }}
+                                    </button>
+                                    <ul class="menu-drawer__menu list-menu"  tabindex="-1">
+                                        {%- for grandchildlink in childlink.links -%}
+                                            <li>
+                                                <a id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}-{{ grandchildlink.handle }}" href="{{ grandchildlink.url }}" class="menu-drawer__menu-item list-menu__item focus-inset{% if grandchildlink.current %} menu-drawer__menu-item--active{% endif %}"{% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                                    {{ grandchildlink.title }}
+                                                </a>
+                                            </li>
+                                        {%- endfor -%}
+                                    </ul>
+                                </div>
+                            </details>
+                    {%- endif -%}
+                </li>
+            {%- endfor -%}
+        </ul>
+    </div>
+</div>
+                

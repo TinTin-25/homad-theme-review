@@ -1,0 +1,578 @@
+{%- if section.settings.layout == 'masonry' -%}
+    <script src="{{ 'jquery.masonry.min.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+{{- 'collection-list.css' | asset_url | stylesheet_tag -}}
+{%- include 'section_style' -%}
+{%- include 'carousel-settings' -%}
+{%- assign image_crop = nil -%}
+{%- if section.settings.crop -%}
+    {%- assign image_crop = 'center' -%}
+{%- endif -%}
+<div class="vela-section collection-list overflow-hidden{% if section.settings.slide_variableWidth %} slick-carousel__variableWidth{% endif %}{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-full{% endif %}">
+        <div class="vela-section__inner position-relative">
+            {%- if section.settings.heading != blank -%}
+                <div class="heading-group mb-3 mb-md-4 pb-1 {{ section.settings.text_align }}">
+                    <h2 class="heading mb-0">
+                        <span>{{ section.settings.heading }}</span>
+                    </h2>
+                    {%- if section.settings.sub_heading != blank -%}
+                        <div class="sub-heading pt-1">
+                            {{ section.settings.sub_heading }}
+                        </div>
+                    {%- endif -%}
+                </div>
+            {%- endif -%}
+            <div class="vela-section__content colleciton_{{ section.settings.collection_style }}">
+                {%- capture space_between -%}
+                    {%- if section.settings.space_between == '0' or section.settings.space_between == '2' -%}g-{{section.settings.space_between }}{%- else -%}g-3 g-lg-{{section.settings.space_between }}{%- endif -%}
+                {%- endcapture -%}
+                <div 
+                    {% if section.settings.layout == 'carousel' %}
+                        class="js-carousel slick-carousel carousel-custom row {{ space_between }}"
+                        data-nav="{{ nav }}"
+                        data-dots="{{ pagination }}"
+                        data-infinite="{{ infinite }}"
+                        data-autoplay="{{ autoplay }}"
+                        data-variableWidth="{{ variableWidth }}"
+                        data-autoplayspeed="{{ autoplay_speed }}"
+                        data-columnone="{{ owlColumn1 }}" 
+                        data-columntwo="{{ owlColumn2 }}" 
+                        data-columnthree="{{ owlColumn3 }}"
+                    {%  else %}
+                        class="row justify-content-center {{ space_between }} row-cols-{{ owlColumn3 }} row-cols-md-{{ owlColumn2 }} row-cols-lg-{{ owlColumn1 }}"
+                        {% if section.settings.layout == 'masonry' %} 
+                            data-masonry='{ "itemSelector": ".masonry__item" }'
+                        {% endif %}
+                    {% endif %}
+                >
+                    {% for block in section.blocks %}
+                        <div class="{% if section.settings.layout == 'masonry' %}masonry__item{% elsif section.settings.layout == 'carousel' %}slick-carousel__item{% else %}col{% endif %}">
+                            {%- assign proCollection = block.settings.collection_handle -%}
+                            <div class="collection-list__box position-relative collection-list__{{ section.settings.collection_style }}{% if section.settings.slide_variableWidth %} box-width{% endif %}">
+                                {%- if section.settings.collection_style =='style1' -%}
+                                    <div 
+                                        {% if block.settings.collection_image != blank %}
+                                            class="collection-list--image lazyload overflow-hidden rounded-pill" data-bgset="{%- render 'bgset', image: block.settings.collection_image -%}" data-sizes="auto" data-parent-fit="cover"
+                                        {% elsif  collections[proCollection].image != blank %}
+                                            class="collection-list--image lazyload overflow-hidden rounded-pill" data-bgset="{%- render 'bgset', image: collections[proCollection].image -%}" data-sizes="auto" data-parent-fit="cover"
+                                        {%- else -%}
+                                            class="placeholder-background overflow-hidden rounded-pill"
+                                        {%- endif -%}
+                                    >
+                                        <a class="position-relative d-block" href="{{ collections[proCollection].url }}">
+                                            <div class="collection-list__content position-relative px-2 py-4 py-md-5">
+                                                <div class="collection-list__wrapper text-center">
+                                                    <div class="collection-list__title line-clamp-1 mb-1 lh-sm h1 text-white"> 
+                                                        <span class="position-relative">
+                                                            {%- if block.settings.collection_title != blank -%}
+                                                                {{ block.settings.collection_title }}
+                                                            {%- else -%}
+                                                                {{ collections[proCollection].title }}
+                                                            {%- endif -%}
+                                                        </span>
+                                                    </div>
+                                                    {%- if proCollection == blank or collections[proCollection] == empty or collections[proCollection].products_count == 0 -%}
+                                                        {%- if section.settings.collection_count -%}
+                                                            <p class="collection-list__count text-white mb-0">{{ 'collections.general.product_count.other' | t: product_count: 20 }}</p>
+                                                        {%- endif -%}
+                                                    {%- else -%}
+                                                        {%- assign product_counts = collections[proCollection].products_count -%}
+                                                        {%- if section.settings.collection_count -%}
+                                                            <p class="collection-list__count text-white mb-0">{% if product_counts > 1 %}{{ 'collections.general.product_count.other' | t: product_count: product_counts }}{% else %}{{ 'collections.general.product_count.one' | t: product_count: product_counts }}{% endif %}</p>
+                                                        {%- endif -%}
+                                                    {%- endif -%}
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {%- elsif section.settings.collection_style =='style2' -%}
+                                    <div class="collection-list--image effectSix">
+                                        <a  class="position-relative d-block overflow-hidden rounded-2" href="{{ collections[proCollection].url }}">
+                                            {%- if block.settings.collection_image != blank -%}
+                                                {% render 'img-global', image: block.settings.collection_image, image_ratio: section.settings.image_ratio, crop: image_crop %}
+                                            {%- elsif  collections[proCollection].image != blank -%}
+                                                {% render 'img-global', image: collections[proCollection].image, image_ratio: section.settings.image_ratio, crop: image_crop %}
+                                            {%- else -%}
+                                                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                            {%- endif -%}
+                                            <div class="collection-list__content d-flex justify-content-between align-items-center position-absolute w-100 bottom-0">
+                                                <div class="collection-list__wrapper">
+                                                    <h4 class="collection-list__title line-clamp-1 mb-1"> 
+                                                        <span class="position-relative">
+                                                            {%- if block.settings.collection_title != blank -%}
+                                                                {{ block.settings.collection_title }}
+                                                            {%- else -%}
+                                                                {{ collections[proCollection].title }}
+                                                            {%- endif -%}
+                                                        </span>
+                                                    </h4>
+                                                    {%- if proCollection == blank or collections[proCollection] == empty or collections[proCollection].products_count == 0 -%}
+                                                        {%- if section.settings.collection_count -%}
+                                                            <div class="collection-list__count lh-1">{{ 'collections.general.product_count.other' | t: product_count: 20 }}</div>
+                                                        {%- endif -%}
+                                                    {%- else -%}
+                                                        {%- assign product_counts = collections[proCollection].products_count -%}
+                                                        {%- if section.settings.collection_count -%}
+                                                            <div class="collection-list__count lh-1">{% if product_counts > 1 %}{{ 'collections.general.product_count.other' | t: product_count: product_counts }}{% else %}{{ 'collections.general.product_count.one' | t: product_count: product_counts }}{% endif %}</div>
+                                                        {%- endif -%}
+                                                    {%- endif -%}
+                                                </div>
+                                                <span class="collection-list--btn d-flex justify-content-center align-items-center">{% render 'icons', icon: 'arrow_right', class: 'arrow_right', attr: 'width="16" height="16"' %}</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {%- elsif section.settings.collection_style == 'style3'-%}
+                                    <div class="collection-list--image effectSix">
+                                        <a  class="position-relative d-block overflow-hidden rounded-2" href="{{ collections[proCollection].url }}">
+                                            {%- if block.settings.collection_image != blank -%}
+                                                {% render 'img-global', image: block.settings.collection_image, image_ratio: section.settings.image_ratio, crop: image_crop %}
+                                            {%- elsif  collections[proCollection].image != blank -%}
+                                                {% render 'img-global', image: collections[proCollection].image, image_ratio: section.settings.image_ratio, crop: image_crop %}
+                                            {%- else -%}
+                                                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                            {%- endif -%}
+                                            <div class="collection-list__content d-flex justify-content-between align-items-center position-absolute w-100 bottom-0">
+                                                <div class="collection-list__wrapper">
+                                                    <h4 class="collection-list__title text-white line-clamp-1 mb-0"> 
+                                                        <span class="position-relative">
+                                                            {%- if block.settings.collection_title != blank -%}
+                                                                {{ block.settings.collection_title }}
+                                                            {%- else -%}
+                                                                {{ collections[proCollection].title }}
+                                                            {%- endif -%}
+                                                        </span>
+                                                    </h4>
+                                                    {%- if proCollection == blank or collections[proCollection] == empty or collections[proCollection].products_count == 0 -%}
+                                                        {%- if section.settings.collection_count -%}
+                                                            <div class="collection-list__count lh-1 text-white mt-2">{{ 'collections.general.product_count.other' | t: product_count: 20 }}</div>
+                                                        {%- endif -%}
+                                                    {%- else -%}
+                                                        {%- assign product_counts = collections[proCollection].products_count -%}
+                                                        {%- if section.settings.collection_count -%}
+                                                            <div class="collection-list__count lh-1 text-white mt-2">{% if product_counts > 1 %}{{ 'collections.general.product_count.other' | t: product_count: product_counts }}{% else %}{{ 'collections.general.product_count.one' | t: product_count: product_counts }}{% endif %}</div>
+                                                        {%- endif -%}
+                                                    {%- endif -%}
+                                                </div>
+                                                <span class="collection-list--btn icon-effect-1 d-flex justify-content-center align-items-center text-white border border-white rounded-circle">
+                                                    <span class="d-block overflow-hidden position-relative lh-1">
+                                                        {% render 'icons', icon: 'arrow-right-top', class: 'vela-icon', attr: 'width="18" height="18"' %}
+                                                        {% render 'icons', icon: 'arrow-right-top', class: 'vela-icon-1', attr: 'width="18" height="18"' %}
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {%- elsif section.settings.collection_style == 'style4'-%}
+                                    <div class="collection-list--image effectSix">
+                                        <a  class="position-relative d-block overflow-hidden rounded-2" href="{{ collections[proCollection].url }}">
+                                            {%- if block.settings.collection_image != blank -%}
+                                                {% render 'img-global', image: block.settings.collection_image, image_ratio: section.settings.image_ratio, crop: image_crop %}
+                                            {%- elsif  collections[proCollection].image != blank -%}
+                                                {% render 'img-global', image: collections[proCollection].image, image_ratio: section.settings.image_ratio, crop: image_crop %}
+                                            {%- else -%}
+                                                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                            {%- endif -%}
+                                            <div class="collection-list__content d-flex align-items-end position-absolute w-100 bottom-0">
+                                                <div class="d-flex justify-content-between align-items-center w-100">
+                                                    <div class="collection-list__wrapper">
+                                                        <h3 class="collection-list__title text-white line-clamp-1 mb-0"> 
+                                                            <span class="position-relative">
+                                                                {%- if block.settings.collection_title != blank -%}
+                                                                    {{ block.settings.collection_title }}
+                                                                {%- else -%}
+                                                                    {{ collections[proCollection].title }}
+                                                                {%- endif -%}
+                                                            </span>
+                                                        </h3>
+                                                        <span class="collection-list--btn d-inline-block position-relative text-white fs-13 fw-medium mt-2 pb-1">
+                                                            {{ 'collections.general.discover_now' | t }}
+                                                        </span>
+                                                    </div>
+                                                    {%- if proCollection == blank or collections[proCollection] == empty or collections[proCollection].products_count == 0 -%}
+                                                        {%- if section.settings.collection_count -%}
+                                                            <div class="collection-list__count rounded-circle lh-1 text-white fs-13 fw-medium d-flex align-items-center justify-content-center">20</div>
+                                                        {%- endif -%}
+                                                    {%- else -%}
+                                                        {%- assign product_counts = collections[proCollection].products_count -%}
+                                                        {%- if section.settings.collection_count -%}
+                                                            <div class="collection-list__count rounded-circle lh-1 text-white fs-13 fw-medium d-flex align-items-center justify-content-center">{{ product_counts }}</div>
+                                                        {%- endif -%}
+                                                    {%- endif -%}
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {%- else -%}
+                                    <div class="collection-list--image effectSix">
+                                        <a  class="position-relative d-block overflow-hidden rounded-2" href="{{ collections[proCollection].url }}">
+                                            {%- if block.settings.collection_image != blank -%}
+                                                {% render 'img-global', image: block.settings.collection_image, image_ratio: section.settings.image_ratio, crop: image_crop %}
+                                            {%- elsif  collections[proCollection].image != blank -%}
+                                                {% render 'img-global', image: collections[proCollection].image, image_ratio: section.settings.image_ratio, crop: image_crop %}
+                                            {%- else -%}
+                                                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                            {%- endif -%}
+                                            <div class="collection-list__content position-absolute text-center start-0 end-0 bottom-0 mx-2">
+                                                <div class="collection-list__wrapper rounded-pill px-3 py-2 d-inline-block">
+                                                    <div class="collection-list__title line-clamp-1"> 
+                                                        <span class="position-relative">
+                                                            {%- if block.settings.collection_title != blank -%}
+                                                                {{ block.settings.collection_title }}
+                                                            {%- else -%}
+                                                                {{ collections[proCollection].title }}
+                                                            {%- endif -%}
+                                                        </span>
+                                                    </div>
+                                                    {%- if proCollection == blank or collections[proCollection] == empty or collections[proCollection].products_count == 0 -%}
+                                                        {%- if section.settings.collection_count -%}
+                                                            <div class="collection-list__count">{{ 'collections.general.product_count.other' | t: product_count: 20 }}</div>
+                                                        {%- endif -%}
+                                                    {%- else -%}
+                                                        {%- assign product_counts = collections[proCollection].products_count -%}
+                                                        {%- if section.settings.collection_count -%}
+                                                            <div class="collection-list__count">{% if product_counts > 1 %}{{ 'collections.general.product_count.other' | t: product_count: product_counts }}{% else %}{{ 'collections.general.product_count.one' | t: product_count: product_counts }}{% endif %}</div>
+                                                        {%- endif -%}
+                                                    {%- endif -%}
+                                                </div>
+                                                
+                                            </div>
+                                        </a>
+                                    </div>
+                                {%- endif -%}
+                            </div>
+                        </div>
+                    {%- endfor -%}
+                </div>
+            </div>
+        </div>       
+    </div>
+</div>
+{% schema %}
+{
+	"name": "Collection list",
+    "tag": "section",
+    "class": "velaFramework",
+    "disabled_on": {
+        "groups": ["header", "footer"]
+    },
+	"settings": [
+		{
+            "type": "header",
+            "content": "t:sections.global.settings.header_section.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "full_with",
+            "label": "t:sections.global.settings.full_width.label"
+        },
+        {
+            "type": "text",
+            "id": "max_with",
+            "label": "t:sections.global.settings.max_with.label",
+            "info": "t:sections.global.settings.max_with.info"
+        },
+        {
+            "type": "color",
+            "id": "color_bg",
+            "label": "t:sections.global.settings.bg_color.label",
+            "default": "rgba(0,0,0,0)"
+        },
+        {
+            "type": "text",
+            "id": "padding_block",
+            "label": "t:sections.global.settings.padding.label",
+            "placeholder": "0px 0px",
+            "info": "t:sections.global.settings.padding.info"
+        },
+        {
+            "type": "text",
+            "id": "padding_block_m",
+            "label": "t:sections.global.settings.padding_mobile.label",
+            "placeholder": "0px 0px",
+            "info": "t:sections.global.settings.padding_mobile.info"
+        },
+        {
+            "type": "text",
+            "id": "margin_block",
+            "label": "t:sections.global.settings.margin.label",
+            "placeholder": "0px 0px"
+        },
+        {
+            "type": "text",
+            "id": "margin_block_m",
+            "label": "Margin on mobile",
+            "placeholder": "0px 0px",
+            "info": "Ex: 0px 0px 0px 0px and use mobile only"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.global.settings.header_settings.content"
+        },
+        {
+            "type": "html",
+            "id": "heading",
+            "label": "t:sections.global.settings.heading_section.label",
+            "default": "Heading"
+        },
+        {
+            "type": "text",
+            "id": "sub_heading",
+            "label": "t:sections.global.settings.subheading_section.label",
+            "default": "sub heading"
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Text alignment",
+            "default": "text-start",
+            "options": [
+                {
+                    "value": "text-start",
+                    "label": "Left"
+                },
+                {
+                    "value": "text-center",
+                    "label": "Center"
+                },
+                {
+                    "value": "text-end",
+                    "label": "Right"
+                }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Layout Settings"
+        },
+        {
+            "type": "select",
+            "id": "layout",
+            "label": "Layout",
+            "default": "grid",
+            "options": [
+                {
+                    "value": "grid",
+                    "label": "Grid"
+                },
+                {
+                    "value": "carousel",
+                    "label": "Carousel"
+                },
+                {
+                    "value": "masonry",
+                    "label": "Masonry"
+                }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "space_between",
+            "label": "Space between item(px)",
+            "default": "4",
+            "options": [
+                {
+                    "value": "0",
+                    "label": "0"
+                },
+                {
+                    "value": "2",
+                    "label": "10px"
+                },
+                {
+                    "value": "3",
+                    "label": "20px"
+                },
+                {
+                    "value": "4",
+                    "label": "30px"
+                },
+                {
+                    "value": "5",
+                    "label": "40px"
+                }
+            ]
+        },
+        {
+            "type": "range",
+            "id": "column1",
+            "min": 1,
+            "max": 8,
+            "step": 1,
+            "label": "Number of columns on desktop",
+            "default": 4,
+            "info": "Desktops"
+        },
+        {
+            "type": "range",
+            "id": "column2",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "label": "Number of columns on tablet",
+            "default": 3,
+            "info": "Tablets landscape"
+        },
+        {
+            "type": "range",
+            "id": "column3",
+            "min": 1,
+            "max": 5,
+            "step": 1,
+            "label": "Number of columns on mobile",
+            "default": 2,
+            "info": "Mobile phone landscape"
+        },
+        {
+            "type": "header",
+            "content": "Item settings"
+        },
+        {
+            "type": "select",
+            "id": "collection_style",
+            "options": [
+                {
+                    "value": "default",
+                    "label": "Default"
+                },
+                {
+                    "value": "style1",
+                    "label": "Style1"
+                },
+                {
+                    "value": "style2",
+                    "label": "Style2"
+                },
+                {
+                    "value": "style3",
+                    "label": "Style3"
+                },
+                {
+                    "value": "style4",
+                    "label": "Style4"
+                }
+            ],
+            "default": "default",
+            "label": "Item style"
+        },
+        {
+            "type": "select",
+            "id": "image_ratio",
+            "options": [
+              {
+                "value": "adapt",
+                "label": "Adapt to image"
+              },
+              {
+                "value": "portrait",
+                "label": "Portrait"
+              },
+              {
+                "value": "square",
+                "label": "Square"
+              }
+            ],
+            "default": "adapt",
+            "label": "Image ratio"
+        },
+        {
+            "type": "checkbox",
+            "id": "crop",
+            "label": "Crop Image",
+            "default": false,
+            "info": "Not use with Adapt to image"
+        },
+        {
+            "type": "checkbox",
+            "id": "collection_count",
+            "label": "Show product count?",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Carousel settings"
+        },
+        {
+            "type": "checkbox",
+            "id": "slide_variableWidth",
+            "label": "Variable width",
+            "default": false,
+            "info": "Variable width slides on the mobile"
+        },
+        {
+            "type": "checkbox",
+            "id": "navigation",
+            "label": "Show navigation",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "pagination",
+            "label": "Show dot indicators",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "infinite",
+            "label": "Infinite loop sliding",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "autoplay",
+            "label": "Enable autoplay",
+            "default": false
+        },
+        {
+            "type": "text",
+            "id": "autoplay_speed",
+            "label": "Autoplay speed",
+            "info": "Autoplay speed in milliseconds. Type: int(ms)",
+            "default": "10000"
+        }
+	],
+	"blocks": [
+		{
+            "type": "collection",
+            "name": "Collection",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "collection_title",
+                    "label": "Title",
+                    "default": "Heading"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "collection_image",
+                    "label": "Collection Image"
+                },
+                {
+                    "type": "collection",
+                    "id": "collection_handle",
+                    "label": "Collection"
+                }
+            ]
+		}
+	],
+	"presets": [
+		{
+			"name": "Collection list",
+            "blocks": [
+                {
+                    "type": "collection"
+                },
+                {
+                    "type": "collection"
+                },
+                {
+                    "type": "collection"
+                },
+                {
+                    "type": "collection"
+                }
+            ]
+		}
+  	]
+}
+{% endschema %}

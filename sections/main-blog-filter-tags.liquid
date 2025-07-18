@@ -1,0 +1,95 @@
+{%- include 'section_style' -%}
+
+<div class="vela-section blog-filter-tags overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{%- if section.settings.full_with -%}-fluid{%- endif -%}">
+        <div class="vela-section__inner">
+            <div class="vela-section__content">
+                <ul class="list-unstyled d-flex  blog-filter-tags__list mb-0">
+                    {%- assign all-tags__active = true -%}
+                    {% for block in section.blocks %}
+                        {%- assign tag = block.settings.tag -%}
+                        <li class="blog-filter-tag__item{% if current_tags contains tag %} active{% endif %}">{{ tag | link_to_tag: tag }}</li>
+                        {% if current_tags contains tag %}
+                            {%- assign all-tags__active = false -%}
+                        {% endif %}
+                    {% endfor %}
+                    {%- if section.settings.tag_default != blank -%}
+                        <li class="blog-filter-tag__item tag_all {%  if all-tags__active %}active{%  endif  %}"><a href="{{ blog.url }}">{{  section.settings.tag_default }}</a></li>
+                    {%- endif -%}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+    {
+        "name": "Blog filter tag",
+        "class": "velaFramework",
+        "settings": [
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            },
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_settings.content"
+            },
+            {
+                "type": "text",
+                "id": "tag_default",
+                "label": "Tag name default",
+                "default": "All"
+            }
+        ],
+        "blocks": [
+            {
+                "type": "tag",
+                "name": "Tag",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "tag",
+                        "label": "Tag name"
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

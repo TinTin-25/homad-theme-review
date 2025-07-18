@@ -1,0 +1,46 @@
+.collapse-banner .collapse-banner__item {
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  overflow: hidden; }
+
+.collapse-banner .collapse-banner__heading {
+  padding: 12px 20px;
+  color: var(--heading-color);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  text-decoration: none;
+  -webkit-transition: all .35s ease;
+  -o-transition: all .35s ease;
+  transition: all .35s ease; }
+  .collapse-banner .collapse-banner__heading svg {
+    margin-right: 16px; }
+  .collapse-banner .collapse-banner__heading .icon-minus {
+    display: block; }
+  .collapse-banner .collapse-banner__heading .icon-plus {
+    display: none; }
+  .collapse-banner .collapse-banner__heading.collapsed, .collapse-banner .collapse-banner__heading.collapsed:hover {
+    color: var(--body-color); }
+    .collapse-banner .collapse-banner__heading.collapsed .icon-minus, .collapse-banner .collapse-banner__heading.collapsed:hover .icon-minus {
+      display: none; }
+    .collapse-banner .collapse-banner__heading.collapsed .icon-plus, .collapse-banner .collapse-banner__heading.collapsed:hover .icon-plus {
+      display: block; }
+  .collapse-banner .collapse-banner__heading:not(.collapsed) {
+    background-color: #fff; }
+
+.collapse-banner .collapse-banner__content {
+  background-color: var(--border-lighter-color); }
+
+.collapse-banner .collapse-banner__wrapper {
+  padding: 16px;
+  background: #fff; }
+
+.collapse-banner .collapse-banner__collapse {
+  margin: 45px 16px 60px; }
+  @media (min-width: 768px) {
+    .collapse-banner .collapse-banner__collapse {
+      margin: 60px 30px; } }
+  @media (min-width: 1380px) {
+    .collapse-banner .collapse-banner__collapse {
+      max-width: 630px;
+      margin: 30px 75px; } }

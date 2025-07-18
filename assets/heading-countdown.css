@@ -1,0 +1,17 @@
+.heading-countdown__countdown .countdown__item {
+  font-size: 15px;
+  line-height: 15px;
+  position: relative; }
+  .heading-countdown__countdown .countdown__item:not(:last-child) {
+    margin-right: 24px; }
+  .heading-countdown__countdown .countdown__item span {
+    text-align: center;
+    display: block; }
+    .heading-countdown__countdown .countdown__item span:first-child {
+      font-weight: 400;
+      font-size: 45px;
+      line-height: 45px;
+      color: var(--heading-color);
+      font-family: var(--font-heading-family);
+      min-width: 52px;
+      position: relative; }

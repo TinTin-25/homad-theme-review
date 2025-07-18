@@ -1,0 +1,149 @@
+<header-drawer>
+    <details id="Details-menu-drawer-container" class="menu-drawer-container">
+        <summary class="header__icon header__icon--menu header__icon--summary pe-sm-1" aria-label="{{ 'sections.header.menu' | t }}">
+            {% render 'icons', icon: 'hamburger', class: 'icon icon-hamburger', attr: 'width="18" height="18"' %}
+            {% render 'icons', icon: 'close-bold', class: 'icon icon-close', attr: 'width="35" height="35"' %}
+        </summary>
+        <div id="menu-drawer" class="menu-drawer">
+            <div class="menu-drawer__inner-container d-flex flex-column justify-content-between">
+                <div class="menu-drawer__navigation-container">
+                    <ul class="menu-drawer__tab-heading nav mb-0" role="tablist">
+                        <li class="nav-item col" role="presentation">
+                            <a class="nav-link w-100 text-center position-relative active"  data-bs-toggle="tab" href="#menuMobile" aria-selected="true">{{ 'sections.header.menu' | t }}</a>
+                        </li>
+                        {%- if section.settings.velavermenu_linklist != blank -%}
+                            <li class="nav-item col" role="presentation">
+                                <a class="nav-link w-100 text-center position-relative text-center"  data-bs-toggle="tab" href="#verticalMenuMobile" aria-selected="false">{{ section.settings.velavermenu_title }}</a>
+                            </li>
+                        {%- endif -%}
+                    </ul>
+                    <div class="menu-drawer__navigation-container tab-content product-tabs__content">
+                        <div class="tab-pane fade show active" id="menuMobile">
+                            <nav class="menu-drawer__navigation">
+                                <ul class="menu-drawer__menu has-submenu list-menu">
+                                    {%- for link in section.settings.menu.links -%}
+                                        <li>
+                                            {%- if link.links != blank -%}
+                                                <details>
+                                                    <summary id="HeaderDrawer-{{ link.handle }}" class="menu-drawer__menu-item list-menu__item{% if link.child_active %} menu-drawer__menu-item--active{% endif %}">
+                                                        <a href="{{ link.url }}" title="{{ link.title | escape }}">{{ link.title }}</a>
+                                                        {% render 'icons', icon: 'angle-right', class: "icon icon-arrow", attr: 'width="7" height="10"' %}
+                                                    </summary>
+                                                    {%- render 'header-menu-drawer', link: link -%}
+                                                </details>
+                                            {%- else -%}
+                                                <a href="{{ link.url }}" class="menu-drawer__menu-item list-menu__item{% if link.current %} menu-drawer__menu-item--active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>
+                                                    {{ link.title }}
+                                                </a>
+                                            {%- endif -%}
+                                        </li>
+                                    {%- endfor -%}
+                                </ul>
+                                {%- if shop.customer_accounts_optional or shop.customer_accounts_enabled or settings.product_wishlist -%}
+                                    <ul class="list-unstyled mb-0 d-lg-none">
+                                        {%- if shop.customer_accounts_optional or shop.customer_accounts_enabled -%}
+                                            {%- assign logout = 'customer.log_out' | t -%}
+                                            {%- assign login = 'customer.log_in' | t -%}
+                                            {%- assign register = 'customer.registration' | t -%}
+                                            <li class="menu-drawer__menu-item d-flex align-items-center">
+                                                {%- render 'icons', icon: 'user', class: 'me-1', attr: 'width="18" height="18" ' -%}
+                                                {% if customer %}
+                                                    <a class="link" href="{{ routes.account_url }}" title="{{ 'customer.account.title' | t }}">{{ 'customer.account.title' | t }}</a> <span class="text-decoration-underline ms-1">({{ logout | customer_logout_link }})</span>
+                                                {% else %}
+                                                    {{ login | customer_login_link }}<span class="separation">/</span>{{ register | customer_register_link }}
+                                                {% endif %}
+                                            </li>
+                                        {%- endif -%}
+                                        {%- if settings.product_wishlist -%}
+                                            <li class="menu-drawer__menu-item d-flex align-items-center">
+                                                <a class="wishlist-count link position-relative d-flex" href="{{root_url}}/pages/wishlist" title="{{ 'products.product.wishlist' | t }}">
+                                                    {%- render 'icons', icon: 'heart', class: 'me-1', attr: 'width="18" height="18" ' -%}{{- 'products.product.wishlist' | t -}}
+                                                </a>
+                                            </li> 
+                                        {%- endif -%}
+                                    </ul>
+                                {% endif %}
+                            </nav>
+                        </div>
+                        {%- if section.settings.velavermenu_linklist != blank -%}
+                            <div class="tab-pane fade" id="verticalMenuMobile">
+                                <nav class="menu-drawer__navigation verticalMenu__{{ section.settings.velavermenu_style }}">
+                                    <ul class="menu-drawer__menu has-submenu list-unstyled mb-0{% if section.settings.velavermenu_style == "style1" %} row g-3{% endif %}">
+                                        {%- for link in section.settings.velavermenu_linklist.links -%}
+                                            <li {% if section.settings.velavermenu_style == "style1" %} class="col-4"{% endif %}>    
+                                                {%- assign collectionHandle = link.handle -%}
+                                                {%- if section.settings.velavermenu_style == "style1" -%}
+                                                    <a href="{{ link.url }}" class="d-block text-center">
+                                                        <div class="menu-drawer__collection-image overflow-hidden rounded-2 mb-1">
+                                                            {%- if collections[collectionHandle].image != blank -%}
+                                                                {% render 'img-global', image: collections[collectionHandle].image %}
+                                                            {%- else -%}
+                                                                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                                            {%- endif -%}
+                                                        </div>
+                                                        <div class="menu-drawer__collection-title fs-14 fw-medium line-clamp-1">
+                                                            <span>
+                                                                {{ link.title }}
+                                                            </span>
+                                                        </div>
+                                                    </a>
+                                                {%- elsif section.settings.velavermenu_style == "style2" %}
+                                                    {%- if link.links != blank -%}
+                                                        <details>
+                                                            <summary id="HeaderDrawer-{{ link.handle }}" class="menu-drawer__menu-item list-menu__item px-0{% if link.child_active %} menu-drawer__menu-item--active{% endif %}">
+                                                                <a  class="d-flex align-items-center" href="{{ link.url }}" title="{{ link.title | escape }}">
+                                                                    <div class="menu-drawer__collection-image overflow-hidden rounded-circle">
+                                                                        {%- if collections[collectionHandle].image != blank -%}
+                                                                            {% render 'img-global', image: collections[collectionHandle].image, image_ratio: 'square', crop: 'center', image_style: true %}
+                                                                        {%- else -%}
+                                                                            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                                                        {%- endif -%}
+                                                                    </div>
+                                                                    {{ link.title }}
+                                                                </a>
+                                                                {% render 'icons', icon: 'angle-right', class: "icon icon-arrow", attr: 'width="6" height="12"' %}
+                                                            </summary>
+                                                            {%- render 'header-menu-drawer', link: link -%}
+                                                        </details>
+                                                    {%- else -%}
+                                                        <a href="{{ link.url }}" class="menu-drawer__menu-item list-menu__item px-0{% if link.current %} menu-drawer__menu-item--active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>
+                                                            <div class="menu-drawer__collection-image overflow-hidden rounded-circle">
+                                                                {%- if collections[collectionHandle].image != blank -%}
+                                                                    {% render 'img-global', image: collections[collectionHandle].image, image_ratio: 'square', crop: 'center', image_style: true %}
+                                                                {%- else -%}
+                                                                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                                                {%- endif -%}
+                                                            </div>
+                                                            {{ link.title }}
+                                                        </a>
+                                                    {%- endif -%}
+                                                {%- else -%}
+                                                    {%- if link.links != blank -%}
+                                                        <details>
+                                                            <summary id="HeaderDrawer-{{ link.handle }}" class="menu-drawer__menu-item list-menu__item{% if link.child_active %} menu-drawer__menu-item--active{% endif %}">
+                                                                <a href="{{ link.url }}" title="{{ link.title | escape }}">{{ link.title }}</a>
+                                                                {% render 'icons', icon: 'angle-right', class: "icon icon-arrow", attr: 'width="6" height="12"' %}
+                                                            </summary>
+                                                            {%- render 'header-menu-drawer', link: link -%}
+                                                        </details>
+                                                    {%- else -%}
+                                                        <a href="{{ link.url }}" class="menu-drawer__menu-item list-menu__item{% if link.current %} menu-drawer__menu-item--active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>
+                                                            {{ link.title }}
+                                                        </a>
+                                                    {%- endif -%}
+                                                {%- endif -%}
+                                            </li>
+                                        {%- endfor -%}
+                                    </ul>
+                                </nav>
+                            </div>
+                        {%- endif -%}
+                    </div>
+                </div>
+                <div class="menu-drawer__utility-links d-flex justify-content-center d-lg-none border-top pt-3">
+                  <div id="ts-switcher-manual-mobile" class="w-100 px-4 py-2"></div>
+                </div>
+            </div>
+        </div>
+    </details>
+</header-drawer>

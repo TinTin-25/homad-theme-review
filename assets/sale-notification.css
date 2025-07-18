@@ -1,0 +1,73 @@
+.notification-sale {
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s ease;
+  position: fixed;
+  bottom: 50px;
+  width: 320px;
+  left: 30px;
+  z-index: 9;
+  box-shadow: 0 1px 8px 5px rgba(0, 0, 0, 0.1); }
+  .notification-sale.slide_inup {
+    transform: translateY(100%); }
+  .notification-sale.left_to_right {
+    transform: translateX(-100%); }
+  .notification-sale.popup {
+    transform: scale(0.7); }
+  .notification-sale.active {
+    opacity: 1;
+    visibility: visible; }
+    .notification-sale.active.slide_inup {
+      transform: translateY(0); }
+    .notification-sale.active.left_to_right {
+      transform: translateX(0); }
+    .notification-sale.active.popup {
+      transform: scale(1); }
+    .notification-sale.active .scroll-notification {
+      animation-name: notification-progressbar;
+      animation-fill-mode: forwards;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+      opacity: 1; }
+  .notification-sale .notification-container {
+    display: flex;
+    background: #fff;
+    width: 100%;
+    padding: 8px 8px 12px;
+    align-items: center; }
+  .notification-sale .notification-image {
+    flex: 0 0 60px;
+    max-width: 60px;
+    overflow: hidden;
+    border-radius: 3px; }
+  .notification-sale .notification-content {
+    padding: 0 40px 0 12px;
+    flex: 1; }
+  .notification-sale .close-notification {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 18px;
+    color: var(--body-color);
+    cursor: pointer;
+    padding: 3px;
+    line-height: 1; }
+    .notification-sale .close-notification:hover {
+      color: var(--primary); }
+  .notification-sale .scroll-notification {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: var(--primary);
+    width: 100%;
+    opacity: 0; }
+  @media (max-width: 767px) {
+    .notification-sale {
+      display: none !important; } }
+
+@keyframes notification-progressbar {
+  0% {
+    width: 100%; }
+  100% {
+    width: 0; } }

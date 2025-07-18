@@ -1,0 +1,64 @@
+{% comment %}
+  - image: Image
+  - crop: 'center' (center, top, left, right, bottom, region)
+  - image_ratio: 'adapt' (adapt, square, portrait)
+  - max_width: image.width
+{% endcomment %}
+{%- if image != blank -%}
+  {%- liquid
+    assign max_width = max_width | default: image.width
+    assign crop = crop | default: 'center'
+    assign array_width = '360-540-720-900-1080-1296-1512-1728-1950-2100-2260-2450-2700-3000-3350-3750-4100' | split: '-'
+    comment
+      assign array_height_portrait = '480-720-960-1200-1440-1728-2016-2304-2600-2800-3013-3266-3600-4000-4467-5000-5467' | split: '-'
+    endcomment
+    assign srcset = ''
+
+    for string_width in array_width
+      assign width = string_width | plus: 0
+      assign height = 0
+
+      if crop_enable and image_ratio != 'adapt'
+        case image_ratio
+          when 'square'
+            assign height = width
+          when 'portrait'
+            assign height = width | divided_by: 0.75 | round
+          else
+            assign height = 0
+        endcase
+      endif
+
+      if max_width >= width
+        if height == 0
+          assign image_url = image | image_url: width: width
+        else
+          assign image_url = image | image_url: width: width, height: height, crop: crop
+        endif
+        assign srcset = srcset | append: image_url | append: ' ' | append: width | append: 'w, '
+      else
+        break
+      endif
+    endfor
+
+    assign max_width = max_width | round
+    if crop_enable and image_ratio != 'adapt'
+      case image_ratio
+        when 'square'
+          assign max_height = max_width
+        when 'portrait'
+          assign max_height = max_width | divided_by: 0.75 | round
+        else
+          assign max_height = 0
+      endcase
+    endif
+    if max_height == 0
+      assign image_url = image | image_url: width: max_width
+    else
+      assign image_url = image | image_url: width: max_width, height: max_height, crop: crop
+    endif
+    assign srcset = srcset | append: image_url | append: ' ' | append: max_width | append: 'w'
+  -%}
+
+  {{- srcset -}}
+{%- endif -%}

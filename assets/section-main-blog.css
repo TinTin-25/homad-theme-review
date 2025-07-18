@@ -1,0 +1,85 @@
+/** Blog pages __*/
+.page-blog .article {
+  padding-bottom: 40px; }
+
+.page-blog .social-sharing {
+  margin-bottom: 0; }
+
+.page-header {
+  margin-bottom: 50px; }
+
+.article__title a {
+  color: var(--heading-color); }
+  .article__title a:hover {
+    color: var(--primary); }
+
+@media (min-width: 992px) {
+  .blog__list .col-lg-5 {
+    width: 45.46%; }
+  .blog__list .col-lg-7 {
+    width: 54.54%; } }
+
+/*blog simple*/
+.blog-simple .article__image {
+  z-index: 1;
+  opacity: 0;
+  transition: all .2s ease; }
+  .blog-simple .article__image:before {
+    content: "";
+    height: 100%;
+    width: 100%;
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, 0.8); }
+
+.blog-simple .article__content {
+  z-index: 2; }
+
+.blog-simple .article__meta-date .icon-calender-hover {
+  display: none; }
+
+.blog-simple:hover .article__image {
+  opacity: 1; }
+
+.blog-simple:hover .article__content {
+  z-index: 2;
+  color: #fff; }
+
+.blog-simple:hover .article__meta-date .icon-calender {
+  display: none; }
+
+.blog-simple:hover .article__meta-date .icon-calender-hover {
+  display: block; }
+
+.blog-simple:hover .article__meta span, .blog-simple:hover .article__meta a,
+.blog-simple:hover .article__meta span:hover, .blog-simple:hover .article__meta a:hover,
+.blog-simple:hover .article__title a,
+.blog-simple:hover .article__meta-tags .tags__item,
+.blog-simple:hover .article__meta {
+  color: #fff !important; }
+
+.blog-filter-tags__list .blog-filter-tag__item {
+  margin-right: 24px; }
+  .blog-filter-tags__list .blog-filter-tag__item.tag_all {
+    order: -1; }
+  .blog-filter-tags__list .blog-filter-tag__item a {
+    color: var(--secondary);
+    text-transform: uppercase;
+    position: relative;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 0; }
+    .blog-filter-tags__list .blog-filter-tag__item a::before {
+      content: "";
+      display: none;
+      position: absolute;
+      bottom: 0;
+      height: 2px;
+      width: 100%;
+      background-color: var(--primary); }
+  .blog-filter-tags__list .blog-filter-tag__item.active a {
+    color: var(--primary); }
+    .blog-filter-tags__list .blog-filter-tag__item.active a::before {
+      display: block; }

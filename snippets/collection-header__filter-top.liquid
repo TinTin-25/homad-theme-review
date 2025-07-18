@@ -1,0 +1,99 @@
+
+<div id="ProductCount" class="d-none"></div>
+<div class="collection-header offcanvas offcanvas-bottom mx-auto" tabindex="-1" id="offcanvasFilterBottom" aria-labelledby="offcanvasFilterBottomLabel">
+	<button type="button" class="vela__btn-close position-absolute top-0 start-50 translate-middle-x bg-white border-0 d-md-none" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilterBottom" aria-controls="offcanvasFilterBottom">
+		{% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+		{% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+	</button>
+	<div class="collection-header__top d-md-flex flex-md-column-reverse">
+		<div class="active-facets mb-2 pb-1">
+			{%- for filter in results.filters -%}
+				{%- for value in filter.active_values -%}
+					<facet-remove>
+						<a class="active-facets__button js-facet-remove" href="{{ value.url_to_remove }}">
+							{{ value.label | escape }}
+							<span class="vela__btn-close position-relative ms-1 d-block">
+								<svg width="10" height="10" class="icon-line position-absolute top-50 start-50" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+								<svg width="10" height="10" class="icon-line1 position-absolute top-50 start-50" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+							</span>
+						</a>
+					</facet-remove>
+				{%- endfor -%}
+				{% if filter.type == "price_range" %}
+					{%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+					<facet-remove>
+						<a class="active-facets__button js-facet-remove" href="{{ filter.url_to_remove }}" title="{{ 'collections.filter.clear' | t }}">
+							{%- if filter.min_value.value -%}{{ filter.min_value.value | money }}{%- else -%}{{ 0 | money }}{%- endif -%}-{%- if filter.max_value.value -%}{{ filter.max_value.value | money }}{%- else -%}{{ filter.range_max | money }}{%- endif -%}
+							<span class="vela__btn-close position-relative ms-1 d-block">
+								<svg width="10" height="10" class="icon-line position-absolute top-50 start-50" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+								<svg width="10" height="10" class="icon-line1 position-absolute top-50 start-50" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+							</span>
+						</a>
+					</facet-remove>
+					{%- endif -%}
+				{% endif %}
+			{%- endfor -%}
+			<facet-remove>
+				<a href="{{ results_url }}&{{ layoutview }}" class="active-facets__button active-facets__clear_all js-facet-remove" title="{{ 'collections.filter.clear_all' | t }}">
+					{{ 'collections.filter.clear_all' | t }}
+					<span class="vela__btn-close position-relative ms-1 d-block">
+						<svg width="10" height="10" class="icon-line position-absolute top-50 start-50" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+						<svg width="10" height="10" class="icon-line1 position-absolute top-50 start-50" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+					</span>
+				</a>
+			</facet-remove>
+		</div>
+		<div class="product-filter__top--wrapper">
+			{%- include 'product-filter-top' -%}
+			<facet-filters-form class="product-filter">
+				<form id="FacetSortForm" class="product-filter__form">
+					{%- if template.suffix != blank -%}
+						<input type="hidden" name="view" value="{{ template.suffix }}" />
+					{%- endif -%}
+					<div class="product-filter__top position-relative collection-filters__field">
+						<a class="filter-top__title d-flex align-items-center justify-content-between collapsed" data-bs-toggle="collapse" href="#SortBy" role="button" aria-expanded="true" aria-controls="SortBy">
+							<label class="collection-filters__label">{{ 'collections.sorting.title' | t }}:</label> 
+							<span class="d-none d-md-block">
+								{%- for option in results.sort_options -%}
+									{%- if option.value == sort_by -%}{{ option.name | escape }} {% break %}{%- endif -%}
+								{%- endfor -%}
+							</span>
+							<span class="btn-arrow">
+								{%- render 'icons', icon: 'angle-down', attr: 'width="10" height="6"' -%}
+							</span>
+						</a>
+						<div id="SortBy" class="filter-top__content collapse" data-bs-parent="#offcanvasFilterBottom">
+							<ul class="filter-top__inner facets__list list-unstyled mb-0">
+								{%- for option in results.sort_options -%}
+									<li class="facets__item px-3 py-1 {% if option.value == sort_by %} selected{% endif %}">
+										<label for="{{ option.value | escape }}">
+											<input class="d-none" type="radio" id="{{ option.value | escape }}" name="sort_by" value="{{ option.value | escape }}" {% if option.value == sort_by %} checked{% endif %}>
+											<span>{{ option.name | escape }}</span>
+										</label>
+									</li>
+								{%- endfor -%}
+							</ul>
+						</div>
+					</div>
+				</form>
+			</facet-filters-form>
+			<div class="d-block d-md-none mt-6">
+				<facet-remove>
+					<a href="{{ results_url }}&{{ layoutview }}" class="active-facets__clear_all js-facet-remove btn btn-default d-flex align-items-center justify-content-center" title="{{ 'collections.filter.clear_all' | t }}">
+						{% render 'icons', icon: 'reset', class: 'me-1', attr: 'width="18" height="18"' %}
+						{{ 'sections.collection_template.reset' | t }}
+					</a>
+				</facet-remove>
+            </div>
+		</div>
+	</div>
+</div>
+<div class="fixed-bottom mb-2 pb-1 d-flex d-md-none justify-content-center">
+	<button class="btn btn-default d-flex align-items-center fw-semibold text-uppercase rounded-1 px-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilterBottom" aria-controls="offcanvasFilterBottom">
+		{% render 'icons', icon: 'filter', attr: 'width="18" height="18"' %}
+		<span class="d-block ms-2 fs-13 d-flex lh-1">{{ 'sections.collection_template.filter_and_sort' | t }}</span>
+		{%- if total_active_values > 0 -%}
+			<span class="filter-total">{{ total_active_values }}</span>
+		{%- endif -%}
+	</button>
+</div>

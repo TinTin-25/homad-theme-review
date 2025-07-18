@@ -1,0 +1,143 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+{%- include 'section_style' -%}
+<div class="customer login vela-section overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+	<div class="container{% if section.settings.full_with %}-fluid{% endif %}">
+		<div class="customer__inner">
+			<div id="recover">
+				<div class="page-header page-account__header text-center">
+					<h2 class="main-page-title page-title m-0" tabindex="-1">{{ 'customer.recover_password.title' | t }}</h2>
+				</div>
+				<div class="login__wrapper">
+					<div class="heading-color fw-medium mb-4">
+						{{ 'customer.recover_password.subtext' | t }}
+					</div>
+					{%- form 'recover_customer_password' -%}
+						{% assign recover_success = form.posted_successfully? %}
+						{%- if form.errors -%}
+							<div id="RecoverEmail-email-error" class="form__message form__message--error mb-3">
+								{{ form.errors.messages['form'] }}
+							</div>
+						{%- endif -%}
+						<div class="mb-3 pb-lg-1 position-relative">
+							<input class="form-control hidden-label" type="email" value="" name="email" id="RecoverEmail" autocorrect="off" autocapitalize="off" autocomplete="email" required placeholder="{{ 'customer.login_page.email' | t }}">
+							<label class="form-label" for="RecoverEmail">
+								{{ 'customer.login_page.email' | t }}
+							</label>
+						</div>
+						<button class="btn btn-default w-100">
+							<span>{{ 'customer.login_page.submit' | t }}</span>
+						</button>
+						<p class="mb-0 pt-2 mt-1 text-color-light text-center">{{ 'customer.login_page.back_to_login_html' | t }}</p>
+					{%- endform -%}
+				</div>
+			</div>
+			<div class="login__form">
+				<div class="page-header page-account__header text-center">
+					<h1 id="login" class="d-none main-page-title page-title m-0" tabindex="-1">{{ 'customer.login_page.title' | t }}</h1>
+				</div>
+				<div class="login__wrapper">
+					{%- if recover_success == true -%}
+						<div class="form__message form__message--success mb-3">
+							<h3 class="form-message__title" tabindex="-1" autofocus>
+								{{ 'customer.recover_password.success' | t }}
+							</h3>
+						</div>
+					{%- endif -%}
+					{%- form 'customer_login' -%}
+						<div class="mb-3 pb-lg-1 position-relative"> 
+							<input class="form-control hidden-label" type="email" name="customer[email]" id="CustomerEmail" autocomplete="email" autocorrect="off" autocapitalize="off" required{% if form.errors contains 'form' %} aria-invalid="true"{% endif %} placeholder="{{ 'customer.login_page.email' | t }}">
+							<label class="form-label" for="CustomerEmail">
+								{{ 'customer.login_page.email' | t }}
+							</label>
+						</div>
+						{%- if form.password_needed -%}
+							<div class="mb-3 pb-lg-1 position-relative">  
+								<input class="form-control hidden-label" type="password" value="" name="customer[password]" id="CustomerPassword" autocomplete="current-password" required {% if form.errors contains 'form' %} aria-invalid="true" {% endif %} placeholder="{{ 'customer.login_page.password' | t }}">
+								<label class="form-label" for="CustomerPassword">
+									{{ 'customer.login_page.password' | t }}
+								</label>
+								<div class="showPass position-absolute top-0 end-0 mt-2 me-3">
+									<span class="eye d-none"> {% render 'icons', icon: 'eye-bold', attr: 'width="18" height="18"' %}</span>
+									<span class="eye-blind"> {% render 'icons', icon: 'eye-blind', attr: 'width="18" height="18"' %}</span>
+								</div>
+							</div>
+						{%- endif -%}
+						<div class="group-action pt-4"> 
+							<button class="btn btn-default w-100 mb-3"><span>{{'customer.login_page.title' | t }}</span></button>
+							<a class="btn btn-outline w-100 d-block" href="{{ routes.account_register_url }}">
+								{{ 'customer.login_page.create_account' | t }}
+							</a>
+						</div>
+						{%- if form.password_needed -%}
+							<div class="text-center pt-5 mt-lg-5">
+								<a class="d-inline-block text-uppercase btn-link-outline fs-13 fw-semibold" href="#recover">
+									{{ 'customer.login_page.forgot_password' | t }}
+								</a>
+							</div>
+						{%- endif -%}
+					{%- endform -%}
+				</div>
+			</div>	
+			{%- if shop.checkout.guest_login -%}
+				<div class="login__wrapper py-4">
+					<h2 class="mb-lg-4 mb-3">{{ 'customer.login_page.guest_title' | t }}</h2>
+					{%- form 'guest_login' -%}
+						<button class="btn btn-default">
+							<span>{{ 'customer.login_page.guest_continue' | t }}</span>
+						</button>
+					{%- endform -%}
+				</div>
+			{%- endif -%}
+	</div>
+	</div>
+</div>
+{% schema %}
+    {
+        "name": "Login",
+        "tag": "section",
+        "class": "velaFramework",
+        "settings": [
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            }
+        ]
+	}
+{% endschema %}

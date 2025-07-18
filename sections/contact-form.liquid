@@ -1,0 +1,135 @@
+{%- include 'section_style' -%}
+<div class="vela-section contact_form{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-fluid{% endif %}">
+        <div class="vela-section__inner">
+            <div class="vela-section__wrapper">
+                {% unless  section.settings.contactform_heading == blank and section.settings.contactform_desc == blank %}
+                    <div class="mb-4 mb-md-5 pb-1">  
+                        {%- if section.settings.contactform_heading != blank -%}
+                            <h2 class="map-info__heading h3 text-center">{{ section.settings.contactform_heading }}</h2>
+                        {%- endif -%}  
+                        {% if section.settings.contactform_desc != blank %}
+                            <div class="map-info__item map-info__desc mt-2 mt-md-3 text-center mx-auto">{{ section.settings.contactform_desc }}</div>
+                        {% endif %} 
+                    </div>
+                {% endunless %}
+                <div class="contact-form__content">
+                    {%- form 'contact', id: 'ContactForm' -%}
+                        {%- if form.posted_successfully? -%}
+                            <div class="alert-success alert alert-success" autofocus>
+                                {{ 'templates.contact.form.post_success' | t }}
+                            </div>
+                        {%- elsif form.errors -%}
+                            <div class="alert-error alert alert-danger alert-dismissible fade show" autofocus>
+                                {{ form.errors | default_errors }}
+                                <button type="button" data-dismiss="alert" aria-hidden="true" data-bs-dismiss="alert" aria-label="Close" class="btn-close"></button>
+                            </div>
+                        {%- endif -%}
+                        <div class="row g-0" style="--bs-gutter-y: 24px;">
+                            <div class="col-12">
+                                <div class="row g-4" style="--bs-gutter-y: 24px;">
+                                    <div class="col-6">
+                                        <div class="position-relative">
+                                            <input class="form-control hidden-label" placeholder="{{ 'templates.contact.form.name_placeholder' | t }}" autocomplete="name" type="text" id="ContactForm-name" name="contact[{{ 'templates.contact.form.name' | t }}]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" required>
+                                            <label class="form__label" for="ContactForm-name">{{ 'templates.contact.form.name' | t }}<span class="text-danger" aria-hidden="true">*</span></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="position-relative">
+                                            <input class="form-control hidden-label"type="email"id="ContactForm-email"placeholder="{{ 'templates.contact.form.email_placeholder' | t }}"name="contact[email]"autocorrect="off"autocapitalize="off"value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"aria-required="true"required>
+                                            <label class="form__label" for="ContactForm-email">{{ 'templates.contact.form.email' | t }} <span class="text-danger" aria-hidden="true">*</span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 position-relative">
+                                {% assign name_attr = 'templates.contact.form.subject' | t | handle %}
+                                <input class="form-control hidden-label" type="text" placeholder="{{ 'templates.contact.form.subject_placeholder' | t }}" id="ContactFormSubject" name="contact[{{ name_attr }}]" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.subject }}{% endif %}">
+                                <label class="form__label" for="ContactFormSubject">{{ 'templates.contact.form.subject_placeholder' | t }}</label>
+                            </div>
+                            <div class="col-12 position-relative">
+                                <textarea class="form-control hidden-label" rows="8" placeholder="{{ 'templates.contact.form.comment_placeholder' | t }}" id="ContactForm-message" name="contact[{{ 'templates.contact.form.comment' | t }}]" required>{% if form.body %}{{ form.body }}{% endif %}</textarea>                            
+                                <label class="form__label" for="ContactForm-body">{{ 'templates.contact.form.comment' | t }}<span>*</span></label>
+                            </div>
+                            <div class="col-12 position-relative">
+                                <button type="submit" class="btn btn-default"><span>{{ 'templates.contact.form.send' | t }} </span></button>
+                            </div>
+                        </div>
+                    {% endform %}
+                </div>
+            </div>
+		</div>
+    </div>
+</div>
+{% schema %}
+  	{
+        "name": "Contact Form",
+        "tag": "section",
+        "class": "velaFramework",
+        "disabled_on": {
+            "groups": ["header", "footer"]
+        },
+        "settings": [
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            },
+            {
+                "type": "header",
+                "content": "Contact form"
+            },
+            {
+                "type": "text",
+                "id": "contactform_heading",
+                "label": "Heading"
+            },
+            {
+                "type": "html",
+                "id": "contactform_desc",
+                "label": "Description"
+            }
+		],
+        "presets": [
+            {
+                "name": "Contact Form"
+            }
+        ]
+  	}
+{% endschema %}

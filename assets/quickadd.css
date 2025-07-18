@@ -1,0 +1,339 @@
+.quickadd .slick-arrow {
+  width: 30px;
+  height: 30px;
+  margin-top: -15px;
+  background: #fff; }
+  .quickadd .slick-arrow::before {
+    width: 6px;
+    height: 11px; }
+  .quickadd .slick-arrow:focus, .quickadd .slick-arrow:hover {
+    background-color: var(--primary); }
+    .quickadd .slick-arrow:focus::before, .quickadd .slick-arrow:hover::before {
+      background-color: #fff; }
+
+.quickadd .slick-prev {
+  left: -12px !important; }
+
+.quickadd .slick-next {
+  right: -12px !important; }
+
+.quickadd__content {
+  max-width: 450px; }
+  @media (max-width: 575.98px) {
+    .quickadd__content {
+      max-width: calc(100vw - 48px);
+      margin: 0 auto; } }
+
+.quickadd__btn-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: block;
+  text-align: center;
+  padding: 0;
+  color: var(--heading-color);
+  transition: opacity .3s ease;
+  background-color: #fff; }
+  .quickadd__btn-close:hover {
+    backgorund-color: #eff0f2; }
+
+.product-quickadd__media {
+  padding: 24px; }
+
+.product-quickadd__reviews:empty {
+  display: none; }
+
+.product-quickadd__reviews .jdgm-widget .jdgm-prev-badge__text,
+.product-quickadd__reviews .vela-review__content {
+  display: none; }
+
+.product-form__item {
+  margin-bottom: 8px; }
+
+.product-quickadd__content {
+  padding: 24px; }
+
+.product-quickadd__organization.product-avaiable {
+  display: none; }
+  .product-quickadd__organization.product-avaiable.product-avaiable--active {
+    display: flex; }
+
+.product-quickadd__price.product-price__has-sale {
+  color: #fb4005; }
+
+.product-quickadd__price--compare-at {
+  display: inline-block;
+  position: relative;
+  color: var(--primary);
+  opacity: .5;
+  margin-left: 8px;
+  padding: 0 2px; }
+  .product-quickadd__price--compare-at:before {
+    content: "";
+    display: block;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+    background-color: var(--primary);
+    position: absolute;
+    left: 0; }
+
+.product-quickadd__unit {
+  display: none; }
+  .price-container--unit-available .product-quickadd__unit {
+    display: block; }
+
+.product-quickadd__policies {
+  margin: 15px 0 25px 0; }
+
+.product-quickadd__variants {
+  margin-bottom: 16px; }
+  .product-quickadd__variants:empty {
+    display: none !important; }
+
+.product-quantity__label {
+  margin: 0;
+  display: block;
+  font-weight: var(--font-heading-weight);
+  color: var(--heading-color);
+  min-width: 75px;
+  padding-right: 15px; }
+
+.quickadd__product-quantity .vela-qty__number {
+  height: 40px; }
+
+.product-form__input {
+  cursor: pointer;
+  display: block;
+  border: 1px solid var(--border-lighter-color);
+  color: var(--heading-color);
+  padding: 6px 30px 6px 15px;
+  font-size: var(--font-size-base);
+  text-rendering: optimizeLegibility;
+  transition: all .3s ease;
+  background-color: #fff;
+  min-width: 80px; }
+  .product-form__input:focus {
+    outline: 0; }
+
+.product-avaiable .product-avaiable__text {
+  color: #12B447; }
+
+.product-avaiable .product-avaiable__text--outstock {
+  color: var(--bs-danger); }
+
+.variants__label {
+  display: block;
+  margin: 0 0 10px;
+  font-weight: 500;
+  color: var(--secondary); }
+  .variants__label > span {
+    color: var(--heading-color);
+    margin-left: 10px; }
+
+.variants__options {
+  display: flex;
+  flex-flow: row wrap; }
+
+.quickadd-option-selector {
+  position: relative;
+  margin: 0; }
+  .quickadd-option-selector input {
+    clip: rect(0, 0, 0, 0);
+    overflow: hidden;
+    position: absolute;
+    width: 1px;
+    height: 1px; }
+  .quickadd-option-selector label {
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 8px 8px 0;
+    padding: 2px 8px;
+    min-width: 40px;
+    min-height: 40px;
+    font-weight: 500;
+    color: var(--body-color);
+    background-color: #EFF0F2;
+    border: 1px solid var(--border-lighter-color);
+    font-size: var(--font-size-base);
+    line-height: 16px;
+    border-radius: 50%;
+    text-align: center; }
+    .quickadd-option-selector label::before {
+      content: "";
+      width: 1px;
+      height: calc(100% + 10px);
+      background-color: var(--heading-color);
+      position: absolute;
+      top: -4px;
+      left: 50%;
+      transform: rotate(40deg);
+      display: none; }
+    .quickadd-option-selector label[data-color] {
+      overflow: hidden;
+      padding: 0;
+      font-size: 0;
+      text-indent: -9999px;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 100%;
+      box-shadow: inset 0 0 0 3px #fff; }
+    .quickadd-option-selector label[data-variantimage] {
+      width: 50px;
+      height: 60px;
+      border-radius: 4px;
+      box-shadow: inset 0 0 0 2px #fff; }
+    .quickadd-option-selector label.disabled {
+      cursor: no-drop;
+      opacity: .5; }
+      .quickadd-option-selector label.disabled::before {
+        display: block; }
+  .quickadd-option-selector.variant_hide label.disabled {
+    display: none; }
+  .quickadd-option-selector input[type='radio']:checked + label:not(.disabled) {
+    background-color: var(--body-color);
+    color: #fff; }
+    .quickadd-option-selector input[type='radio']:checked + label:not(.disabled)[data-color] {
+      border-color: var(--body-color); }
+      .quickadd-option-selector input[type='radio']:checked + label:not(.disabled)[data-color]:after {
+        border-color: #fff; }
+
+.product-quickadd__buttons .btn--pre-order,
+.product-quickadd__buttons .btn--add-to-cart {
+  padding: 0 15px;
+  height: 48px;
+  color: #fff;
+  background: var(--primary);
+  border: 1px solid var(--primary);
+  width: 100%;
+  min-width: 175px;
+  position: relative;
+  text-transform: capitalize; }
+  .product-quickadd__buttons .btn--pre-order .btn__text,
+  .product-quickadd__buttons .btn--add-to-cart .btn__text {
+    position: relative; }
+  .product-quickadd__buttons .btn--pre-order svg,
+  .product-quickadd__buttons .btn--add-to-cart svg {
+    margin-right: 3px;
+    margin-top: -2px;
+    display: none !important; }
+  .product-quickadd__buttons .btn--pre-order:hover,
+  .product-quickadd__buttons .btn--add-to-cart:hover {
+    background-color: var(--body-color);
+    border-color: var(--body-color);
+    color: #fff; }
+  .product-quickadd__buttons .btn--pre-order[disabled="disabled"],
+  .product-quickadd__buttons .btn--add-to-cart[disabled="disabled"] {
+    width: 100%;
+    margin-right: 0; }
+    .product-quickadd__buttons .btn--pre-order[disabled="disabled"] svg,
+    .product-quickadd__buttons .btn--add-to-cart[disabled="disabled"] svg {
+      display: none; }
+
+@media (max-width: 575.98px) {
+  .product-quickadd__buttons .col:nth-child(3) {
+    flex: 1 1 100%; } }
+
+.formQuickadd .vela-buynow__content,
+.formQuickadd .vela-buynow {
+  margin-top: 16px;
+  display: block; }
+
+.product-quantity__select {
+  min-height: 48px;
+  min-width: 80px;
+  padding: 6px 30px 6px 15px;
+  background-color: #EFF0F2;
+  border: 0;
+  cursor: pointer;
+  text-align: center;
+  font-family: var(--font-heading-family); }
+
+.product-quickadd__product__vendor {
+  margin-bottom: 4px; }
+  .product-quickadd__product__vendor a {
+    color: var(--secondary); }
+    .product-quickadd__product__vendor a:hover {
+      color: var(--primary); }
+
+.product-quickadd__organization--wrap {
+  padding-top: 10px; }
+  .product-quickadd__organization--wrap:empty {
+    display: none; }
+
+.btn-buynow {
+  color: #fff;
+  background-color: rgba(251, 64, 5, 0.7);
+  line-height: 48px;
+  padding: 0;
+  overflow: hidden;
+  font-weight: 400;
+  border-radius: 30px;
+  min-width: 100%;
+  position: relative;
+  transition: all .3s ease; }
+  .btn-buynow:hover {
+    background-color: var(--heading-color);
+    color: #fff; }
+
+.vela-buynow__content {
+  opacity: 0.5;
+  pointer-events: none; }
+
+#quickadd-terms-condition {
+  cursor: pointer; }
+  #quickadd-terms-condition ~ .form-check-label {
+    cursor: pointer; }
+    #quickadd-terms-condition ~ .form-check-label a {
+      border-bottom: 1px solid var(--body-color); }
+  #quickadd-terms-condition:checked ~ .vela-buynow__content {
+    opacity: 1;
+    pointer-events: auto; }
+
+.product-quickadd__organization {
+  display: flex;
+  margin-top: 4px;
+  line-height: 20px; }
+
+.product-quickadd__organization__label {
+  margin-right: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--heading-color); }
+
+.product-quickadd__organization__text,
+.product-quickadd__organization__text a {
+  color: var(--secondary); }
+
+.product-quickadd__organization__text a:hover {
+  color: var(--primary); }
+
+.product-details-tags {
+  color: var(--body-color-light); }
+  .product-details-tags a {
+    color: var(--body-color-light); }
+    .product-details-tags a:hover {
+      color: var(--primary); }
+
+.product-quickadd__btn--wishlist {
+  width: 48px;
+  height: 48px;
+  background-color: #EFF0F2;
+  border: 0;
+  color: var(--heading-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+  .product-quickadd__btn--wishlist .heart-fill {
+    display: none; }
+  .product-quickadd__btn--wishlist.is-added .heart-fill {
+    display: block; }
+  .product-quickadd__btn--wishlist.is-added .heart {
+    display: none; }
+  .product-quickadd__btn--wishlist:hover {
+    background-color: var(--primary);
+    color: #fff; }

@@ -1,0 +1,345 @@
+{{ 'product-tab.css' | asset_url | stylesheet_tag }}
+{%- include 'section_style' -%}
+{%- include 'carousel-settings' -%}
+{%- assign proLimit = section.settings.limit -%}
+<div class="vela-section product-tabs overflow-hidden{% if section.settings.layout == 'carousel' and section.settings.slide_variableWidth %} slick-carousel__variableWidth{% endif %}{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+	<div class="container{% if section.settings.full_with %}-fluid{% endif %}">
+		<div class="vela-section__inner product-tabs__{{ section.settings.producttab_style }}">
+			<div class="product-tabs__heading">
+              <select class="product-tabs__dropdown d-md-none" onchange="document.querySelector('.product-tabs__nav-link[href=\'' + this.value + '\']').click();">
+                {% for block in section.blocks %}
+                 <option value="#product-tabs-{{ section.id }}{{ forloop.index }}">{{ block.settings.title }}</option>
+                {% endfor %}
+               </select>
+
+				<ul class="nav d-flex {% if section.settings.producttab_style == 'style2' %}justify-content-start{% else %}justify-content-center{% endif %} list-unstyled mb-0">
+
+					{%- for block in section.blocks -%}
+					{%- assign tab_heading =  block.settings.title | escape -%}
+					<li class="nav-item product-tabs__nav-item{% unless forloop.last %} me-4{% endunless %}">
+						<a class="product-tabs__nav-link lh-1 {% if forloop.first %} active{% endif %}"  data-bs-toggle="tab"
+						href="#product-tabs-{{ section.id }}{{ forloop.index }}">
+						<span>{{ tab_heading }}</span>
+						</a>
+					</li>
+					{%- endfor -%}
+				</ul>
+			</div>
+			<div class="vela-section__content">
+				<div class="tab-banner_content">
+					<div class="tab-content product-tabs__content">
+						{%- for block in section.blocks -%}
+							{%- assign proCollection = block.settings.collection -%}
+							<div class="tab-pane fade{% if forloop.first %} show active{% endif %}" id="product-tabs-{{ section.id }}{{ forloop.index }}">
+								<div
+									{% if section.settings.layout == 'carousel' %}
+										class="js-carousel carousel-custom slick-carousel row g-2 g-md-{{ section.settings.space_between }}"
+										data-nav="{{ nav }}"
+										data-dots="{{ pagination }}"
+										data-infinite="{{ infinite }}"
+										data-autoplay="{{ autoplay }}"
+										data-variableWidth="{{ variableWidth }}"
+										data-autoplayspeed="{{ autoplay_speed }}"
+										data-columnone="{{ owlColumn1 }}" 
+										data-columntwo="{{ owlColumn2 }}" 
+										data-columnthree="{{ owlColumn3 }}"
+									{% else %}
+										class="row gx-2 gx-md-3 g-lg-4 gy-4 gy-lg-5 g-lg-{{ section.settings.space_between }} row-cols-{{ owlColumn3 }} row-cols-md-{{ owlColumn2 }} row-cols-lg-{{ owlColumn1 }}"
+									{% endif %}
+								>
+									{%- if proCollection == blank or collections[proCollection] == empty or collections[proCollection].products_count == 0 -%}
+										{% render 'onboarding-featured-products', product_style: section.settings.product_style, slide_variableWidth: section.settings.slide_variableWidth, number: proLimit %}
+									{%- else -%}
+										{%- for product in collections[proCollection].products limit: proLimit -%}
+											<div class="{% if section.settings.layout == 'carousel' %}slick-carousel__item{% else %}col{% endif %}">
+												{% render 'product-grid-item', product: product, product_style: section.settings.product_style, slide_variableWidth: section.settings.slide_variableWidth , number: proLimit %}
+											</div>
+										{%- endfor -%}
+									{%- endif -%}
+								</div>
+								{%- if section.settings.button_text != blank -%}
+									<div class="text-center pt-lg-3">
+										<a class="btn--viewall fs-6 btn mt-4 mt-md-5" href="{{ collections[proCollection].url }}" title="{{ section.settings.button_text | strip_html }}">{{ section.settings.button_text }}</a>
+									</div>
+								{%- endif -%}
+							</div>
+						{%- endfor -%}
+					</div>
+				</div>
+			</div>
+		</div>
+  	</div>
+</div>
+{% schema %}
+{
+	"name": "Product tabs",
+	"tag": "section",
+	"class": "velaFramework",
+	"disabled_on": {
+		"groups": ["header", "footer"]
+	},
+	"settings": [
+		{
+			"type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+		},
+		{
+			"type": "checkbox",
+			"id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+		},
+		{
+			"type": "text",
+			"id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+		},
+		{
+			"type": "color",
+			"id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+			"default": "rgba(0,0,0,0)"
+		},
+		{
+			"type": "text",
+			"id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+			"placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+		},
+		{
+			"type": "text",
+			"id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+			"placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+		},
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            },
+		{
+			"type": "header",
+			"content": "General Settings"
+		},
+		{
+			"type": "select",
+			"id": "producttab_style",
+			"label": "Product tab style",
+			"default": "style1",
+			"options": [
+				{
+					"value": "default",
+					"label": "Default"
+				},
+				{
+					"value": "style1",
+					"label": "Style1"
+				},
+				{
+					"value": "style2",
+					"label": "Style2"
+				}
+			]
+		},
+		{
+			"type": "range",
+			"id": "limit",
+			"min": 1,
+			"max": 12,
+			"step": 1,
+			"label": "Maximum products to show",
+			"default": 8
+		},
+		{
+			"type": "text",
+			"id": "button_text",
+			"label": "Button read more",
+			"placeholder": "View all",
+			"info": "Hidden, if it's blank"
+		},
+		{
+			"type": "header",
+			"content": "Layout Settings"
+		},
+		{
+			"type": "select",
+			"id": "layout",
+			"label": "Layout",
+			"default": "grid",
+			"options": [
+				{
+					"value": "grid",
+					"label": "Grid"
+				},
+				{
+					"value": "carousel",
+					"label": "Carousel"
+				}
+			]
+		},
+		{
+			"type": "select",
+			"id": "space_between",
+			"label": "Space between item",
+			"default": "4",
+			"options": [
+				{
+					"value": "3",
+					"label": "20px"
+				},
+				{
+					"value": "4",
+					"label": "30px"
+				},
+				{
+					"value": "5",
+					"label": "40px"
+				}
+			]
+		},
+		{
+			"type": "range",
+			"id": "column1",
+			"min": 1,
+			"max": 8,
+			"step": 1,
+			"label": "Number of columns on desktop",
+			"default": 4,
+			"info": "Desktops"
+		},
+		{
+			"type": "range",
+			"id": "column2",
+			"min": 1,
+			"max": 6,
+			"step": 1,
+			"label": "Number of columns on tablet",
+			"default": 3,
+			"info": "Tablets landscape"
+		},
+		{
+			"type": "range",
+			"id": "column3",
+			"min": 1,
+			"max": 5,
+			"step": 1,
+			"label": "Number of columns on mobile",
+			"default": 2,
+			"info": "Mobile phone landscape"
+		},
+		{
+			"type": "header",
+			"content": "Item settings"
+		},
+		{
+			"type": "select",
+			"id": "product_style",
+			"label": "Product style",
+			"default": "style1",
+			"options": [
+				{
+					"value": "style1",
+					"label": "Style1"
+				},
+				{
+					"value": "style2",
+					"label": "Style2"
+				},
+				{
+					"value": "style3",
+					"label": "Style3"
+				},
+				{
+					"value": "style4",
+					"label": "Style4"
+				},
+				{
+					"value": "style5",
+					"label": "Style5"
+				}
+			]
+		},
+		{
+			"type": "header",
+			"content": "Carousel settings"
+		},
+		{
+			"type": "checkbox",
+			"id": "slide_variableWidth",
+			"label": "Variable width",
+			"default": false,
+			"info": "Variable width slides on the mobile"
+		},
+		{
+			"type": "checkbox",
+			"id": "navigation",
+			"label": "Show navigation",
+			"default": true
+		},
+		{
+			"type": "checkbox",
+			"id": "pagination",
+			"label": "Show dot indicators",
+			"default": false
+		},
+		{
+			"type": "checkbox",
+			"id": "infinite",
+			"label": "Infinite loop sliding",
+			"default": true
+		},
+		{
+			"type": "checkbox",
+			"id": "autoplay",
+			"label": "Enable autoplay",
+			"default": false
+		},
+		{
+			"type": "text",
+			"id": "autoplay_speed",
+			"label": "Autoplay speed",
+			"info": "Autoplay speed in milliseconds. Type: int(ms)",
+			"default": "10000"
+		}
+  	],
+	"blocks": [
+		{
+			"type": "tab",
+			"name": "Tab item",
+			"settings": [
+				{
+					"type": "text",
+					"id": "title",
+					"label": "Heading",
+					"default": "Tab heading"
+				},
+				{
+					"type": "collection",
+					"id": "collection",
+					"label": "Collection"
+				}
+			]
+		}
+	],
+	"presets": [
+		{
+			"name": "Product tabs",
+			"category": "3. Product",
+			"blocks": [
+				{
+					"type": "tab"
+				},
+				{
+					"type": "tab"
+				},
+				{
+					"type": "tab"
+				}
+			]
+		}
+	]
+}
+{% endschema %}

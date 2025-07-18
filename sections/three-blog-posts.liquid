@@ -1,0 +1,244 @@
+<style>@media(min-width: 992px){ .three-blog-posts .col-lg-8 {width: 67%;} .three-blog-posts .col-lg-4 {width: 33%;}}</style>
+{%- include 'section_style' -%}
+{%- assign image_crop = nil -%}
+{%- if section.settings.crop -%}
+    {%- assign image_crop = 'center' -%}
+{%- endif -%} 
+{%- assign show_date = section.settings.blog_date -%}
+{%- assign show_tags = section.settings.blog_tags -%}
+{%- assign show_author = section.settings.blog_author -%}
+{%- assign show_excerpt = section.settings.blog_excerp   -%}
+{%- assign show_readmore = section.settings.blog_readmore  -%}
+<div class="vela-section three-blog-posts overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}"  style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-fluid{% endif %}">
+        <div class="vela-section__inner">
+            <div class="vela-section__content position-relative"> 
+                <div class="row g-3 g-lg-4">
+                    <div class="col-12 col-lg-8" style="--plh-svg-h: 556px;">
+                        {%- if section.settings.article1 != blank -%}
+                            {%- assign article = section.settings.article1 -%}
+                            {%- assign article_content = article.excerpt_or_content -%}
+                            <article class="article blog__grid1">
+                                <div class="article__image position-relative">
+                                    <a class="article__featured-image-link d-block position-relative overflow-hidden rounded-3" href="{{ article.url }}">
+                                        {% render 'img-global', image: article.image, image_ratio: section.settings.image_ratio, crop: image_crop %}
+                                    </a>
+                                    <div class="article__content position-absolute start-0 bottom-0 text-white p-3">
+                                        <div class="p-lg-1">
+                                            {%- if show_tags -%}
+                                                <div class="article__meta-tags d-flex flex-wrap mb-2 pb-lg-1 lh-1">
+                                                    {% for tag in article.tags limit: section.settings.blog_tags_limit %}
+                                                        <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="tags__item text-white">{{ tag }}</a>{% unless forloop.last %}<span class="lh-1 me-1">,</span>{% endunless %}
+                                                    {% endfor %}
+                                                </div>
+                                            {%- endif -%}
+                                            <h2 class="article__title mb-2 line-clamp-2">
+                                                <a class="line-title text-white" href="{{ article.url }}" title="{{ article.title | strip_html }}"><span>{{ article.title }}</span></a>
+                                            </h2>
+                                            {%- if show_excerpt -%}
+                                                <div class="rte article__excerpt mb-3 mb-lg-4 line-clamp-3">
+                                                    {{ article_content | strip_html | truncate: 146 }}
+                                                </div>
+                                            {%- endif -%}
+                                            <div class="article__meta d-flex flex-wrap align-items-center">
+                                                {%- if show_date -%}
+                                                    <div class="article__meta-date d-flex align-items-center text-white">
+                                                        <svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.37 16.16C16.66 17.27 15.42 18 14 18H6C3.79 18 2 16.21 2 14V9H18V14C18 14.8 17.77 15.54 17.37 16.16Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 12H8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12H14" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 15H8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 15H14" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.37 5.84C16.66 4.73 15.42 4 14 4H6C3.79 4 2 5.79 2 8V9H18V8C18 7.2 17.77 6.46 17.37 5.84Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 2V6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2V6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                                        {{ article.published_at | time_tag: format: 'date_month_year' }}
+                                                    </div>
+                                                {%- endif -%}
+                                                {%- if show_author -%}
+                                                    <div class="article__meta-author d-flex align-items-center text-white">
+                                                        {%- capture author -%}{{ article.author }}{%- endcapture -%}
+                                                        {{ 'blogs.article.author_html' | t: author: author }}
+                                                    </div>
+                                                {%- endif -%}
+                                            </div>
+                                            {%- if show_readmore -%}
+                                                <div class="mt-3">
+                                                    <a class="article__btn link fw-medium text-white" href="{{ article.url }}"><span class="d-inline-block">{{ 'blogs.article.read_more' | t }}</span>{% render 'icons', icon: 'arrow-right-top', class: 'icon-arrow-right-top ms-2 position-relative', attr: 'width="9" height="9"' %}</a>
+                                                </div>
+                                            {%- endif -%}
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        {%- else -%}
+                            {%- include 'onboarding-featured-blog', blogstyle: 'grid1', number: 1, show_date: show_date,show_tags: show_tags,show_author: show_author, show_excerpt: show_excerpt, show_readmore: show_readmore -%}
+                        {%- endif -%}
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <div class="row g-3 g-lg-4" style="--plh-svg-h: 263px;">
+                            <div class="col-12">
+                                {%- if section.settings.article2 != blank -%}
+                                    {%- assign article = section.settings.article2 -%}
+                                    {%- assign article_content = article.excerpt_or_content -%}
+                                    {%- include 'blog-grid-item1' -%}
+                                {%- else -%}
+                                    {%- include 'onboarding-featured-blog', blogstyle: 'grid1', number: 1, show_date: show_date,show_tags: show_tags,show_author: show_author, show_excerpt: show_excerpt, show_readmore: show_readmore -%}
+                                {%- endif -%}
+                            </div>
+                            <div class="col-12">
+                                {%- if section.settings.article3 != blank -%}
+                                    {%- assign article = section.settings.article3 -%}
+                                    {%- assign article_content = article.excerpt_or_content -%}
+                                    {%- include 'blog-grid-item1' -%}
+                                {%- else -%}
+                                    {%- include 'onboarding-featured-blog', blogstyle: 'grid1', , number: 1, show_date: show_date,show_tags: show_tags,show_author: show_author, show_excerpt: show_excerpt, show_readmore: show_readmore -%}
+                                {%- endif -%}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%- assign prostyle = nil -%}
+{% schema %}
+    {
+        "name": "Three blog posts",
+        "tag": "section",
+        "class": "velaFramework",
+        "disabled_on": {
+            "groups": ["header", "footer"]
+        },
+        "settings":[
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            },
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_settings.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "blog_tags",
+                "label": "Show tags",
+                "default": true
+            },
+            {
+                "type": "range",
+                "id": "blog_tags_limit",
+                "min": 1,
+                "max": 10,
+                "step": 1,
+                "label": "Tags limit",
+                "default": 2
+            },
+            {
+                "type": "checkbox",
+                "id": "blog_date",
+                "label": "Show date",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id": "blog_author",
+                "label": "Show author",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id": "blog_excerp",
+                "label": "Show Excerp",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id": "blog_readmore",
+                "label": "Show readmore",
+                "default": true
+            },
+            {
+                "type": "select",
+                "id": "image_ratio",
+                "options": [
+                  {
+                    "value": "adapt",
+                    "label": "Adapt to image"
+                  },
+                  {
+                    "value": "portrait",
+                    "label": "Portrait"
+                  },
+                  {
+                    "value": "square",
+                    "label": "Square"
+                  }
+                ],
+                "default": "adapt",
+                "label": "Image ratio"
+            },
+            {
+                "type": "checkbox",
+                "id": "crop",
+                "label": "Crop Image",
+                "default": false,
+                "info": "Not use with Adapt to image"
+            },
+            {
+                "type": "header",
+                "content": "article"
+            },
+            {
+                "type": "article",
+                "id": "article1",
+                "label": "Article 1"
+            },
+            {
+                "type": "article",
+                "id": "article2",
+                "label": "Article 2"
+            },
+            {
+                "type": "article",
+                "id": "article3",
+                "label": "Article 3"
+            }
+        ],
+        "presets": [
+            {
+                "name": "Three blog posts"
+            }
+        ]
+    }
+{% endschema %}

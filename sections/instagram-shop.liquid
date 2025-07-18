@@ -1,0 +1,453 @@
+{{ 'instagram-shop.css' | asset_url | stylesheet_tag }}
+{%- include 'section_style' -%}
+{% include 'carousel-settings' %}
+<div class="vela-section instagram-shop{% if variableWidth %} slick-carousel__variableWidth{% endif %}{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{ section_style }}">
+    <div class="container{% if section.settings.full_with %}-full{% endif %}">
+        <div class="vela-section__inner">
+            <div class="instagram__content">
+                <div class="js-carousel slick-carousel carousel-custom row g-2 g-md-4"
+                    data-nav="{{ nav }}"
+                    data-dots="{{ pagination }}"
+                    data-infinite="{{ infinite }}"
+                    data-autoplay="{{ autoplay }}"
+                    data-variableWidth="{{ variableWidth }}"
+                    data-autoplayspeed="{{ autoplay_speed }}"
+                    data-columnone="{{ owlColumn1 }}" 
+                    data-columntwo="{{ owlColumn2 }}" 
+                    data-columnthree="{{ owlColumn3 }}" style="--bs-gutter-x: 6px;">
+                    {% for block in section.blocks %}
+                        <div class="slick-carousel__item">
+                            <div class="instagram-shop__image {% if variableWidth %} box-width{% endif %}">
+                                <button type="button" class="position-relative overflow-hidden rounded-2 border-0 p-0 w-100" data-bs-toggle="modal" data-bs-target="#instagram-item__{{ block.id }}">
+                                    {%- if block.settings.media != blank -%}
+                                        <div class="ratio ratio-1x1">
+                                            <video loop autoplay playsinline muted style="object-fit: cover;">
+                                                <source src="{{ block.settings.media }}" type="video/mp4">
+                                            </video>
+                                        </div>
+                                    {%- elsif block.settings.image != blank -%}
+                                        {% render 'img-global' with image: block.settings.image %}
+                                    {%- else -%}
+                                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                    {%- endif -%}
+                                    <span class="icon-bag position-absolute overflow-hidden rounded-circle d-flex align-items-center justify-content-center">{%- render 'icons', icon: 'bag', attr: 'width="18" height="18" ' -%}</span>
+                                </button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% for block in section.blocks %}
+                    <div class="modal fade instagram-modal" id="instagram-item__{{ block.id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content overflow-hidden rounded-3">
+                                <div class="modal-body p-0 scroll-style">
+                                    <button type="button" class="vela__btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close">
+                                        {% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+                                        {% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+                                    </button>
+                                    <div class="instagram-item__image position-relative">
+                                        {%- if block.settings.media != blank -%}
+                                            <div class="ratio ratio-1x1">
+                                                <video loop autoplay playsinline muted style="object-fit: cover;">
+                                                    <source src="{{ block.settings.media }}" type="video/mp4">
+                                                </video>
+                                            </div>
+                                        {%- elsif block.settings.image != blank -%}
+                                            {% render 'img-global' with image: block.settings.image %}
+                                        {%- else -%}
+                                            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                        {%- endif -%}
+                                        {% for i in (1..4) %}
+                                            {%- assign productItem = "product" | append: forloop.index -%}
+                                            {%- assign productHandle = block.settings[productItem]-%}
+                                            {% assign offsetLeft = 'left' | append: forloop.index %}
+                                            {% assign offsetTop = 'top' | append: forloop.index %}
+                                            {% if productHandle != blank  %}
+                                                <button class="instagram-shop__btn bg-transparent p-0 d-block border-0 position-absolute" type="button" style="top: {{ block.settings[offsetTop] }}%; left: {{ block.settings[offsetLeft] }}%;">
+                                                    <span class="position-relative d-flex justify-content-center align-items-centerposition-relative d-flex justify-content-center align-items-center">
+                                                        {% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="8" height="8"' %}
+                                                        {% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="8" height="8"' %}
+                                                    </span>
+                                                </button>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <div class="instagram-item__product row gx-0" style="--bs-gutter-y: 16px;">
+                                        {%- for i in (1..4) -%}
+                                            {%- assign productItem = "product" | append: forloop.index -%}
+                                            {%- assign productHandle = block.settings[productItem]-%}
+                                                {%- assign product = all_products[productHandle] -%}
+                                                {%- if productHandle != blank  -%}
+                                                    {%  render 'product-list__style1', product: product %}
+                                                {%- endif -%}
+                                        {%- endfor -%}
+                                        <div class="instagram-item__more_info col-12">
+                                            {%- if block.settings.more_info != blank -%}
+                                                {{ block.settings.more_info }}
+                                            {%- endif -%}
+                                            {%- if block.settings.image_url -%}
+                                                <a class="fs-13 fw-medium" href="{{ block.settings.image_url }}" target="_blank" title="{{ block.settings.store_name | default: shop.name | escape}}">
+                                                    {% render 'icons', icon: 'instagram', attr: 'width="18" height="18"' %} {{ block.settings.store_name | default: shop.name | escape }}
+                                                </a>
+                                            {%- endif-%}
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+    {
+        "name": "Instagram shop",
+        "tag": "section",
+        "class": "velaFramework",
+        "disabled_on": {
+            "groups": ["header", "footer"],
+            "templates": ["product"]
+        },
+        "settings": [
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            },
+            {
+                "type": "header",
+                "content": "Layout Settings"
+            },
+            {
+                "type": "range",
+                "id": "column1",
+                "min": 1,
+                "max": 6,
+                "step": 1,
+                "label": "Number of columns on desktop",
+                "default": 4
+            },
+            {
+                "type": "range",
+                "id": "column2",
+                "min": 1,
+                "max": 5,
+                "step": 1,
+                "label": "Number of columns on tablet",
+                "default": 3
+            },
+            {
+                "type": "range",
+                "id": "column3",
+                "min": 1,
+                "max": 5,
+                "step": 1,
+                "label": "Number of columns on mobile",
+                "default": 2
+            },
+            {
+                "type": "header",
+                "content": "Carousel settings"
+            },
+            {
+                "type": "checkbox",
+                "id": "slide_variableWidth",
+                "label": "Variable width",
+                "default": false,
+                "info": "Variable width slides on the mobile"
+            },
+            {
+                "type": "checkbox",
+                "id": "navigation",
+                "label": "Show navigation",
+                "default": true
+            },
+            {
+				"type": "checkbox",
+				"id": "pagination",
+				"label": "Show dot indicators",
+				"default": false
+			},
+            {
+                "type": "checkbox",
+                "id": "infinite",
+                "label": "Infinite loop sliding",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id": "autoplay",
+                "label": "Enable autoplay",
+                "default": false
+            },
+            {
+                "type": "text",
+                "id": "autoplay_speed",
+                "label": "Autoplay speed",
+                "info": "Autoplay speed in milliseconds. Type: int(ms)",
+                "default": "10000"
+            }
+        ],
+        "blocks": [
+            {
+                "type": "instagram_item",
+                "name": "Instagram item",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "media",
+                        "label": "Primary Media"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "image",
+                        "label": "Primary Image"
+                    },
+                    {
+                        "type": "header",
+                        "content": "Product"
+                    },
+                    {
+                        "type": "product",
+                        "id": "product1",
+                        "label": "Choose product"
+                    },
+                    {
+                        "type": "range",
+                        "id": "top1",
+                        "min": 0,
+                        "max": 100,
+                        "step": 1,
+                        "unit": "%",
+                        "label": "Offset top",
+                        "default": 50
+                    },
+                    {
+                        "type": "range",
+                        "id": "left1",
+                        "min": 0,
+                        "max": 100,
+                        "step": 1,
+                        "unit": "%",
+                        "label": "Offset left",
+                        "default": 50
+                    },
+                    {
+                        "type": "header",
+                        "content": "Product"
+                    },
+                    {
+                        "type": "product",
+                        "id": "product2",
+                        "label": "Choose product"
+                    },
+                    {
+                        "type": "range",
+                        "id": "top2",
+                        "min": 0,
+                        "max": 100,
+                        "step": 1,
+                        "unit": "%",
+                        "label": "Offset top",
+                        "default": 60
+                    },
+                    {
+                        "type": "range",
+                        "id": "left2",
+                        "min": 0,
+                        "max": 100,
+                        "step": 1,
+                        "unit": "%",
+                        "label": "Offset left",
+                        "default": 60
+                    },
+                    {
+                        "type": "header",
+                        "content": "Product"
+                    },
+                    {
+                        "type": "product",
+                        "id": "product3",
+                        "label": "Choose product"
+                    },
+                    {
+                        "type": "range",
+                        "id": "top3",
+                        "min": 0,
+                        "max": 100,
+                        "step": 1,
+                        "unit": "%",
+                        "label": "Offset top",
+                        "default": 40
+                    },
+                    {
+                        "type": "range",
+                        "id": "left3",
+                        "min": 0,
+                        "max": 100,
+                        "step": 1,
+                        "unit": "%",
+                        "label": "Offset left",
+                        "default": 40
+                    },
+                    {
+                        "type": "header",
+                        "content": "Product"
+                    },
+                    {
+                        "type": "product",
+                        "id": "product4",
+                        "label": "Choose product"
+                    },
+                    {
+                        "type": "range",
+                        "id": "top4",
+                        "min": 0,
+                        "max": 100,
+                        "step": 1,
+                        "unit": "%",
+                        "label": "Offset top",
+                        "default": 70
+                    },
+                    {
+                        "type": "range",
+                        "id": "left4",
+                        "min": 0,
+                        "max": 100,
+                        "step": 1,
+                        "unit": "%",
+                        "label": "Offset left",
+                        "default": 70
+                    },
+                    {
+                        "type": "header",
+                        "content": "More info"
+                    },
+                    {
+                        "type": "html",
+                        "id": "more_info",
+                        "label": "More info",
+                        "default":"<p>We're totally smitten over this look! will you be creating a red or pink makeup look for valentine's day?<\/p><p>#cotton #aceno #trending #sale</p>"
+                    },
+                    {
+                        "type": "text",
+                        "id": "store_name",
+                        "label": "Store name",
+                        "default": "Aceno store"
+                    },
+                    {
+                        "type": "url",
+                        "id": "image_url",
+                        "label": "Link to instagram"
+                    }
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name": "Instagram shop",
+				"blocks": [
+                    {
+                        "type":"instagram_item",
+                        "settings": {
+                            "image": "",
+                            "product1": "",
+                            "top1": 30,
+                            "left1": 49,
+                            "product2": "",
+                            "top2": 50,
+                            "left2": 50,
+                            "product3": "",
+                            "top3": 75,
+                            "left3": 75
+                        }
+                    },
+                    {
+                        "type":"instagram_item",
+                        "settings": {
+                            "image": "",
+                            "product1": "",
+                            "top1": 30,
+                            "left1": 49,
+                            "product2": "",
+                            "top2": 50,
+                            "left2": 50,
+                            "product3": "",
+                            "top3": 75,
+                            "left3": 75
+                        }
+                    },
+                    {
+                        "type":"instagram_item",
+                        "settings": {
+                            "image": "",
+                            "product1": "",
+                            "top1": 30,
+                            "left1": 49,
+                            "product2": "",
+                            "top2": 50,
+                            "left2": 50,
+                            "product3": "",
+                            "top3": 75,
+                            "left3": 75
+                        }
+                    },
+                    {
+                        "type":"instagram_item",
+                        "settings": {
+                            "image": "",
+                            "product1": "",
+                            "top1": 30,
+                            "left1": 49,
+                            "product2": "",
+                            "top2": 50,
+                            "left2": 50,
+                            "product3": "",
+                            "top3": 75,
+                            "left3": 75
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

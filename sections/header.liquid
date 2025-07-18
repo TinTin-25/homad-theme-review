@@ -1,0 +1,616 @@
+{%- include 'section_style' -%}
+{%- capture header_style -%}
+	--header-color: {{ section.settings.color_header_text }};
+{%- endcapture -%}
+<{% if section.settings.sticky_header_type != 'none' %}sticky-header data-sticky-type="{{ section.settings.sticky_header_type }}"{% else %}div{% endif %} class="header-wrapper{% if section.settings.header-white %} header-white__wrap{% endif %}">
+	<header class="header">
+		<div data-section-id="header" data-section-type="header-section" class="vela-section{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}{{- header_style -}}">
+			<div class="container{% if section.settings.full_with %}-fluid{% endif %}">		
+				<div class="header__inner style__{{ settings.header_layout }}">
+					<div class="row g-2 align-items-center">
+						{%- if settings.header_layout == "header2" -%}
+							{{ 'header2.css' | asset_url | stylesheet_tag }}
+							{% include 'header2' %}
+						{%- elsif settings.header_layout == "header3"-%}
+							{{ 'header3.css' | asset_url | stylesheet_tag }}
+							{% include 'header3' %}
+						{%- elsif settings.header_layout == "header4"-%}
+							{{ 'header4.css' | asset_url | stylesheet_tag }}
+							{% include 'header4' %}
+						{%- else -%}
+							{{ 'header1.css' | asset_url | stylesheet_tag }}
+							{% include 'header1' %}
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+</{% if section.settings.sticky_header_type != 'none' %}sticky-header{% else %}div{% endif %}>
+{%- render "header-search" -%}
+{%- if settings.header_layout == "header4" and section.settings.menu != blank -%}
+	{%- include 'header4-menu' -%}
+{%- endif -%}
+{%- if request.page_type == 'index' -%}
+	{% assign potential_action_target = request.origin | append: routes.search_url | append: "?q={search_term_string}" %}
+	<script type="application/ld+json">
+	  {
+		"@context": "http://schema.org",
+		"@type": "WebSite",
+		"name": {{ shop.name | json }},
+		"potentialAction": {
+		  "@type": "SearchAction",
+		  "target": {{ potential_action_target | json }},
+		  "query-input": "required name=search_term_string"
+		},
+		"url": {{ request.origin | append: page.url | json }}
+	  }
+	</script>
+{%- endif -%}
+{% schema %}
+{
+  	"name": "t:sections.header.name",
+	"class": "section-header",
+  	"settings": [
+		{
+			"type": "header",
+			"content": "t:sections.global.settings.header_section.content"
+		},
+		{
+			"type": "checkbox",
+			"id": "full_with",
+			"label": "t:sections.global.settings.full_width.label"
+		},
+		{
+			"type": "text",
+			"id": "max_with",
+			"label": "t:sections.global.settings.max_with.label",
+			"info": "t:sections.global.settings.max_with.info"
+		},
+		{
+			"type": "text",
+			"id": "padding_block",
+			"label": "t:sections.global.settings.padding.label",
+			"placeholder": "0px 0px",
+			"info": "t:sections.global.settings.padding.info"
+		},
+		{
+			"type": "text",
+			"id": "padding_block_m",
+			"label": "t:sections.global.settings.padding_mobile.label",
+			"placeholder": "0px 0px",
+			"info": "t:sections.global.settings.padding_mobile.info"
+		},
+		{
+			"type": "color",
+			"id": "color_bg",
+			"label": "t:sections.global.settings.bg_color.label",
+			"default": "rgba(0,0,0,0)"
+		},
+		{
+			"type": "color",
+			"id": "color_header_text",
+			"label": "Color",
+			"label": "t:sections.global.settings.color.label",
+			"default": "#1f2021"
+		},
+		{
+            "type": "header",
+            "content": "t:sections.global.settings.header_settings.content"
+        },
+		{
+			"type": "image_picker",
+			"id": "logo",
+			"label": "t:sections.header.settings.logo.label"
+		},
+		{
+			"type": "range",
+			"id": "logo_width",
+			"min": 50,
+			"max": 250,
+			"step": 5,
+			"default": 100,
+			"unit": "px",
+			"label": "t:sections.header.settings.logo_width.label"
+		},
+		{
+			"type": "select",
+			"id": "sticky_header_type",
+			"options": [
+				{
+					"value": "none",
+					"label": "t:sections.header.settings.sticky_header_type.options__1.label"
+				},
+				{
+					"value": "on-scroll-up",
+					"label": "t:sections.header.settings.sticky_header_type.options__2.label"
+				},
+				{
+					"value": "always",
+					"label": "t:sections.header.settings.sticky_header_type.options__3.label"
+				}
+			],
+			"default": "on-scroll-up",
+			"label": "t:sections.header.settings.sticky_header_type.label"
+		},
+		{
+			"type": "link_list",
+			"id": "menu",
+			"default": "main-menu",
+			"label": "t:sections.header.settings.menu.label",
+			"info": "t:sections.header.settings.menu.info"
+		},
+		{
+			"type": "header",
+			"content": "Hot Line"
+		},
+		{
+			"type": "checkbox",
+			"id": "hotline_enabel",
+			"label": "Enabel?",
+			"default": true
+		},
+		{
+			"type": "textarea",
+			"id": "hotline_icon",
+			"label": "Icon",
+			"info": "svg icon, icon size: 32x32"
+		}, 
+		{
+			"type": "textarea",
+			"id": "hotline_text",
+			"label": "Text",
+			"default": "<label class=\"d-block\">Call us free:<\/label><span class=\"fw-semibold\">(888) 910-2330<\/span>"
+		},
+		{
+			"type": "header",
+			"content": "Header white"
+		},
+		{
+			"type": "checkbox",
+			"id": "header-white",
+			"label": "Header white",
+			"default": false
+		},
+		{
+			"type": "image_picker",
+			"id": "logo_white",
+			"label": "Logo"
+		},
+		{
+			"type": "header",
+			"content": "Categories"
+		},
+		{
+            "type": "paragraph",
+            "content": "displayed on the drawer tab menu"
+        },
+		{
+			"type": "link_list",
+			"id": "velavermenu_linklist",
+			"label": "Menu navigation",
+			"default": "main-menu"
+		},
+		{
+			"type": "text",
+			"id": "velavermenu_title",
+			"label": "Title",
+			"placeholder": "Categories",
+			"default": "main-menu"
+		},
+		{
+			"type": "select",
+			"id": "velavermenu_style",
+			"label": "Style",
+			"default": "default",
+			"options": [
+				{
+					"value": "default",
+					"label": "Default"
+				},
+				{
+					"value": "style1",
+					"label": "Style1"
+				},
+				{
+					"value": "style2",
+					"label": "Style2"
+				}
+			]
+		},
+  	],
+  	"blocks": [
+    	{
+			"type": "menu",
+			"name": "Megamenu Item",
+			"settings": [
+				{
+					"type": "html",
+					"id": "title",
+					"label": "Menu item name",
+					"info": "Menu item of main-menu. Menu item has dropdown megamenu.[guideline](https:\/\/velatheme.com\/guide\/velatheme-v3\/main_menu.html)"
+				},
+				{
+					"type": "text",
+					"id": "menu_width",
+					"label": "Item max width(px)",
+					"info": "ex: 800px"
+				},
+				{
+					"type": "select",
+					"id": "menu_align",
+					"label": "Menu Alignment",
+					"default": "start-0",
+					"options": [
+						{
+							"value": "start-0",
+							"label": "Left"
+						},
+						{
+							"value": "start-0 end-0",
+							"label": "Center"
+						},
+						{
+							"value": "end-0",
+							"label": "Right"
+						}
+					]
+				},
+				{
+					"type": "header",
+					"content": "1. Block navigation",
+					"info": "Admin -> Navigation -> Menu"
+				},
+				{
+					"type": "checkbox",
+					"id": "menu",
+					"label": "Enable"
+				},
+				{
+					"type": "select",
+					"id": "menu_order",
+					"label": "Order",
+					"default": "1",
+					"options": [
+						{
+							"value": "1",
+							"label": "1"
+						},
+						{
+							"value": "2",
+							"label": "2"
+						},
+						{
+							"value": "3",
+							"label": "3"
+						},
+						{
+							"value": "4",
+							"label": "4"
+						},
+						{
+							"value": "5",
+							"label": "5"
+						}
+					]
+				},
+				{
+					"type": "range",
+					"id": "menu_col",
+					"label": "Block width",
+					"min": 10,
+					"max": 100,
+					"step": 1,
+					"unit": "%",
+					"default": 100
+				},
+				{
+					"type": "range",
+					"id": "menu_menu_col",
+					"label": "Width of each menu",
+					"min": 10,
+					"max": 100,
+					"step": 1,
+					"unit": "%",
+					"default": 20
+				},
+				{
+					"type": "header",
+					"content": "2. Block products"
+				},
+				{
+					"type": "checkbox",
+					"id": "products",
+					"label": "Enable"
+				},
+				{
+					"type": "select",
+					"id": "products_order",
+					"label": "Order",
+					"default": "2",
+					"options": [
+						{
+							"value": "1",
+							"label": "1"
+						},
+						{
+							"value": "2",
+							"label": "2"
+						},
+						{
+							"value": "3",
+							"label": "3"
+						},
+						{
+							"value": "4",
+							"label": "4"
+						},
+						{
+							"value": "5",
+							"label": "5"
+						}
+					]
+				},
+				{
+					"type": "range",
+					"id": "products_col",
+					"label": "Block width",
+					"min": 10,
+					"max": 100,
+					"step": 1,
+					"unit": "%",
+					"default": 100
+				},
+				{
+					"type": "text",
+					"id": "products_title",
+					"label": "Heading"
+				},
+				{
+					"type": "collection",
+					"id": "products_collection",
+					"label": "Collection"
+				},
+				{
+					"type": "text",
+					"id": "products_limit",
+					"label": "Limit",
+					"default": "2"
+				},
+				{
+					"type": "header",
+					"content": "3. Block html"
+				},
+				{
+					"type": "checkbox",
+					"id": "html",
+					"label": "Enable"
+				},
+				{
+					"type": "select",
+					"id": "html_order",
+					"label": "Order",
+					"default": "3",
+					"options": [
+						{
+							"value": "1",
+							"label": "1"
+						},
+						{
+							"value": "2",
+							"label": "2"
+						},
+						{
+							"value": "3",
+							"label": "3"
+						},
+						{
+							"value": "4",
+							"label": "4"
+						},
+						{
+							"value": "5",
+							"label": "5"
+						}
+					]
+				},
+				{
+					"type": "range",
+					"id": "html_col",
+					"label": "Block width",
+					"min": 10,
+					"max": 100,
+					"step": 1,
+					"unit": "%",
+					"default": 100
+				},
+				{
+					"type": "text",
+					"id": "html_title",
+					"label": "Heading"
+				},
+				{
+					"type": "html",
+					"id": "html_content",
+					"label": "Content HTML",
+					"info": "You can input HTML code, img tag, video code, ..."
+				},
+				{
+					"type": "header",
+					"content": "4. Block banner"
+				},
+				{
+					"type": "checkbox",
+					"id": "banner",
+					"label": "Enable"
+				},
+				{
+					"type": "select",
+					"id": "banner_order",
+					"label": "Order",
+					"default": "4",
+					"options": [
+						{
+							"value": "1",
+							"label": "1"
+						},
+						{
+							"value": "2",
+							"label": "2"
+						},
+						{
+							"value": "3",
+							"label": "3"
+						},
+						{
+							"value": "4",
+							"label": "4"
+						},
+						{
+							"value": "5",
+							"label": "5"
+						}
+					]
+				},
+				{
+					"type": "range",
+					"id": "banner_col",
+					"label": "Block width",
+					"min": 10,
+					"max": 100,
+					"step": 1,
+					"unit": "%",
+					"default": 100
+				},
+				{
+					"type": "image_picker",
+					"id": "image",
+					"label": "Banner image"
+				},
+				{
+					"type": "url",
+					"id": "banner_link",
+					"label": "Banner URL"
+				},
+				{
+					"type": "header",
+					"content": "5. Collection list"
+				},
+				{
+					"type": "checkbox",
+					"id": "collection_enable",
+					"label": "Enable"
+				},
+				{
+					"type": "select",
+					"id": "collection_order",
+					"label": "Order",
+					"default": "5",
+					"options": [
+						{
+							"value": "1",
+							"label": "1"
+						},
+						{
+							"value": "2",
+							"label": "2"
+						},
+						{
+							"value": "3",
+							"label": "3"
+						},
+						{
+							"value": "4",
+							"label": "4"
+						},
+						{
+							"value": "5",
+							"label": "5"
+						}
+					]
+				},
+				{
+					"type": "text",
+					"id": "collection_title",
+					"label": "Block Title"
+				},
+				{
+					"type": "html",
+					"id": "collection_content",
+					"label": "Block Content"
+				},
+				{
+					"type": "range",
+					"id": "colllection_col",
+					"label": "Block width",
+					"min": 10,
+					"max": 100,
+					"step": 1,
+					"unit": "%",
+					"default": 100
+				},
+				{
+					"type": "range",
+					"id": "colllection_col_item",
+					"label": "Width of item",
+					"min": 10,
+					"max": 100,
+					"step": 1,
+					"unit": "%",
+					"default": 25
+				},
+				{
+				   "type": "collection",
+				   "id": "velamenu_list_collection1",
+				   "label": "Select Collection"
+				 },
+				 {
+				   "type": "collection",
+				   "id": "velamenu_list_collection2",
+				   "label": "Select Collection"
+				 },
+				 {
+				   "type": "collection",
+				   "id": "velamenu_list_collection3",
+				   "label": "Select Collection"
+				 },
+				 {
+				   "type": "collection",
+				   "id": "velamenu_list_collection4",
+				   "label": "Select Collection"
+				 },
+				 {
+				   "type": "collection",
+				   "id": "velamenu_list_collection5",
+				   "label": "Select Collection"
+				 },
+				 {
+				   "type": "collection",
+				   "id": "velamenu_list_collection6",
+				   "label": "Select Collection"
+				 },
+				 {
+				   "type": "collection",
+				   "id": "velamenu_list_collection7",
+				   "label": "Select Collection"
+				 },
+				 {
+				   "type": "collection",
+				   "id": "velamenu_list_collection8",
+				   "label": "Select Collection"
+				 },
+				 {
+				   "type": "collection",
+				   "id": "velamenu_list_collection9",
+				   "label": "Select Collection"
+				 },
+				 {
+				   "type": "collection",
+				   "id": "velamenu_list_collection10",
+				   "label": "Select Collection"
+				 }
+			]
+		}
+  	]
+}
+{% endschema %}

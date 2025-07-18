@@ -1,0 +1,182 @@
+{{- 'collection-list-special.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'collection-list-special.js' | asset_url }}" defer="defer"></script>
+{%- include 'section_style' -%}
+
+<style>
+  /* Aplicación de padding y margin móvil desde settings */
+  @media screen and (max-width: 768px) {
+    .collection-list-special {
+      {% if section.settings.padding_block_m != blank %}
+        padding: {{ section.settings.padding_block_m }};
+      {% endif %}
+      {% if section.settings.margin_block_m != blank %}
+        margin: {{ section.settings.margin_block_m }};
+      {% endif %}
+    }
+  }
+</style>
+
+<div
+  class="vela-section collection-list-special {% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}"
+  style="
+    {% if section.settings.max_with != blank %}max-width: {{ section.settings.max_with }};{% endif %}
+    {% if section.settings.color_bg != blank %}background-color: {{ section.settings.color_bg }};{% endif %}
+    {% if section.settings.padding_block != blank %}padding: {{ section.settings.padding_block }};{% endif %}
+    {% if section.settings.margin_block != blank %}margin: {{ section.settings.margin_block }};{% endif %}
+  "
+>
+  <div class="container{% if section.settings.full_with %}-full{% endif %}">
+    <div class="vela-section__inner position-relative">
+      <div class="vela-section__content colleciton_special" data-color-hover="#ffffff">
+        <div class="row g-ct justify-content-center" style="--gutter-md-x: 60px;--gutter-md-y: 60px;--gutter-x: 36px;--gutter-y: 36px;">
+          {% for block in section.blocks %}
+            <div class="col-md-4 col-sm-6">
+              <div class="position-relative collection-list__special text-center">
+               <div class="collection-list-special__title lh-sm h4" style="font-size: {{ section.settings.title_font_size }}px;">
+                  {{ block.settings.text_title }}
+                </div>
+                {% if block.settings.text_subtitle != blank %}
+                  <div class="text-muted small mb-3" style="font-size: {{ section.settings.subtitle_font_size }}px;">{{ block.settings.text_subtitle }}</div>
+                {% endif %}
+                {% if block.settings.block_image != blank %}
+                  <img class="hover-image img-fluid" src="{{ block.settings.block_image | img_url: 'master' }}" alt="{{ block.settings.block_image.alt }}">
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg hover-image' }}
+                {% endif %}
+                {% if block.settings.button_text != blank and block.settings.button_link != blank %}
+                {% if block.settings.button_link == "#open-homad-modal" %}
+                  <a href="#" data-modal="open-homad-modal" class="btn btn-primary mt-3">{{ block.settings.button_text }}</a>
+                 {% else %}
+                  <a href="{{ block.settings.button_link }}" class="btn btn-primary mt-3">{{ block.settings.button_text }}</a>
+                 {% endif %}
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% schema %}
+{
+  "name": "Collection list special 2",
+  "tag": "section",
+  "class": "velaFramework",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_with",
+      "label": "Make section full width"
+    },
+    {
+      "type": "text",
+      "id": "max_with",
+      "label": "Container max width?(px)",
+      "info": "Ex: 1440px"
+    },
+    {
+      "type": "color",
+      "id": "color_bg",
+      "label": "Background color",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "text",
+      "id": "padding_block",
+      "label": "Padding",
+      "placeholder": "0px 0px",
+      "info": "Ex: 0px 0px 0px 0px and use on desktop only"
+    },
+    {
+      "type": "text",
+      "id": "padding_block_m",
+      "label": "Padding on mobile",
+      "placeholder": "0px 0px",
+      "info": "Ex: 0px 0px 0px 0px and use on mobile only"
+    },
+    {
+      "type": "text",
+      "id": "margin_block",
+      "label": "Margin",
+      "placeholder": "0px 0px",
+      "default": "0 0 30px",
+      "info": "Ex: 0px 0px 30px 0px"
+    },
+    {
+      "type": "text",
+      "id": "margin_block_m",
+      "label": "Margin on mobile",
+      "placeholder": "0px 0px",
+      "info": "Ex: 0px 0px 0px 0px and use mobile only"
+    },
+    {
+     "type": "range",
+     "id": "title_font_size",
+     "label": "Tamaño del título (px)",
+     "min": 12,
+     "max": 100,
+     "step": 1,
+     "default": 42
+     },
+     {
+     "type": "range",
+     "id": "subtitle_font_size",
+     "label": "Tamaño del subtítulo (px)",
+     "min": 10,
+     "max": 60,
+     "step": 1,
+     "default": 16
+     }
+  ],
+  "blocks": [
+    {
+      "type": "textblock",
+      "name": "Text Block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text_title",
+          "label": "Main Title",
+          "default": "Text title"
+        },
+        {
+          "type": "text",
+          "id": "text_subtitle",
+          "label": "Subtitle",
+          "default": "Subtitle text here"
+        },
+        {
+          "type": "image_picker",
+          "id": "block_image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection list special 2",
+      "category": "4. element",
+      "blocks": [
+        { "type": "textblock" },
+        { "type": "textblock" },
+        { "type": "textblock" }
+      ]
+    }
+  ]
+}
+{% endschema %}

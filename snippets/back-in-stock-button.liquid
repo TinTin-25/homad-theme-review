@@ -1,0 +1,15 @@
+{%- assign title = settings.outofstock_title | escape -%}
+{%- assign notify_class = '' -%}
+{%- if current_variant.available -%}
+    {%- assign notify_class = ' d-none' -%}
+{%- endif -%}
+<div class="notify-me__button{{ notify_class }}">
+    <button
+        class="notify-me__btn btn btn-default w-100"
+        type="button"
+        data-bs-toggle="modal"
+        data-bs-target="#notify-popup"
+        data-bs-backdrop="static"
+        title="{{ title }}"
+    >{{ title }}</button>
+</div>

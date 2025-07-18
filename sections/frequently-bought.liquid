@@ -1,0 +1,307 @@
+{{ 'frequently-bought.css' | asset_url | stylesheet_tag }}
+{{- 'lookbook.css' | asset_url | stylesheet_tag -}}
+{%- include 'section_style' -%}
+<div class="vela-section frb-lookbook{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-full{% endif %}">
+        <div class="vela-section__inner">
+            <div class="lookbook__content" style="--plh-svg-h: 700px;">
+                <div class="row g-0 flex-lg-row-reverse">
+                    <div class="col-12 col-lg-7">
+                        <div class="position-relative">
+                            <div class="overflow-hidden rounded-3">
+                                {%- if section.settings.image1 != blank -%}
+                                    {% render 'img-global' with image: section.settings.image1 %}
+                                {%- else -%}
+                                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                {%- endif -%}
+                            </div>
+                            {% for block in section.blocks %}
+                                {%- assign product_handle = block.settings.product -%}
+                                {%- assign alignment = block.settings.display -%}
+                                {%- assign postion_top = block.settings.top -%}
+                                {%- assign postion_left = block.settings.left -%}
+                                {%- render 'lookbook-item', id: block.id , product: all_products[product_handle], alignment: alignment, top: postion_top, left: postion_left -%}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-5">
+                        <frequently-bought class="frequently-bought d-block">
+                            <div class="frb-lookbook__product pt-4 mt-1 mt-lg-0 pt-lg-0">
+                                {%- if section.settings.heading != blank -%}
+                                    <div class="heading-group pb-1 mb-3 mb-lg-4">
+                                        {%- if section.settings.caption != blank -%}
+                                            <div class="caption">
+                                                {{ section.settings.caption }}
+                                            </div>
+                                        {%- endif -%}
+                                        <h2 class="heading mb-0">
+                                            <span>{{ section.settings.heading }}</span>
+                                        </h2>
+                                    </div>
+                                {%- endif -%}
+                                <div class="frequently-bought__content">
+                                    <div class="frequently-bought__products">
+                                        <form class="frequently-bought__form" action="#">
+                                            <div class="frequently-bought__cards">
+                                                {% for block in section.blocks %}
+                                                    <div class="row g-0 align-items-center{% unless forloop.last %} border-bottom mb-3 pb-3{% endunless %}">
+                                                        {%- assign fb_product = all_products[block.settings.product] -%}
+                                                        {%- render 'product-frequently-bought', is_image_card: true, product: fb_product, unique: section.id, index: 0 -%}
+                                                        {%- liquid
+                                                            assign fb_variant = fb_product.selected_or_first_available_variant
+                                                            if fb_variant.available
+                                                                assign sub_total = sub_total | plus: fb_variant.price
+                                                                if fb_variant.compare_at_price
+                                                                assign sub_total_compare = sub_total_compare | plus: fb_variant.compare_at_price
+                                                                else
+                                                                assign sub_total_compare = sub_total_compare | plus: fb_variant.price
+                                                                endif
+                                                            endif
+                                                        -%}
+                                                        {%- render 'product-frequently-bought', is_image_card: false, is_main_product: false, product: fb_product, unique: section.id -%}
+                                                    </div>
+                                                {%- endfor -%}
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="frequently-bought__subtotal mt-5">
+                                        <button type="button" class="fbvela-actions__submit position-relative btn btn-default w-100">
+                                            <span class="text">{{ 'sections.frequently_bought.shop_now' | t }} / 
+                                                <span class="fbvela-subtotal__price" data-sub-total="{{ sub_total }}">{{ sub_total | money }}</span>
+                                                <span class="fbvela-subtotal__compare-price" data-sub-total-compare="{{ sub_total_compare }}">{{ sub_total_compare | money }}</span>                                             
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </frequently-bought>
+                        <script src="{{ 'frequently-bought.js' | asset_url }}" defer="defer"></script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% for block in section.blocks %}
+        {%- assign product = all_products[block.settings.product] -%}
+        <div class="modal fade lookbook-modal" id="lookbook-{{ block.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content bg-transparent border-0">
+                    <div class="modal-header">
+                        <button class="lookbook-modal__btn vela__btn-close bg-white p-0 d-block border-0 position-relative start-50 translate-middle-x" type="button" data-bs-dismiss="modal" aria-label="Close">    
+                            {% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+                            {% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+                        </button>
+                    </div>
+                    <div class="modal-body d-flex justify-content-center p-0">
+                        <div class="lookbook-product">
+                            <a class="lookbook-product__img d-block mb-2" href="{{ product.url }}" title="{{ product.title | strip_html }}">
+                                {% render 'img-global', image: product.featured_media, crop: 'center', max_width: 180 %}
+                            </a>
+                            <div class="lookbook-product__content">
+                                <div class="product-card__name fs-6 line-clamp-2">
+                                    <a class="lookbook-product__title" href="{{ product.url }}" title="{{ product.title | strip_html }}">{{ product.title | escape }}</a>
+                                </div>
+                                <div class="lookbook-product__price pt-1 d-flex">
+                                    <div class="product-price fs-14 {% if on_sale %} product-price__has-sale{% endif %}">{{ product.price | money }}</div>
+                                    {%- if on_sale -%}
+                                        <div class="product-price product-price--regular fs-14 ms-1">{{ product.compare_at_price | money }}</div>
+                                    {%- endif -%}
+                                    {%- if shop.taxes_included and settings.product_card_tax -%}
+                                        <span class="ms-2">
+                                            {{ 'products.general.include_taxes' | t }}
+                                        </span>
+                                    {%- endif -%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% schema %}
+    {
+        "name": "Frequently bought",
+        "tag": "section",
+        "class": "velaFramework",
+        "disabled_on": {
+            "groups": ["header", "footer"],
+            "templates": ["product"]
+        },
+        "settings": [
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            },
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_settings.content"
+            },
+            {
+                "type": "text",
+                "id": "caption",
+                "label": "t:sections.global.settings.subheading_section.label",
+                "default": "Caption"
+            },
+            {
+                "type": "html",
+                "id": "heading",
+                "label": "t:sections.global.settings.heading_section.label",
+                "default": "Heading"
+            },
+            {
+                "type": "header",
+                "content": "Banner"
+            },
+            {
+                "type": "image_picker",
+                "id": "image1",
+                "label": "Banner"
+            }
+        ],
+        "blocks": [
+            {
+                "type": "item",
+                "name": "Product",
+                "settings": [
+                    {
+                        "type": "product",
+                        "id": "product",
+                        "label": "Choose product"
+                    },
+                    {
+                        "type": "select",
+                        "id": "display",
+                        "label": "Display type",
+                        "default": "top-left",
+                        "options": [
+                            {
+                                "value": "top-left",
+                                "label": "Top left"
+                            },
+                            {
+                                "value": "top-right",
+                                "label": "Top right"
+                            },
+                            {
+                                "value": "center-left",
+                                "label": "Center left"
+                            },
+                            {
+                                "value": "center-top",
+                                "label": "Center top"
+                            },
+                            {
+                                "value": "center-right",
+                                "label": "Center right"
+                            },
+                            {
+                                "value": "center-bottom",
+                                "label": "Center bottom"
+                            },
+                            {
+                                "value": "bottom-left",
+                                "label": "Bottom left"
+                            },
+                            {
+                                "value": "bottom-right",
+                                "label": "Bottom right"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "range",
+                        "id": "top",
+                        "min": 0,
+                        "max": 100,
+                        "step": 1,
+                        "unit": "%",
+                        "label": "Offset top",
+                        "default": 50
+                    },
+                    {
+                        "type": "range",
+                        "id": "left",
+                        "min": 0,
+                        "max": 100,
+                        "step": 1,
+                        "unit": "%",
+                        "label": "Offset left",
+                        "default": 50
+                    }
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name": "Frequently bought",
+				"blocks": [
+                    {
+                        "type":"item",
+                        "settings": {
+                            "product": "",
+                            "display": "bottom-right",
+                            "top": 30,
+                            "left": 49
+                        }
+                    },
+                    {
+                        "type":"item",
+                        "settings": {
+                            "display": "center-left",
+                            "top": 49,
+                            "left": 37
+                        }
+                    },
+                    {
+                        "type":"item",
+                        "settings": {
+                            "product": "",
+                            "display": "center-top",
+                            "top": 90,
+                            "left": 50
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

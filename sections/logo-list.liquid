@@ -1,0 +1,299 @@
+{%- include 'carousel-settings' -%}
+{%- include 'section_style' -%}
+{%- if section.settings.logo_size != blank -%}
+    {%- assign logo_size = section.settings.logo_size | plus: 0 -%}
+{%- else -%}
+    {%- assign logo_size = 155 -%}
+{%- endif -%}
+<div class="vela-section brand-list overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{ section_style }}">
+    <div class="container{% if section.settings.full_with %}-fluid{% endif %}">
+        <div class="vela-section__inner">
+            <div class="vela-section__content">
+                <div
+                    {% if section.settings.layout == 'carousel' %}
+                        class="js-carousel slick-carousel row gx-{{ section.settings.space_between }}"
+                        data-nav="{{ nav }}"
+                        data-infinite="{{ infinite }}"
+                        data-autoplay="{{ autoplay }}"
+                        data-autoplayspeed="{{ autoplay_speed }}"
+                        data-columnone="{{ owlColumn1 }}" 
+                        data-columntwo="{{ owlColumn2 }}" 
+                        data-columnthree="{{ owlColumn3 }}"
+                    {% else %}
+                        class="row gx-{{ section.settings.space_between }} row-cols-{{ owlColumn3 }} row-cols-md-{{ owlColumn2 }} row-cols-lg-{{ owlColumn1 }}"
+                    {% endif %}
+                >
+                    {% for block in section.blocks %}
+                        <div class="{% if section.settings.layout == 'carousel'  %}slick-carousel__item{% else %}col{% endif %}">
+                            <div class="logo-list-item position-relative d-flex justify-content-center{% if section.settings.brand-effect %} logo-effect{% endif %}">
+                                <div style="width: {{ logo_size }}px;">
+                                    {%- if block.settings.link != blank -%}
+                                        <a href="{{ block.settings.link }}" title="{{ shop.name }}">
+                                    {%- else -%}
+                                        <span>
+                                    {%- endif -%}
+                                        {%- if block.settings.image != blank -%}
+                                            {% render 'img-global', image: block.settings.image, max_width: logo_size, image_ratio: section.settings.image_ratio, image_style: true %}
+                                        {%- else -%}
+                                            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                        {%- endif -%}
+                                    {%- if block.settings.link != blank -%}
+                                        </a>
+                                    {%- else -%}
+                                        </span>
+                                    {%- endif -%}
+                                </div>
+                            </div>
+                        </div>
+                    {%- endfor -%}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+    {
+        "name": "Brand list",
+        "tag": "section",
+        "class": "velaFramework",
+        "disabled_on": {
+            "groups": ["header"]
+        },
+        "settings":[
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            },
+            {
+                "type": "header",
+                "content": "Layout Settings"
+            },
+            {
+                "type": "select",
+                "id": "layout",
+                "label": "Layout",
+                "default": "grid",
+                "options": [
+                    {
+                        "value": "grid",
+                        "label": "Grid"
+                    },
+                    {
+                        "value": "carousel",
+                        "label": "Carousel"
+                    }
+                ]
+            },
+            {
+                "type": "select",
+                "id": "space_between",
+                "label": "Space between item(px)",
+                "default": "3",
+                "options": [
+                    {
+                        "value": "0",
+                        "label": "0"
+                    },
+                    {
+                        "value": "2",
+                        "label": "10px"
+                    },
+                    {
+                        "value": "3",
+                        "label": "20px"
+                    },
+                    {
+                        "value": "4",
+                        "label": "30px"
+                    },
+                    {
+                        "value": "5",
+                        "label": "40px"
+                    }
+                ]
+            },
+            {
+                "type": "range",
+                "id": "column1",
+                "min": 1,
+                "max": 7,
+                "step": 1,
+                "label": "Number of columns on desktop",
+                "default": 6
+            },
+            {
+                "type": "range",
+                "id": "column2",
+                "min": 1,
+                "max": 5,
+                "step": 1,
+                "label": "Number of columns on tablet",
+                "default": 3
+            },
+            {
+                "type": "range",
+                "id": "column3",
+                "min": 1,
+                "max": 5,
+                "step": 1,
+                "label": "Number of columns on mobile",
+                "default": 2
+            },
+            {
+                "type": "header",
+                "content": "Item settings"
+            },
+            {
+                "type": "text",
+                "id": "logo_size",
+                "label": "Logo size",
+                "default": "150",
+                "placeholder": "150"
+            },
+            {
+                "type": "select",
+                "id": "image_ratio",
+                "options": [
+                  {
+                    "value": "adapt",
+                    "label": "Adapt to image"
+                  },
+                  {
+                    "value": "portrait",
+                    "label": "Portrait"
+                  },
+                  {
+                    "value": "square",
+                    "label": "Square"
+                  }
+                ],
+                "default": "adapt",
+                "label": "Image ratio"
+            },
+            {
+                "type": "checkbox",
+                "id": "crop",
+                "label": "Crop Image",
+                "default": false,
+                "info": "Not use with Adapt to image"
+            },
+            {
+                "type": "checkbox",
+                "id": "brand-effect",
+                "label": "Show effect",
+                "default": true
+            },
+            {
+                "type": "header",
+                "content": "Carousel settings"
+            },
+            {
+                "type": "checkbox",
+                "id": "navigation",
+                "label": "Show navigation",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id": "infinite",
+                "label": "Infinite loop sliding",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id": "autoplay",
+                "label": "Enable autoplay",
+                "default": false
+            },
+            {
+                "type": "text",
+                "id": "autoplay_speed",
+                "label": "Autoplay speed",
+                "info": "Autoplay speed in milliseconds. Type: int(ms)",
+                "default": "10000"
+            }
+        ],
+		"blocks": [
+			{
+                "type": "image",
+                "name": "Brand item",
+                "settings": [
+                    {
+                        "type": "url",
+                        "id": "link",
+                        "label": "Brand URL"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "image",
+                        "label": "Brand image",
+                        "info": "Default size:288x100 pixels"
+                    }
+                ]
+            }
+		],
+        "presets": [
+            {
+                "name": "Brand list",
+                "category": "3. Images",
+				"blocks": [
+                    {
+                        "type":"image"
+                    },
+                    {
+                        "type":"image"
+                    },
+					{
+                        "type":"image"
+                    },
+					{
+                        "type":"image"
+                    },
+					{
+                        "type":"image"
+                    },
+					{
+                        "type":"image"
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

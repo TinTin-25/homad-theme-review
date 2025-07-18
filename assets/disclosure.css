@@ -1,0 +1,92 @@
+.disclosure__list {
+  min-height: 4rem;
+  max-height: 19rem;
+  max-width: 22rem;
+  min-width: 8rem;
+  width: max-content;
+  overflow-y: auto;
+  padding: 8px;
+  border-radius: 8px;
+  position: absolute;
+  top: 100%;
+  z-index: 13;
+  right: 0;
+  background-color: #fff;
+  box-shadow: var(--shadow); }
+  .disclosure__list .disclosure__link {
+    display: block;
+    padding: 0.4rem .75rem;
+    text-decoration: none;
+    line-height: 1.8;
+    color: var(--body-color);
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 13px;
+    border-radius: 4px;
+    overflow: hidden; }
+    .disclosure__list .disclosure__link .flag {
+      overflow: hidden;
+      width: 20px;
+      height: 15px;
+      display: flex;
+      margin-right: 4px;
+      border-radius: 4px; }
+    .disclosure__list .disclosure__link:hover, .disclosure__list .disclosure__link--active {
+      background-color: #EFF0F2; }
+
+.disclosure__item {
+  position: relative;
+  border-bottom: 1px solid transparent; }
+
+@media screen and (max-width: 749px) {
+  .localization-form .button {
+    word-break: break-all; } }
+
+.localization-form__select {
+  position: relative;
+  border: 0;
+  text-align: left;
+  padding: 0;
+  color: var(--heading-color);
+  line-height: 14px;
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  background-color: transparent; }
+  .localization-form__select svg {
+    width: 12px;
+    height: 6px; }
+  .localization-form__select[aria-expanded="true"] svg {
+    transform: rotate(180deg); }
+
+@keyframes animateLocalizationTopBottom {
+  0% {
+    opacity: 0;
+    transform: translateY(-2rem); }
+  100% {
+    opacity: 1;
+    transform: translateY(-1rem); } }
+
+@keyframes animateLocalizationBottomTop {
+  0% {
+    opacity: 0;
+    transform: translateY(2rem); }
+  100% {
+    opacity: 1;
+    transform: translateY(1rem); } }
+
+.bottom__list .disclosure__list {
+  top: auto;
+  bottom: 100%;
+  transform: translateY(-1rem);
+  animation: animateLocalizationTopBottom 0.2s ease; }
+
+.bottom__list .localization-form__select svg {
+  transform: rotate(180deg); }
+
+.bottom__list .localization-form__select[aria-expanded="true"] svg {
+  transform: rotate(0deg); }
+
+.topbar__list .disclosure__list {
+  transform: translateY(1rem);
+  animation: animateLocalizationBottomTop 0.2s ease; }

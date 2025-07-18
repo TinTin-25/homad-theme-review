@@ -1,0 +1,273 @@
+{{ 'testimonial.css' | asset_url | stylesheet_tag }}
+{%- assign nav = section.settings.navigation -%}
+{%- assign pagination = section.settings.pagination -%}
+{%- assign infinite = section.settings.infinite -%}
+{%- assign autoplay = section.settings.autoplay -%}
+{%- include 'section_style' -%}
+<div class="vela-section testimonial testimonial-banner overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{%- if section.settings.full_with -%}-fluid{%- endif -%}">
+        <div class="vela-section__inner">
+            <div class="vela-section__content  align-items-center" >
+                <div class="vela-section__wrapper">
+                    <div class="js-carousel slick-carousel row g-0"
+                    data-nav="{{ nav }}"
+                    data-fade="true"
+                    data-infinite="{{ infinite }}"
+                    data-autoplay="{{ autoplay }}"
+                    data-columnone="1" 
+                    data-columntwo="1" 
+                    data-columnthree="1">
+                        {% for block in section.blocks %}
+                            <div class="slick-carousel__item">
+                                <div class="row g-5 align-items-center">
+                                    <div class="col-12 col-lg-7">
+                                        <div class="testimonial__item">
+                                            {%- if section.settings.show_star -%}
+                                                <div class="testimonial__badge mb-2 mb-md-3">
+                                                    <div class="jdgm-widget jdgm-preview-badge jdgm--done-setup">
+                                                        <div class="jdgm-prev-badge d-block"> 
+                                                            <span class="jdgm-prev-badge__stars" data-score="5.00" tabindex="0" aria-label="5.00 stars" role="button"> 
+                                                                <span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span> 
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {%- endif -%}
+                                            {%- if block.settings.title != blank -%}
+                                                <div class="testimonial__title fs-13 text-uppercase mb-2 mb-md-3">{{ block.settings.title }}</div>
+                                            {%- endif -%}
+                                            {%- if block.settings.review != blank -%}
+                                                <h5 class="testimonial__review  mb-4 pb-lg-5">{{ block.settings.review }}</h5>
+                                            {%- endif -%}
+                                            <div class="testimonial__content d-flex flex-wrap align-items-center pt-md-2">
+                                                {%- if block.settings.name != blank -%}
+                                                    <div class="testimonial__name">{{ block.settings.name }}</div>
+                                                {%- endif -%}
+                                                <span class="dash d-block mx-1">-</span>
+                                                {%- if block.settings.position != blank -%}
+                                                    <div class="testimonial__position">{{ block.settings.position }}</div>
+                                                {%- endif -%}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-5">
+                                        <div class="slide__banner-wrapp position-relative overflow-hidden rounded-2">
+                                            <a target="_blank" href="{{ block.settings.url }}">
+                                                {% if block.settings.image != blank %}
+                                                    {% render 'img-global', image: block.settings.image %}
+                                                {% else %}
+                                                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                                {% endif %}
+                                                <div class="slide__banner-content position-absolute start-0 bottom-0 pb-1">
+                                                    {%- if block.settings.button_text3 != blank -%}
+                                                        <div class="testimonial-banner__btn position-relative fs-13 text-white d-inline-block border-bottom border-white ms-3 mb-3">{{ block.settings.button_text3 }}</div>
+                                                    {%- endif -%}
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+    {
+        "name": "Testimonial - banner",
+        "tag": "section",
+        "class": "velaFramework",
+        "disabled_on": {
+            "groups": ["header", "footer"]
+        },
+        "settings":[
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            },
+            {
+                "type": "text",
+                "id": "margin_block_m",
+                "label": "Margin on mobile",
+                "placeholder": "0px 0px",
+                "info": "Ex: 0px 0px 0px 0px and use mobile only"
+            },
+            {
+                "type": "header",
+                "content": "Layout Settings"
+            },
+            {
+                "type": "range",
+                "id": "column1",
+                "min": 1,
+                "max": 6,
+                "step": 1,
+                "label": "Number of columns on desktop",
+                "default": 4
+            },
+            {
+                "type": "range",
+                "id": "column2",
+                "min": 1,
+                "max": 5,
+                "step": 1,
+                "label": "Number of columns on tablet",
+                "default": 3
+            },
+            {
+                "type": "range",
+                "id": "column3",
+                "min": 1,
+                "max": 5,
+                "step": 1,
+                "label": "Number of columns on mobile",
+                "default": 2
+            },
+            {
+                "type": "header",
+                "content": "Item settings"
+            },
+            {
+                "type": "checkbox",
+                "id": "show_star",
+                "label": "Show star?"
+            },
+            {
+                "type": "header",
+                "content": "Carousel settings"
+            },
+            {
+                "type": "checkbox",
+                "id": "navigation",
+                "label": "Show navigation",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id": "infinite",
+                "label": "Infinite loop sliding",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id": "autoplay",
+                "label": "Enable autoplay",
+                "default": false
+            },
+            {
+                "type": "text",
+                "id": "autoplay_speed",
+                "label": "Autoplay speed",
+                "info": "Autoplay speed in milliseconds. Type: int(ms)",
+                "default": "10000"
+            }
+        ],
+		"blocks": [
+			{
+                "type": "item",
+                "name": "Testimonial Item",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "title",
+                        "label": "Title"
+                    },
+                    {
+                        "type": "textarea",
+                        "id": "review",
+                        "label": "Customer Review",
+                        "default": "Ipsum dolor sit amet, consectetur adipiscing elit. Fringilla vel tincidunt ipsum ac. Nam at et id leo pulvinar egestas mi lorem. Adipiscing felis, vel faucibus in. Hendrerit viverra elementum venenatis pellentesque pellentesque ornare"
+                    },
+                    {
+                        "type": "text",
+                        "id": "name",
+                        "label": "Customer name",
+                        "default": "Customer name"
+                    },
+                    {
+                        "type": "text",
+                        "id": "position",
+                        "label": "Job",
+                        "default": "Job"
+                    },
+                    {
+                        "type": "header",
+                        "content": "Banner"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "image",
+                        "label": "Banner"
+                    },
+                    {
+                        "type": "text",
+                        "id": "button_text3",
+                        "label": "button text",
+                        "default": "Discover Now"
+                    },
+                    {
+                        "type": "url",
+                        "id": "url",
+                        "label": "button Url"
+                    }
+                ]
+            }
+		],
+        "presets": [
+            {
+                "name": "Testimonial - banner",
+                "blocks": [
+                    {
+                        "type": "item"
+                    },
+                    {
+                        "type": "item"
+                    },
+                    {
+                        "type": "item"
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

@@ -1,0 +1,652 @@
+<script>
+// DIGITAL CARD JS v7.1 – Limpio, sin Shopify Markets, multilenguaje localStorage
+(function () {
+  function initCardJS() {
+    const body = document.querySelector("body");
+
+    // 1. Ocultar chat y barra inferior de Shopify
+    const hideShopifyElements = () => {
+      const interval = setInterval(() => {
+        const chat = document.querySelector('[data-shopify-chat]');
+        const bottomBar = document.querySelector(".shopify-section--mobile-bottom-bar");
+        if (chat) chat.style.display = "none";
+        if (bottomBar) bottomBar.style.display = "none";
+        if (chat && bottomBar) clearInterval(interval);
+      }, 300);
+    };
+    hideShopifyElements();
+
+    // 2. Agregar clase si es mobile
+    if (window.innerWidth <= 480) {
+      body.classList.add("mobile-card");
+    }
+
+    // 3. Efecto “pressed” en íconos sociales
+    document.querySelectorAll(".social-icon").forEach((icon) => {
+      const img = icon.querySelector("img");
+      const href = icon.getAttribute("href");
+      if (!img || !img.getAttribute("src") || !href || href.trim() === "" || href === "#") {
+        icon.style.display = "none";
+      } else {
+        icon.addEventListener("touchstart", () => icon.classList.add("pressed"));
+        icon.addEventListener("touchend", () => {
+          setTimeout(() => icon.classList.remove("pressed"), 150);
+        });
+      }
+    });
+
+    // 4. Botón guardar contacto (.vcf)
+    const contactSaveBtn = document.querySelector(".save-contact-btn");
+    if (contactSaveBtn) {
+      const vcf = contactSaveBtn.getAttribute("data-vcf");
+      if (vcf && vcf !== "") {
+        contactSaveBtn.style.display = "inline-flex";
+        contactSaveBtn.addEventListener("click", function () {
+          const link = document.createElement("a");
+          link.setAttribute("href", vcf);
+          link.setAttribute("download", "contact.vcf");
+          link.click();
+        });
+      } else {
+        contactSaveBtn.style.display = "none";
+      }
+    }
+
+    // 5. Sistema de idioma sin Shopify Markets
+    const translations = {
+      es: {
+        profile_description: "Fundador · Arquitecto · Diseñador Solar",
+        save_contact: "Guardar contacto",
+        service_title_1: "Homad Studio",
+        service_description_1: "Arquitectura solar y diseño sostenible",
+        footer_line_1: "Desarrollado por Homad",
+        footer_line_2: "Diseñado con intención · © 2025"
+      },
+      en: {
+        profile_description: "Founder · Architect · Solar Designer",
+        save_contact: "Save Contact",
+        service_title_1: "Homad Studio",
+        service_description_1: "Solar architecture and sustainable design",
+        footer_line_1: "Powered by Homad",
+        footer_line_2: "Designed with intention · © 2025"
+      }
+    };
+
+    function setLanguage(lang) {
+      localStorage.setItem("preferredLanguage", lang);
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (translations[lang] && translations[lang][key]) {
+          el.textContent = translations[lang][key];
+        }
+      });
+
+      document.querySelectorAll(".lang-btn").forEach(btn => btn.classList.remove("active"));
+      document.querySelector(`.lang-btn[data-lang='${lang}']`)?.classList.add("active");
+    }
+
+    document.querySelectorAll(".lang-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const lang = btn.getAttribute("data-lang");
+        setLanguage(lang);
+      });
+    });
+
+    const savedLang = localStorage.getItem("preferredLanguage") || "en";
+    setLanguage(savedLang);
+  }
+
+  setTimeout(initCardJS, 300);
+})();
+</script>
+
+
+
+
+
+
+
+
+<main class="homad-digital-card">
+
+  <!-- HERO PRINCIPAL -->
+  <section class="hero-visual" style="height: {{ section.settings.hero_height }}; background-image: url({{ section.settings.hero_main | image_url }});">
+    <div class="hero-overlay"></div>
+
+    <!-- BOTÓN DE IDIOMA -->
+    <div class="language-switcher">
+      <button class="lang-btn" data-lang="es">ES</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+
+    <!-- PERFIL -->
+    <div class="hero-profile" style="top: {{ section.settings.profile_avatar_offset_y }};">
+      <img class="profile-avatar"
+           src="{{ section.settings.profile_avatar | image_url }}"
+           alt="Avatar"
+           style="width: {{ section.settings.profile_avatar_size }}; height: {{ section.settings.profile_avatar_size }};">
+      <div class="profile-info">
+        <p class="username">@{{ section.settings.profile_username }}</p>
+        <p class="hashtag">{{ section.settings.profile_tagline }}</p>
+      </div>
+    </div>
+
+    <!-- BIO + REDES -->
+    <div class="hero-bio" style="margin-top: {{ section.settings.profile_bio_offset_y }};">
+      <div class="bio-title-line"></div>
+      <p class="bio-description" data-i18n="profile_description">Texto temporal</p>
+      <div class="bio-title-line"></div>
+
+      <div class="hero-socials">
+        {% for i in (1..7) %}
+          {% assign url_key = "profile_social_" | append: i | append: "_url" %}
+          {% assign icon_key = "profile_social_" | append: i | append: "_icon" %}
+          {% assign url = section.settings[url_key] %}
+          {% assign icon = section.settings[icon_key] %}
+
+          {% if url != blank and icon != blank %}
+            <a href="{{ url }}" class="social-icon" target="_blank" aria-label="Social link {{ i }}">
+              <img src="{{ icon | image_url }}" alt="Social {{ i }} icon" />
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if section.settings.contact_vcf %}
+        <div class="save-contact-wrapper">
+          <button class="save-contact-btn" data-vcf="{{ section.settings.contact_vcf | file_url }}" data-i18n="save_contact">
+            Texto temporal
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- BLOQUES DE SERVICIO -->
+  <section class="services-wrapper" style="--services-bg-color: {{ section.settings.services_bg_color }};">
+    {% for block in section.blocks %}
+      {% if block.type == 'service_block' %}
+        <article class="service-card"
+          style="
+            height: {{ block.settings.card_height }};
+            border-radius: {{ block.settings.card_radius }};
+            --image-width: {{ block.settings.image_width }};
+            --spacing-y: {{ block.settings.text_spacing_y }};
+            --card-opacity: {{ block.settings.card_opacity }};
+            box-shadow: {{ block.settings.card_shadow }};"
+          >
+
+          <div class="service-image" style="width: var(--image-width);">
+            <img src="{{ block.settings.service_image | image_url }}" alt="Service Image">
+          </div>
+
+          <div class="service-info" style="gap: var(--spacing-y);">
+            <h4 data-i18n="service_title_{{ forloop.index }}">Texto temporal</h4>
+            <p data-i18n="service_description_{{ forloop.index }}">Texto temporal</p>
+
+            <div class="service-socials">
+              {% for i in (1..7) %}
+                {% assign s_url_key = "service_social_" | append: i | append: "_url" %}
+                {% assign s_icon_key = "service_social_" | append: i | append: "_icon" %}
+                {% assign s_url = block.settings[s_url_key] %}
+                {% assign s_icon = block.settings[s_icon_key] %}
+
+                {% if s_url != blank and s_icon != blank %}
+                  <a href="{{ s_url }}" class="social-icon" target="_blank" aria-label="Social link {{ i }}">
+                    <img src="{{ s_icon | image_url }}" alt="Icon {{ i }}" />
+                  </a>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </article>
+      {% endif %}
+    {% endfor %}
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <p data-i18n="footer_line_1">Texto temporal</p>
+      <p data-i18n="footer_line_2">Texto temporal</p>
+    </footer>
+  </section>
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+:root {
+  --font-body: 'Inter', sans-serif;
+  --font-heading: 'DM Serif Display', serif;
+  --radius-large: 2rem;
+  --radius-medium: 1.5rem;
+  --shadow-soft: 0 6px 20px rgba(0,0,0,0.08);
+  --shadow-wrapper: 0 10px 30px rgba(0,0,0,0.06);
+  --content-pad-left: 1rem;
+}
+
+body.mobile-card {
+  margin: 0;
+  font-family: var(--font-body);
+  background-color: #f5f5f5;
+}
+
+.homad-digital-card {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* HERO */
+.hero-visual {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: white;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6));
+  z-index: 1;
+}
+
+/* BOTÓN DE IDIOMA (nuevo botón <button>) */
+.language-switcher {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 4;
+  display: flex;
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.language-switcher .lang-btn {
+  font-size: 11px;
+  padding: 0.35rem 0.6rem;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  font-weight: 500;
+  backdrop-filter: blur(12px);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.language-switcher .lang-btn.active {
+  background: #fff;
+  color: #111;
+}
+
+.language-switcher .lang-btn:first-child {
+  border-right: 1px solid rgba(255,255,255,0.25);
+}
+
+/* PERFIL */
+.hero-profile {
+  position: absolute;
+  left: 1.2rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.profile-avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+}
+
+.profile-info .username {
+  font-weight: bold;
+  font-size: 15px;
+  margin: 0;
+}
+
+.profile-info .hashtag {
+  font-size: 13px;
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* BIO */
+.hero-bio {
+  z-index: 2;
+  text-align: center;
+  padding: 1rem;
+  position: relative;
+}
+
+.bio-title-line {
+  height: 1px;
+  width: 60%;
+  background: rgba(255,255,255,0.3);
+  margin: 0.6rem auto;
+}
+
+.bio-description {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  color: white;
+  margin: 0;
+}
+
+.hero-socials {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+/* BOTÓN GUARDAR CONTACTO */
+.save-contact-wrapper {
+  margin-top: 1.2rem;
+}
+
+.save-contact-btn {
+  background: #222;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem 1.2rem;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.save-contact-btn:hover {
+  transform: scale(1.05);
+  background: #000;
+}
+
+/* SECCIÓN DE SERVICIOS */
+.services-wrapper {
+  position: relative;
+  margin-top: -2rem;
+  background-color: var(--services-bg-color, #ffffff);
+  border-radius: var(--radius-large);
+  padding: 1rem 1.2rem;
+  box-shadow: var(--shadow-wrapper);
+  z-index: 3;
+}
+
+/* BLOQUES DE SERVICIO */
+.service-card {
+  display: flex;
+  align-items: flex-start;
+  background: rgba(255, 255, 255, var(--card-opacity, 0.25));
+  backdrop-filter: blur(14px);
+  padding: 1rem;
+  margin-bottom: 1.2rem;
+  border-radius: var(--radius-medium);
+  box-shadow: var(--shadow-soft);
+  gap: var(--spacing-y, 0.8rem);
+}
+
+.service-card:last-of-type {
+  margin-bottom: 0.5rem;
+}
+
+.service-image {
+  flex: 0 0 auto;
+  width: var(--image-width, 80px);
+  min-width: 60px;
+  max-width: 120px;
+  height: auto;
+}
+
+.service-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-medium);
+  border: 1px solid rgba(255,255,255,0.4);
+  display: block;
+}
+
+.service-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: var(--content-pad-left);
+  padding-right: 0.5rem;
+  gap: var(--spacing-y, 0.6rem);
+}
+
+.service-info h4,
+.service-info p {
+  margin: 0;
+}
+
+.service-info h4 {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  color: #222;
+}
+
+.service-info p {
+  font-size: 14px;
+  color: #333;
+}
+
+/* ÍCONOS REDES EN BLOQUES */
+.service-socials {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
+  gap: 0.5rem;
+  justify-items: center;
+  max-width: 160px;
+  margin-top: var(--spacing-y, 0.8rem);
+}
+
+.social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+  overflow: hidden;
+}
+
+.social-icon img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  filter: brightness(1.2);
+}
+
+.social-icon:hover {
+  transform: scale(1.05);
+}
+
+.social-icon.pressed {
+  transform: scale(0.92);
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 0.3rem 0.5rem;
+  font-size: 12px;
+  opacity: 0.6;
+  margin-top: 0.3rem;
+}
+</style>
+
+
+
+{% schema %}
+{
+  "name": "Tarjeta Digital Homad",
+  "tag": "section",
+  "class": "homad-digital-card",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "hero_main",
+      "label": "Imagen de fondo del Hero"
+    },
+    {
+      "type": "text",
+      "id": "hero_height",
+      "label": "Altura del Hero (ej: 100vh o 600px)",
+      "default": "90vh"
+    },
+    {
+      "type": "image_picker",
+      "id": "profile_avatar",
+      "label": "Foto de perfil circular"
+    },
+    {
+      "type": "text",
+      "id": "profile_avatar_size",
+      "label": "Tamaño del avatar (ej: 64px)",
+      "default": "64px"
+    },
+    {
+      "type": "text",
+      "id": "profile_avatar_offset_y",
+      "label": "Offset vertical del avatar (ej: 1.5rem)",
+      "default": "1.5rem"
+    },
+    {
+      "type": "text",
+      "id": "profile_bio_offset_y",
+      "label": "Offset vertical de la descripción (ej: 12rem)",
+      "default": "12rem"
+    },
+    {
+      "type": "text",
+      "id": "profile_username",
+      "label": "@Nombre de usuario",
+      "default": "martin.architect"
+    },
+    {
+      "type": "text",
+      "id": "profile_tagline",
+      "label": "Frase corta o hashtag",
+      "default": "#SolarDesign · Personal Story"
+    },
+    {
+      "type": "textarea",
+      "id": "profile_description_es",
+      "label": "Descripción profesional (Español)",
+      "default": "Fundador · Arquitecto · Diseñador Solar"
+    },
+    {
+      "type": "textarea",
+      "id": "profile_description_en",
+      "label": "Professional description (English)",
+      "default": "Founder · Architect · Solar Designer"
+    },
+    {
+      "type": "url",
+      "id": "contact_vcf",
+      "label": "Archivo VCF para botón de contacto"
+    },
+    {
+      "type": "color",
+      "id": "services_bg_color",
+      "label": "Color de fondo de los bloques de servicios",
+      "default": "#ffffff"
+    },
+
+    { "type": "url", "id": "profile_social_1_url", "label": "Red social 1 · Enlace" },
+    { "type": "image_picker", "id": "profile_social_1_icon", "label": "Red social 1 · Ícono" },
+    { "type": "url", "id": "profile_social_2_url", "label": "Red social 2 · Enlace" },
+    { "type": "image_picker", "id": "profile_social_2_icon", "label": "Red social 2 · Ícono" },
+    { "type": "url", "id": "profile_social_3_url", "label": "Red social 3 · Enlace" },
+    { "type": "image_picker", "id": "profile_social_3_icon", "label": "Red social 3 · Ícono" },
+    { "type": "url", "id": "profile_social_4_url", "label": "Red social 4 · Enlace" },
+    { "type": "image_picker", "id": "profile_social_4_icon", "label": "Red social 4 · Ícono" },
+    { "type": "url", "id": "profile_social_5_url", "label": "Red social 5 · Enlace" },
+    { "type": "image_picker", "id": "profile_social_5_icon", "label": "Red social 5 · Ícono" },
+    { "type": "url", "id": "profile_social_6_url", "label": "Red social 6 · Enlace" },
+    { "type": "image_picker", "id": "profile_social_6_icon", "label": "Red social 6 · Ícono" },
+    { "type": "url", "id": "profile_social_7_url", "label": "Red social 7 · Enlace" },
+    { "type": "image_picker", "id": "profile_social_7_icon", "label": "Red social 7 · Ícono" }
+  ],
+
+  "blocks": [
+    {
+      "type": "service_block",
+      "name": "Bloque de Servicio",
+      "settings": [
+        { "type": "image_picker", "id": "service_image", "label": "Imagen lateral del servicio" },
+
+        { "type": "text", "id": "service_title_es", "label": "Título del servicio (Español)", "default": "Homad Studio" },
+        { "type": "text", "id": "service_title_en", "label": "Service Title (English)", "default": "Homad Studio" },
+
+        { "type": "textarea", "id": "service_description_es", "label": "Descripción del servicio (Español)", "default": "Arquitectura solar y diseño sostenible" },
+        { "type": "textarea", "id": "service_description_en", "label": "Service Description (English)", "default": "Solar architecture and sustainable design" },
+
+        { "type": "text", "id": "card_height", "label": "Altura del bloque (ej: auto o 240px)", "default": "auto" },
+        { "type": "text", "id": "card_radius", "label": "Bordes del bloque (ej: 1.5rem)", "default": "1.5rem" },
+        { "type": "text", "id": "image_width", "label": "Ancho de la imagen (ej: 80px)", "default": "80px" },
+        { "type": "text", "id": "text_spacing_y", "label": "Espaciado entre título, texto e íconos (ej: 0.6rem)", "default": "0.6rem" },
+        {
+          "type": "range",
+          "id": "card_opacity",
+          "min": 0,
+          "max": 1,
+          "step": 0.1,
+          "default": 0.3,
+          "label": "Opacidad del fondo del bloque"
+        },
+        { "type": "text", "id": "card_shadow", "label": "Sombra del bloque (CSS box-shadow)", "default": "0 6px 20px rgba(0,0,0,0.08)" },
+
+        { "type": "url", "id": "service_social_1_url", "label": "Red social 1 · Enlace" },
+        { "type": "image_picker", "id": "service_social_1_icon", "label": "Red social 1 · Ícono" },
+        { "type": "url", "id": "service_social_2_url", "label": "Red social 2 · Enlace" },
+        { "type": "image_picker", "id": "service_social_2_icon", "label": "Red social 2 · Ícono" },
+        { "type": "url", "id": "service_social_3_url", "label": "Red social 3 · Enlace" },
+        { "type": "image_picker", "id": "service_social_3_icon", "label": "Red social 3 · Ícono" },
+        { "type": "url", "id": "service_social_4_url", "label": "Red social 4 · Enlace" },
+        { "type": "image_picker", "id": "service_social_4_icon", "label": "Red social 4 · Ícono" },
+        { "type": "url", "id": "service_social_5_url", "label": "Red social 5 · Enlace" },
+        { "type": "image_picker", "id": "service_social_5_icon", "label": "Red social 5 · Ícono" },
+        { "type": "url", "id": "service_social_6_url", "label": "Red social 6 · Enlace" },
+        { "type": "image_picker", "id": "service_social_6_icon", "label": "Red social 6 · Ícono" },
+        { "type": "url", "id": "service_social_7_url", "label": "Red social 7 · Enlace" },
+        { "type": "image_picker", "id": "service_social_7_icon", "label": "Red social 7 · Ícono" }
+      ]
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Tarjeta Martín v7.1"
+    }
+  ]
+}
+{% endschema %}
+
+
+
+

@@ -1,0 +1,177 @@
+{%- assign color_names = settings.product_cart_swatch_label | split: ',' -%}
+<facet-filters-form class="product-filter">
+  <form id="FacetFiltersForm" class="product-filter__form">
+    <div class="product-filter__wrapper">
+      {%- if results.terms -%}
+        <input type="hidden" name="type" value="product" />
+        <input type="hidden" name="q" value="{{ results.terms | escape }}">
+        <input name="options[prefix]" type="hidden" value="last">
+      {%- endif -%}
+      {%- if template.suffix != blank -%}
+        <input type="hidden" name="view" value="{{ template.suffix }}" />
+      {%- endif -%}
+      {%- for filter in results.filters -%}
+        {%- assign total_active_values = total_active_values | plus: filter.active_values.size -%}
+        {% case filter.type %}
+          {% when 'list' %}
+            <div class="block-sidebar {% unless forloop.first %}border-top{% endunless %} js-filter" data-index="{{ forloop.index }}">
+              <h6 class="block-sidebar__title product-filter__title position-relative">
+                {{ filter.label | escape }}
+                <a class="btn-arrow d-flex align-items-center justify-content-end position-absolute top-0 end-0" data-bs-toggle="collapse" href="#filter{{ forloop.index }}" role="button" aria-expanded="true" aria-controls="collapseExample">
+                  {%- render 'icons', icon: 'angle-down', attr: 'width="10" height="6"' -%}
+                </a>
+              </h6>
+              <div id="filter{{ forloop.index }}" class="block-sidebar__content product-filter__content collapse show">
+                <span class="facets__selected no-js-hidden">{%- if filter.active_values.size > 0 -%}{{ filter.active_values.size }}{%- endif -%}</span>
+                <facet-remove class="position-relative">
+                  <a href="{{ filter.url_to_remove }}" class="facets__reset link--text">{{ 'sections.collection_template.reset' | t }}</a>
+                </facet-remove>
+                {%- liquid
+                  assign option_downcased = filter.label | handleize | replace: '-', ''
+                  assign is_color = false
+                  assign is_size = false
+                  if color_names contains option_downcased
+                    assign is_color = true
+                  endif
+                  if option_downcased contains 'size'
+                    assign is_size = true
+                  endif
+                -%}
+                <div class="block-sidebar__inner{% unless block.settings.filter_style == "filter_inline"%} scroll-style{% endunless %}">
+                  <ul class="facets__list list-unstyled{% if is_color or is_size %} {{ block.settings.filter_style }}{% endif %} m-0">
+                    {%- for value in filter.values -%}
+                      <li class="list-menu__item facets__item position-relative">
+                        <label for="Filter-{{ filter.label | handleize }}-{{ forloop.index }}" class="facet-checkbox{% if value.count == 0 and value.active == false %} facet-checkbox--disabled{% endif %}{% if is_color %} facet-checkbox--color{% endif %}">
+                          <input type="checkbox"
+                            name="{{ value.param_name }}"
+                            value="{{ value.value }}"
+                            id="Filter-{{ filter.label | handleize }}-{{ forloop.index }}"
+                            {% if value.active %}checked{% endif %}
+                            {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                          >
+                          {%- if is_color -%}
+                            {%- liquid
+                              assign color_handleize = value.value | handleize
+                              assign color_name = color_handleize | replace: '-', ''
+                              assign style_bg_color = 'background-color: ' | append: color_name | append: ';'
+                              assign color_label_classes = 'd-flex position-relative color-box'
+                              if block.settings.filter_style == 'filter_list'
+                                assign color_label_classes = color_label_classes | append: ' me-2'
+                              endif
+                              assign color_label_classes = color_label_classes | append: ' vela-swatch--' | append: color_handleize
+                              assign color_attributes = 'style="' | append: style_bg_color | append: '"'
+                            -%}
+                            <span
+                              class="{{ color_label_classes }}"
+                              {{ color_attributes }}
+                            ></span>
+                            {%- if block.settings.filter_style == "filter_inline" -%}
+                              <div class="tooltip bs-tooltip-top start-50 translate-middle-x" role="tooltip">
+                                <div class="tooltip-arrow start-50 translate-middle-x"></div>
+                                <div class="tooltip-inner"> {{- value.label | escape -}}</div>
+                              </div>
+                              <span class="vela__btn-close position-absolute">
+                                <svg width="8" height="8" class= 'icon-line position-absolute top-50 start-50' viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 7L7 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                <svg width="8" height="8" class= 'icon-line1 position-absolute top-50 start-50' viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 7L7 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                              </span>
+                            {%- endif -%}
+                          {%- endif -%}
+                          {% unless is_color %}
+                            {% render 'icons', icon: 'square', class: 'icon square', attr: 'width="18" height="18"' %}
+                            {% render 'icons', icon: 'square-checked', class: 'icon square-checked', attr: 'width="18" height="18"' %}
+                          {%- endunless -%}
+                          {%- if block.settings.filter_count -%}
+                            <span class="number-item position-absolute{% if is_color or is_size %} list-count{% endif %}">{{ value.count }}</span>
+                          {%- endif -%}
+                          <span class="text">{{- value.label | escape -}}</span>
+                        </label>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {% when 'price_range' %}
+            <div class="block-sidebar {% unless forloop.first %}pt-sm-4 pt-3 mt-3{% endunless %}" data-index="{{ forloop.index }}">
+              <h6 class="block-sidebar__title position-relative">
+                {{ filter.label | escape }}
+                <a class="btn-arrow d-flex align-items-center justify-content-end position-absolute top-0 end-0" data-bs-toggle="collapse" href="#filter{{ forloop.index }}" role="button" aria-expanded="true" aria-controls="collapseExample">
+                  {%- render 'icons', icon: 'angle-down', attr: 'width="10" height="6"' -%}
+                </a>
+              </h6>
+              <div id="filter{{ forloop.index }}" class="product-filter-price__content collapse show">
+                <div class="block-sidebar__inner">
+                  {%- liquid
+                    assign currencies_using_comma_decimals = 'ANG,ARS,BRL,BYN,BYR,CLF,CLP,COP,CRC,CZK,DKK,EUR,HRK,HUF,IDR,ISK,MZN,NOK,PLN,RON,RUB,SEK,UYU,VES,VND' | split: ','
+                    assign uses_comma_decimals = false
+                    if currencies_using_comma_decimals contains cart.currency.iso_code
+                      assign uses_comma_decimals = true
+                    endif
+                  -%}
+                  <price-range class="facets__price position-relative d-block">
+                    {%- if uses_comma_decimals -%}
+                      {%- assign max_price_amount = filter.range_max | plus: 1 | money_without_currency | replace: '.', '' | split: ',' | first | remove: ' ' -%}
+                    {%- else -%}
+                      {%- assign max_price_amount = filter.range_max | plus: 1 | money_without_currency | replace: ',', '' | split: '.' | first | remove: ' ' -%}
+                    {%- endif -%}
+                    {%- if uses_comma_decimals -%}
+                      {%- if filter.max_value.value -%}
+                        {%- assign range_max = filter.max_value.value | money_without_currency | replace: '.', '' | split: ',' | first -%}
+                      {%- endif -%}
+                      {%- if filter.min_value.value -%}
+                        {% assign range_min =  filter.min_value.value | money_without_currency | replace: '.', '' | split: ',' | first %}
+                      {%- endif -%}
+                    {%- else -%}
+                      {%- assign range_max = filter.max_value.value | money_without_currency | replace: ',', '' | split: '.' | first -%}
+                      {%- if filter.min_value.value -%}
+                        {% assign range_min = filter.min_value.value | money_without_currency | replace: ',', ''  | split: '.' | first %}
+                      {%- endif -%}
+                    {%- endif -%}
+                    <div class="price-slider-range mb-2">
+                      <div id="slider-range" class="price-filter-range" name="rangeInput" data-min="0" data-prefix="{{ cart.currency.symbol }}" data-max="{{ max_price_amount }}"></div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <div class="position-relative">
+                        <span class="prefix position-absolute top-50 start-0 translate-middle-y ms-1 text-secondary">{{ cart.currency.symbol }}</span>
+                        <input
+                          id="min_price"
+                          {% comment %} id="Filter-{{ filter.label | escape }}-GTE" {% endcomment %}
+                          class="text-center rounded-1"
+                          name="{{ filter.min_value.param_name }}"
+                          {%- if filter.min_value.value -%}
+                            value ="{{ range_min }}"
+                          {%- endif -%}
+                          type="number"
+                          placeholder="0"
+                          min="0"
+                          max="{{ max_price_amount }}"
+                        />
+                      </div>
+                      <div class="position-relative text-center mx-1">{{ 'sections.collection_template.to' | t }}</div>
+                      <div class="position-relative">
+                        <span class="prefix position-absolute top-50 start-0 translate-middle-y ms-1 text-secondary">{{ cart.currency.symbol }}</span>
+                        <input 
+                          id="max_price"
+                          {% comment %} id="Filter-{{ filter.label | escape }}-LTE" {% endcomment %}
+                          class="text-center rounded-1"
+                          name="{{ filter.max_value.param_name }}"
+                          value="{{ range_max }}"
+                          type="number"
+                          min="0"
+                          placeholder="{{ max_price_amount }}"
+                          max="{{ max_price_amount }}"
+                        />
+                      </div>
+                    </div>
+                  </price-range>
+                </div>
+              </div>
+            </div>
+        {% endcase %}
+      {%- endfor -%}
+    </div>
+    {%- if results.current_vendor or results.current_type -%}
+      <input type="hidden" name="q" value="{{ results.current_vendor }}{{ results.current_type }}">
+    {%- endif -%}
+  </form>
+</facet-filters-form>

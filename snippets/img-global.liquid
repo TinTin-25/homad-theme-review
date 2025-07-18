@@ -1,0 +1,90 @@
+{%- liquid
+  assign enable_img_tag = image_style | default: false
+  assign max_width = max_width | default: 0
+  assign max_width = max_width | plus: 0
+  assign img_fix_w = img_fix_w | default: false
+
+  comment
+    image_ratio: adapt, square, portrait
+  endcomment
+  assign image_ratio = image_ratio | default: 'adapt'
+
+  assign image_crop_enable = crop | default: false
+  assign image_crop = 'center'
+  assign image_container_classes = image_class | default: ''
+  assign image_classes = img_class | default: ''
+  assign image_attr = img_attr | default: ''
+  assign image_alt_default = image.alt | default: shop.name
+  assign image_alt = img_alt | default: image_alt_default
+  assign image_aspect_ratio = image.aspect_ratio | default: 1
+  assign image_max_width = image.width
+  assign width = image.width
+  assign height = image.height
+
+  case image_ratio
+    when 'square'
+      assign ratio = 1
+      if width > height and image_crop_enable
+        assign image_max_width = height
+      endif
+    when 'portrait'
+      assign ratio = 0.75
+      assign portrait_width = height | times: ratio
+      if portrait_width < image_max_width and image_crop_enable
+        assign image_max_width = portrait_width
+      endif
+    else
+      assign ratio = image_aspect_ratio
+  endcase
+
+  assign padding_top = 100 | divided_by: ratio
+  assign styles = 'padding-top: ' | append: padding_top | append: '%;'
+
+  if max_width > 0 and max_width < image_max_width
+    assign image_max_width = max_width
+  endif
+
+  capture image_bgset
+    render 'bgset', image: image, crop_enable: image_crop_enable, crop: image_crop, image_ratio: image_ratio, max_width: image_max_width
+  endcapture
+-%}
+
+<div class="card_wrap {{ image_container_classes }}"{% if img_fix_w %} style="width: {{ image_max_width | round }}px; max-width: 100%;"{% endif %}>
+  {%- if enable_img_tag -%}
+    {%- liquid
+      assign width = image_max_width | round
+      assign height = image_max_width | divided_by: ratio | round
+      if image_crop_enable and image_ratio != 'adapt'
+        assign image_src = image | image_url: width: width, height: height, crop: image_crop
+      else
+        assign image_src = image | image_url: width: width
+      endif
+    -%}
+    <div class="card__image position-relative lazyload js" style="{{ styles }}">
+      {%- if image != blank -%}
+        <img
+          class="position-absolute top-50 translate-middle-y start-0 w-100 h-auto {{ image_classes }}"
+          srcset="{{ image_bgset }}"
+          data-sizes="auto"
+          src="{{ image_src }}"
+          alt="{{ image_alt | escape }}"
+          width="{{ width }}"
+          height="{{ height }}"
+          loading="lazy"
+          {{ image_attr }}
+        >
+      {%- endif -%}
+      {%- render 'preloading', preload_class: 'position-absolute' -%}
+    </div>
+  {%- else -%}
+  <div
+    class="card__image position-relative lazyload js"
+    style="{{ styles }}"
+    role="img"
+    aria-label="{{ image_alt | escape }}"
+    data-alt="{{ image_alt | escape }}"
+    data-bgset="{{ image_bgset }}"
+    data-sizes="auto"
+  >{%- render 'preloading', preload_class: 'position-absolute' -%}</div>
+  {%- endif -%}
+</div>

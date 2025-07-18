@@ -1,0 +1,182 @@
+{%- assign show_date = show_date | default: false -%}
+{%- assign show_tags = show_tags | default: false -%}
+{%- assign show_author = show_author | default: false -%}
+{%- assign show_image = show_image | default: false -%}
+{%- assign show_excerpt = show_excerpt | default: false -%}
+{%- assign show_readmore = show_readmore | default: false -%}
+{%- assign blogstyle = blogstyle | default: 'default' -%}
+{%- assign number = number | default: 4 -%}
+{% for i in (1..number) %}
+  <div class="slick-carousel__item">
+		{%- if blogstyle == 'grid' -%}
+			<article class="article blog__{{ section.settings.blog_style }}">
+				{%- if show_image -%}
+					<div class="article__image mb-3">
+						<a class="article__featured-image-link d-block overflow-hidden rounded-2" href="{{ article.url }}">
+							<div class="article__featured-image-wrapper overflow-hidden">
+							{{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+							</div>
+						</a>
+					</div>
+				{%- endif -%}
+				<div class="article__content">
+					{%- if show_tags -%}
+						<div class="article__meta-tags d-flex flex-wrap mb-2">
+							<a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="tags__item">Fashion</a>
+						</div>
+					{%- endif -%}
+					
+					<h3 class="article__title mb-2 pb-lg-1 line-clamp-2">
+						<a href="{{ article.url }}" title="Nam liber tempor cum soluta.">Nam liber tempor cum soluta.</a>
+					</h3>
+					{%- if show_excerpt -%}
+						<div class="rte article__excerpt mb-2 pb-lg-1 line-clamp-3">
+							The west coast of the United States is home to some of the most recognizable geographic landmarks in the country...
+						</div>
+					{%- endif -%}
+					<div class="d-flex justify-content-between">
+						<div class="article__meta d-flex flex-wrap align-items-center">
+							{%- if show_date -%}
+								<div class="article__meta-date d-flex align-items-center"><span class="icon">{% render 'icons', icon: 'calender', attr: 'width="20" height=20' %}</span>{{ 'now' | time_tag: format: 'date_month_year' }}</div>
+							{%- endif -%}
+							{%- if show_author -%}
+								<div class="article__meta-author d-flex align-items-center">{{ 'blogs.article.author_html' | t: author: 'Admin' }}</div>
+							{%- endif -%}
+						</div>
+						{%- if show_readmore -%}
+							<a class="article__btn link fw-medium" href="{{ article.url }}"><span class="d-inline-block">{{ 'blogs.article.read_more' | t }}</span>{% render 'icons', icon: 'arrow-right-top', class: 'icon-arrow-right-top ms-2 position-relative text-primary', attr: 'width="9" height="9"' %}</a>
+						{%- endif -%}
+					</div>
+				</div>
+			</article>
+		{%- elsif blogstyle == 'grid1' -%}
+			<article class="article blog__{{ section.settings.blog_style }}">
+				<div class="article__image position-relative overflow-hidden rounded-2">
+					<a class="article__featured-image-link d-block position-relative" href="{{ article.url }}">
+						<div class="article__featured-image-wrapper">
+							{{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+						</div>
+					</a>
+					<div class="article__content position-absolute start-0 bottom-0 text-white p-3">
+						<div class="p-lg-1">
+							{%- if show_tags -%}
+								<div class="article__meta-tags d-flex flex-wrap mb-2">
+									<a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="tags__item text-white">Fashion</a>
+								</div>
+							{%- endif -%}
+							<h3 class="article__title mb-2 pb-lg-1 line-clamp-2">
+								<a class="text-white" href="{{ article.url }}" title="Nam liber tempor cum soluta.">Nam liber tempor cum soluta.</a>
+							</h3>
+							{%- if show_excerpt -%}
+								<div class="rte article__excerpt mb-2 pb-lg-1  line-clamp-3">
+									The west coast of the United States is home to some of the most recognizable geographic landmarks in the country...
+								</div>
+							{%- endif -%}
+							<div class="article__meta d-flex flex-wrap align-items-center">
+								{%- if show_date -%}
+									<div class="article__meta-date d-flex align-items-center text-white">
+										<svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.37 16.16C16.66 17.27 15.42 18 14 18H6C3.79 18 2 16.21 2 14V9H18V14C18 14.8 17.77 15.54 17.37 16.16Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 12H8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12H14" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 15H8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 15H14" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.37 5.84C16.66 4.73 15.42 4 14 4H6C3.79 4 2 5.79 2 8V9H18V8C18 7.2 17.77 6.46 17.37 5.84Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 2V6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2V6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+										{{ 'now' | time_tag: format: 'date_month_year' }}</div>
+								{%- endif -%}
+								{%- if show_author -%}
+									<div class="article__meta-author d-flex align-items-center text-white">{{ 'blogs.article.author_html' | t: author: 'Admin' }}</div>
+								{%- endif -%}
+							</div>
+							{%- if show_readmore -%}
+								<div class="mt-3">
+									<a class="article__btn link fw-medium text-white" href="{{ article.url }}"><span class="d-inline-block">{{ 'blogs.article.read_more' | t }}</span>{% render 'icons', icon: 'arrow-right-top', class: 'icon-arrow-right-top ms-2 position-relative', attr: 'width="9" height="9"' %}</a>
+								</div>
+							{%- endif -%}
+						</div>
+					</div>
+				</div>
+			</article>
+		{%- elsif blogstyle == 'grid2' -%}
+			<article class="article blog__{{ section.settings.blog_style }}">
+				{%- if show_image -%}
+					<div class="article__image mb-3">
+						<a class="article__featured-image-link d-block overflow-hidden rounded-2 position-relative" href="{{ article.url }}">
+							{{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+						</a>
+					</div>
+				{%- endif -%}
+				<div class="article__content text-center">
+					<div class="article__content--wrapper">
+						{%- if show_tags -%}
+							<div class="article__meta-tags d-flex justify-content-center flex-wrap mb-2">
+								<a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="tags__item">Fashion</a>
+							</div>
+						{%- endif -%}
+						<h3 class="article__title mb-2 pb-lg-1 line-clamp-2">
+							<a href="{{ article.url }}" title="Nam liber tempor cum soluta.">Nam liber tempor cum soluta.</a>
+						</h3>
+						<div class="article__meta d-flex flex-wrap justify-content-center align-items-center mb-2">
+							{%- if show_date -%}
+								<div class="article__meta-date d-flex align-items-center"><span class="icon">{% render 'icons', icon: 'calender', attr: 'width="20" height=20' %}</span>{{ 'now' | time_tag: format: 'date_month_year' }}</div>
+							{%- endif -%}
+							{%- if show_author -%}
+								<div class="article__meta-author d-flex align-items-center">{{ 'blogs.article.author_html' | t: author: 'Admin' }}</div>
+							{%- endif -%}
+						</div>
+						{%- if show_excerpt -%}
+							<div class="article__excerpt mb-2 pb-lg-1">
+								<div class="rte line-clamp-3">
+									The west coast of the United States is home to some of the most recognizable geographic landmarks in the country...
+								</div>
+							</div>
+						{%- endif -%}
+						<div class="d-flex justify-content-center pt-2">
+							{%- if show_readmore -%}
+								<a class="article__btn link fw-medium" href="{{ article.url }}"><span class="d-inline-block">{{ 'blogs.article.read_more' | t }}</span>{% render 'icons', icon: 'arrow-right-top', class: 'icon-arrow-right-top ms-2 position-relative text-primary', attr: 'width="9" height="9"' %}</a>
+							{%- endif -%}
+						</div>
+					</div>
+				</div>
+			</article>
+		{%- else -%}
+			<article class="article blog__{{ section.settings.blog_style }}">
+				<div class="row g-3 g-xl-4">
+					{%- if show_image -%}
+						<div class="col-12 col-lg-4 mb-3 mb-lg-0">
+							<div class="article__image">
+								<a class="article__featured-image-link d-block overflow-hidden rounded-2" href="{{ article.url }}">
+									{{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+								</a>
+							</div>
+						</div>   
+					{%- endif -%}
+					<div class="col-12{% if show_image %} col-lg-8{% endif %}"> 
+						<div class="article__content">
+							{%- if show_tags -%}
+								<div class="article__meta-tags d-flex flex-wrap mb-2">
+									<a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="tags__item">Fashion</a>
+								</div>
+							{%- endif -%}
+							<h3 class="article__title mb-2 pb-lg-1 line-clamp-2">
+								<a href="{{ article.url }}" title="Nam liber tempor cum soluta.">Nam liber tempor cum soluta.</a>
+							</h3>
+							<div class="article__meta d-flex flex-wrap align-items-center mb-2">
+								{%- if show_author -%}
+									<div class="article__meta-author">By <span class="ms-1">Admin</span></div>
+								{%- endif -%}
+								{%- if show_date -%}
+									<div class="article__meta-date">{{ 'now' | time_tag: format: 'date' }}</div>
+								{%- endif -%}
+							</div>
+							{%- if show_excerpt -%}
+								<div class="rte article__excerpt mb-2 pb-lg-1 line-clamp-3">
+									Diga, Koma and Torus are three kitchen utensils designed for Ommo, a new design-oriented brand...
+								</div>
+							{%- endif -%}
+							{%- if show_readmore -%}
+								<div class="d-flex pt-2 mt-1">
+									<a class="article__btn" href="{{ article.url }}"><span class="d-inline-block">{{ 'blogs.article.read_more' | t }}</span>{% render 'icons', icon: 'arrow-right-top', class: 'icon-arrow-right-top ms-2 position-relative', attr: 'width="9" height="9"' %}</a>
+								</div>
+							{%- endif -%}
+						</div>
+					</div>
+				</div>
+			</article>
+		{%- endif -%}
+  </div>
+{% endfor %}

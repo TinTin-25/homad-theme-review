@@ -1,0 +1,11 @@
+{%- liquid  
+    assign nav = section.settings.navigation
+    assign pagination = section.settings.pagination
+    assign infinite = section.settings.infinite
+    assign autoplay = section.settings.autoplay
+    assign autoplay_speed = section.settings.autoplay_speed | escape
+    assign variableWidth = section.settings.slide_variableWidth
+    assign owlColumn1 = section.settings.column1 | plus: 0
+    assign owlColumn2 = section.settings.column2 | plus: 0
+    assign owlColumn3 = section.settings.column3 | plus: 0
+-%}

@@ -1,0 +1,282 @@
+{%- include 'section_style' -%}
+<div class="vela-section section__heading overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-full{% endif %}">
+        <div class="vela-section-inner position-relative">
+            <div class="heading-wrapper">
+                {%- for block in section.blocks -%}
+                    {%- capture text_style -%}
+                        --vl-t-fs-m:{{block.settings.text_font_size_mobile}}px;
+                        {%- if block.settings.margin_mobile !=blank -%}--vl-t-mg-m:{{ block.settings.margin_mobile }};{%- endif -%}
+                        --vl-t-fs-tl:{{block.settings.text_font_size_tablet}}px;
+                        {%- if block.settings.margin_tablet !=blank -%}--vl-t-mg-tl:{{block.settings.margin_tablet}};{%- endif -%}
+                        --vl-t-cl:{{block.settings.text_color_desktop}}; --vl-t-fs:{{block.settings.text_font_size_desktop}}px;
+                        {%- if block.settings.margin_desktop !=blank -%}--vl-t-mg:{{block.settings.margin_desktop}};{%- endif -%}
+                        --vl-t-cl: {{ block.settings.text_color_desktop }};
+                    {%- endcapture -%}
+                    <div class="heading__text vela-text heading__{{ block.settings.title_style }} text-{{ block.settings.text_alignment }} {{ block.settings.text_style }} {{ block.settings.text_font-weight }}" style="{{- text_style -}}" ><span>{{ block.settings.text }}</span></div>
+                {%- endfor -%}
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+    {
+        "name": "Heading",
+        "tag": "section",
+        "class": "velaFramework",
+        "disabled_on": {
+            "groups": ["header", "footer"]
+        },
+        "settings":[
+            {
+                "type": "header",
+                "content": "Design Section"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "Make section full width"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "Container max width?(px)",
+                "info": "Ex: 1440px"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "Background Color",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "Padding",
+                "placeholder": "0px 0px",
+                "info": "Ex: 0px 0px 0px 0px"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "Padding on mobile",
+                "placeholder": "0px 0px",
+                "info": "Ex: 0px 0px 0px 0px and use mobile only"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "Margin",
+                "placeholder": "0px 0px",
+                "default": "0 0 60px",
+                "info": "Ex: 0px 0px 0px 0px"
+            }
+        ],
+  		"blocks": [
+			{
+				"type": "text",
+				"name": "Text",
+				"settings": [
+                    {
+                        "type": "select",
+                        "id": "title_style",
+                        "label": "Style",
+                        "default": "default",
+                        "options": [
+                            {
+                                "value": "default",
+                                "label": "Default"
+                            },
+                            {
+                                "value": "style1",
+                                "label": "Style1"
+                            },
+                            {
+                                "value": "style2",
+                                "label": "Style2"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "html",
+                        "id": "text",
+                        "label": "Text",
+                        "default": "<div><p>Use HTML to format your text so it can be easily read.<br/>This text can be used to share information about your brand with customers.</p></div>"
+                    },
+                    {
+                        "type": "select",
+                        "id": "text_alignment",
+                        "label": "Text alignment",
+                        "default": "center",
+                        "options": [
+                            {
+                                "value": "start",
+                                "label": "Left"
+                            },
+                            {
+                                "value": "center",
+                                "label": "Center"
+                            },
+                            {
+                                "value": "end",
+                                "label": "Right"
+                            }
+                        ]
+                    },
+					{
+						"type": "select",
+						"id": "text_style",
+						"label": "Font family",
+						"default": "text",
+						"options": [
+							{
+								"value": "text",
+								"label": "Text"
+							},
+							{
+								"value": "ff-heading",
+								"label": "Heading"
+							},
+                            {
+								"value": "ff-special",
+								"label": "Special"
+							}
+						]
+					},
+                    {
+						"type": "select",
+						"id": "text_font-weight",
+						"label": "Font weight",
+						"default": "fw-normal",
+						"options": [
+							{
+								"value": "fw-normal",
+								"label": "Normal"
+							},
+							{
+								"value": "fw-light",
+								"label": "Light"
+							},
+                            {
+								"value": "fw-medium",
+								"label": "Medium"
+							},
+                            {
+								"value": "fw-semibold",
+								"label": "Semibold"
+							},
+                            {
+								"value": "fw-bolder",
+								"label": "Bolder"
+							},
+                            {
+								"value": "fw-bold",
+								"label": "Bold"
+							}
+						]
+					},
+                    {
+                        "type": "color",
+                        "id": "text_color_desktop",
+                        "label": "Color",
+                        "default": "#1F1F27"
+                    },
+                    {
+						"type": "header",
+						"content": "Config for desktop"
+					},
+					{
+						"type": "range",
+						"id": "text_font_size_desktop",
+						"min": 10,
+						"max": 100,
+						"step": 1,
+						"unit": "px",
+						"label": "Font size",
+						"default": 16
+					},
+                    {
+						"type": "text",
+						"id": "margin_desktop",
+						"label": "Margin",
+						"info": "Ex: 10px 10px 10px 10px"
+					},
+                    {
+						"type": "header",
+						"content": "Config for Tablets"
+					},
+					{
+						"type": "range",
+						"id": "text_font_size_tablet",
+						"min": 10,
+						"max": 100,
+						"step": 1,
+						"unit": "px",
+						"label": "Font size",
+						"default": 16
+					},
+                    {
+						"type": "text",
+						"id": "margin_tablet",
+						"label": "Margin",
+						"info": "Ex: 10px 10px 10px 10px"
+					},
+                    {
+						"type": "header",
+						"content": "Config for Mobile"
+					},
+					{
+						"type": "range",
+						"id": "text_font_size_mobile",
+						"min": 10,
+						"max": 100,
+						"step": 1,
+						"unit": "px",
+						"label": "Font size",
+						"default": 16
+					},
+                    {
+						"type": "text",
+						"id": "margin_mobile",
+						"label": "Margin",
+						"info": "Ex: 10px 10px 10px 10px"
+					}
+				]
+			}
+        ],
+        "presets": [
+            {
+                "name": "Heading",
+                "blocks": [
+                    {
+                        "type":"text",
+                        "settings": {
+                            "text": "Caption",
+                            "text_style": "ff-heading",
+                            "text_color_desktop": "#1F1F27",
+                            "text_font_size_desktop": 12
+                        }
+                    },
+                    {
+                        "type":"text",
+                        "settings": {
+                            "text": "Heading",
+                            "text_style": "ff-heading",
+                            "text_color_desktop": "#1F1F27",
+                            "text_font_size_desktop": 36
+                        }
+                    },
+					{
+                        "type":"text",
+                        "settings": {
+                            "text": "<div><p>Use HTML to format your text so it can be easily read.<br/>This text can be used to share information about your brand with customers.</p></div>",
+                            "text_style": "text",
+                            "text_color_desktop": "#666666",
+                            "text_font_size_desktop": 14
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

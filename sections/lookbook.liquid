@@ -1,0 +1,295 @@
+{{- 'lookbook.css' | asset_url | stylesheet_tag -}}
+{%- include 'section_style' -%}
+<div class="vela-section section-lookbook{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-full{% endif %}">
+        <div class="vela-section__inner">
+            <div class="lookbook__content" style="--plh-svg-h: 700px;">
+                <div class="row g-3 g-lg-4">
+                    <div class="col-12 col-lg-6">
+                        <div class="position-relative">
+                            <div class="overflow-hidden rounded-3">
+                                {%- if section.settings.image1 != blank -%}
+                                    {% render 'img-global' with image: section.settings.image1 %}
+                                {%- else -%}
+                                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                {%- endif -%}
+                            </div>
+                            {% for block in section.blocks %}
+                                {%- if block.settings.image == 'image1' -%}
+                                    {%- assign product_handle = block.settings.product -%}
+                                    {%- assign alignment = block.settings.display -%}
+                                    {%- assign postion_top = block.settings.top -%}
+                                    {%- assign postion_left = block.settings.left -%}
+                                    {%- render 'lookbook-item', id: block.id , product: all_products[product_handle], alignment: alignment, top: postion_top, left: postion_left -%}
+                                {%- endif -%}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="position-relative">
+                            <div class="overflow-hidden rounded-3">
+                                {%- if section.settings.image2 != blank -%}
+                                    {% render 'img-global' with image: section.settings.image2 %}
+                                {%- else -%}
+                                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                {%- endif -%}
+                            </div>
+                            {% for block in section.blocks %}
+                                {%- if block.settings.image == 'image2' -%}
+                                    {%- assign product_handle = block.settings.product -%}
+                                    {%- assign alignment = block.settings.display -%}
+                                    {%- assign postion_top = block.settings.top -%}
+                                    {%- assign postion_left = block.settings.left -%}
+                                    {%- render 'lookbook-item', id: block.id , product: all_products[product_handle], alignment: alignment, top: postion_top, left: postion_left -%}
+                                {%- endif -%}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% for block in section.blocks %}
+        {%- assign product = all_products[block.settings.product] -%}
+        <div class="modal fade lookbook-modal" id="lookbook-{{ block.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content bg-transparent border-0">
+                    <div class="modal-header">
+                        <button class="lookbook-modal__btn vela__btn-close bg-white p-0 d-block border-0 position-relative start-50 translate-middle-x" type="button" data-bs-dismiss="modal" aria-label="Close">    
+                            {% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+                            {% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+                        </button>
+                    </div>
+                    <div class="modal-body d-flex justify-content-center p-0">
+                        <div class="lookbook-product overflow-hidden rounded-1">
+                            <a class="lookbook-product__img d-block overflow-hidden rounded-1 mb-2" href="{{ product.url }}" title="{{ product.title | strip_html }}">
+                                {% render 'img-global', image: product.featured_media, crop: 'center', max_width: 180 %}
+                            </a>
+                            <div class="lookbook-product__content">
+                                <div class="product-card__name fs-6 line-clamp-2">
+                                    <a class="lookbook-product__title" href="{{ product.url }}" title="{{ product.title | strip_html }}">{{ product.title | escape }}</a>
+                                </div>
+                                <div class="lookbook-product__price pt-1 d-flex">
+                                    <div class="product-price fs-14 {% if on_sale %} product-price__has-sale{% endif %}">{{ product.price | money }}</div>
+                                    {%- if on_sale -%}
+                                        <div class="product-price product-price--regular fs-14 ms-1">{{ product.compare_at_price | money }}</div>
+                                    {%- endif -%}
+                                    {%- if shop.taxes_included and settings.product_card_tax -%}
+                                        <span class="ms-2">
+                                            {{ 'products.general.include_taxes' | t }}
+                                        </span>
+                                    {%- endif -%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% schema %}
+    {
+        "name": "Lookbook",
+        "tag": "section",
+        "class": "velaFramework",
+        "disabled_on": {
+            "groups": ["header", "footer"]
+        },
+        "settings": [
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            },
+            {
+                "type": "header",
+                "content": "Lookbook item 1"
+            },
+            {
+                "type": "image_picker",
+                "id": "image1",
+                "label": "Image"
+            },
+            {
+                "type": "header",
+                "content": "Lookbook item 2"
+            },
+            {
+                "type": "image_picker",
+                "id": "image2",
+                "label": "Image"
+            }
+        ],
+        "blocks": [
+            {
+                "type": "item",
+                "name": "Product",
+                "settings": [
+                    {
+                        "type": "select",
+                        "id": "image",
+                        "label": "Assign to image",
+                        "default": "image1",
+                        "options": [
+                            {
+                                "value": "image1",
+                                "label": "Image 1"
+                            },
+                            {
+                                "value": "image2",
+                                "label": "Image 2"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "product",
+                        "id": "product",
+                        "label": "Choose product"
+                    },
+                    {
+                        "type": "select",
+                        "id": "display",
+                        "label": "Display type",
+                        "default": "top-left",
+                        "options": [
+                            {
+                                "value": "top-left",
+                                "label": "Top left"
+                            },
+                            {
+                                "value": "top-right",
+                                "label": "Top right"
+                            },
+                            {
+                                "value": "center-left",
+                                "label": "Center left"
+                            },
+                            {
+                                "value": "center-top",
+                                "label": "Center top"
+                            },
+                            {
+                                "value": "center-right",
+                                "label": "Center right"
+                            },
+                            {
+                                "value": "center-bottom",
+                                "label": "Center bottom"
+                            },
+                            {
+                                "value": "bottom-left",
+                                "label": "Bottom left"
+                            },
+                            {
+                                "value": "bottom-right",
+                                "label": "Bottom right"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "range",
+                        "id": "top",
+                        "min": 0,
+                        "max": 100,
+                        "step": 1,
+                        "unit": "%",
+                        "label": "Offset top",
+                        "default": 50
+                    },
+                    {
+                        "type": "range",
+                        "id": "left",
+                        "min": 0,
+                        "max": 100,
+                        "step": 1,
+                        "unit": "%",
+                        "label": "Offset left",
+                        "default": 50
+                    }
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name": "Lookbook",
+				"blocks": [
+                    {
+                        "type":"item",
+                        "settings": {
+                            "image": "image1",
+                            "product": "",
+                            "display": "center-right",
+                            "top": 28,
+                            "left": 16
+                        }
+                    },
+                    {
+                        "type":"item",
+                        "settings": {
+                            "image": "image1",
+                            "display": "center-right",
+                            "top": 49,
+                            "left": 37
+                        }
+                    },
+                    {
+                        "type":"item",
+                        "settings": {
+                            "image": "image2",
+                            "product": "",
+                            "display": "center-right",
+                            "top": 28,
+                            "left": 16
+                        }
+                    },
+                    {
+                        "type":"item",
+                        "settings": {
+                            "image": "image2",
+                            "display": "center-right",
+                            "top": 49,
+                            "left": 37
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

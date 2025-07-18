@@ -1,0 +1,29 @@
+@media (min-width: 992px) {
+  .frb-lookbook__product {
+    padding-right: 60px; } }
+
+@media (min-width: 1380px) {
+  .frb-lookbook__product {
+    padding-right: 120px; } }
+
+.frb-lookbook__product .fbproduct-card__image {
+  width: 102px; }
+
+.frb-lookbook__product .fbproduct-card {
+  width: calc( 100% - 102px);
+  padding-left: 20px; }
+
+.frb-lookbook__product .hvduc-select__heading {
+  border: 0 !important;
+  padding: 6px 30px 6px 0; }
+
+.frb-lookbook__product .fbproduct-card__price-compare,
+.frb-lookbook__product .fbvela-subtotal__compare-price {
+  display: none !important; }
+
+.frb-lookbook__product .fbproduct-price-save {
+  color: #FB4005; }
+  .frb-lookbook__product .fbproduct-price-save .fbproduct-card__price-save.d-none ~ .text {
+    display: none; }
+  .frb-lookbook__product .fbproduct-price-save .text {
+    margin-right: 4px; }

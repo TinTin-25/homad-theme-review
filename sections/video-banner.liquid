@@ -1,0 +1,639 @@
+{{- 'videos.css' | asset_url | stylesheet_tag -}}
+{%- include 'section_style' -%}
+<div class="vela-section video-banner overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+	<div class="container{% if section.settings.full_with %}-full{% endif %}">
+		<div class="vela-section__inner">
+            <div class="vela-section__content">
+				<div class="row g-4">
+					<div class="video-section col-12 col-lg-6">		
+						<div class="video-banner__banner position-relative">
+							<div class="overflow-hidden rounded-3">
+								{% if section.settings.image != blank %}
+									{% render 'img-global', image: section.settings.image %}
+								{% else %}
+									{{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+								{% endif %}
+							</div>
+							<div class="video-banner__video position-absolute top-0 end-0 mt-5 mt-md-6 pt-md-2">
+								<div class="position-relative rounded-3 ratio overflow-hidden {{ section.settings.border_radius }} d-block w-100" style="--bs-aspect-ratio: 100%;">
+									{%- if section.settings.video_url != blank -%}
+										<video class="video-background__media" loop autoplay playsinline  {% if section.settings.muted %}muted {% else %} muted {% endif %}>
+											<source src="{{ section.settings.video_url }}" type="video/mp4" />
+											<source src="movie.ogg" type="video/ogg">
+										</video> 
+									{%- else -%}
+										{{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+									{%- endif -%}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-12 col-lg-6 video-banner__content d-flex align-items-center">
+						{%- capture content_style -%}
+							{% assign opacity = section.settings.opacity | times: 0.01 %}
+							{% assign overlay = section.settings.content_color_bg | color_modify: 'alpha', opacity %}
+							style="background-color: {{ overlay }}; {% if section.settings.content_max_with != blank %}--ct-mx: {{ section.settings.content_max_with }};{% endif %}{% if section.settings.padding_content != blank %}--ct-pd: {{ section.settings.padding_content }};{% endif %}{% if section.settings.padding_content_m != blank %}--ct-pd-m: {{ section.settings.padding_content_m }};{% endif %}"
+						{%- endcapture -%}
+						<div class="d-flex justify-content-lg-{{ section.settings.content_align }} w-100">
+							<div class="video-banner__wrapper  text-{{ section.settings.text_align }} w-100" {{ content_style }}>
+								{%- for block in section.blocks -%}
+									{%- case block.type -%}
+										{%- when 'text' -%}
+											{%- if block.settings.text != blank -%}
+												{%- capture text_style -%}
+														--vl-t-fs-m:{{block.settings.text_font_size_mobile}}px;
+														{%- if block.settings.margin_mobile !=blank -%}--vl-t-mg-m:{{ block.settings.margin_mobile }};{%- endif -%}
+														--vl-t-fs-tl:{{block.settings.text_font_size_tablet}}px;
+														{%- if block.settings.margin_tablet !=blank -%}--vl-t-mg-tl:{{block.settings.margin_tablet}};{%- endif -%}
+														--vl-t-cl:{{block.settings.text_color_desktop}}; --vl-t-fs:{{block.settings.text_font_size_desktop}}px;
+														{%- if block.settings.margin_desktop !=blank -%}--vl-t-mg:{{block.settings.margin_desktop}};{%- endif -%}
+													{%- endcapture -%}
+												<div class="video-background__text vela-text {{ block.settings.font-weight }} {{- block.settings.text_style -}}{%  if block.settings.font-weight == 'ff-heading'%} lh-1{%  endif %}" style="{{- text_style -}}">{{ block.settings.text }}</div>
+											{%- endif -%}
+										{%- when 'button' -%}
+											{%- if block.settings.button != blank -%}
+												{%- capture btn_style -%}
+													--vl-b-cl: {{- block.settings.button_color -}}; --vl-b-fs: {{- block.settings.button_font_size -}}px;
+													{%- if block.settings.button_padding != blank -%}
+														--vl-b-pd: {{- block.settings.button_padding -}};
+													{%- endif -%}
+													{%- if block.settings.margin != blank -%}
+														--vl-b-mg: {{- block.settings.margin -}};
+													{%- endif -%}
+													--vl-b-bd-cl: {{- block.settings.button_color_border -}};--vl-b-bd-w: {{ block.settings.button_border-width }};--vl-b-bg-cl: {{- block.settings.button_color_bg -}};--vl-b-cl-h: {{- block.settings.button_color_hover -}};--vl-b-bd-cl-h: {{- block.settings.button_color_border_hover -}};--vl-b-bg-cl-h: {{- block.settings.button_color_bg_hover -}};--vl-b-fs-m: {{- block.settings.button_font_size_mobile -}}px;
+													{%- if block.settings.button_padding_mobile != blank -%}
+														--vl-b-pd-m: {{- block.settings.button_padding_mobile -}};
+													{%- endif -%}
+												{%- endcapture -%}
+												{%- unless block.settings.button_icon == 'none' -%}
+													{%- capture buton_icon_size -%}
+														{%- if block.settings.button_icon_size != blank -%}
+															{%- assign iwt-b-icon = block.settings.button_icon_size -%}
+														{%- else -%}
+															{%- assign iwt-b-icon = '14x14' -%}
+														{%- endif -%}
+														{%- assign iwt-b-icon-w = iwt-b-icon | split: 'x' | first -%}
+														{%- assign iwt-b-icon-h = iwt-b-icon | split: 'x' | last -%}
+														width="{{ iwt-b-icon-w  }}" height="{{ iwt-b-icon-h }}"
+													{%- endcapture -%}
+												{%- endunless -%}
+												<a class="video-background__btn btn vela-btn {{  block.settings.border_radius }}{% if block.settings.button_border-width == '0' %} btn__special-style{% endif %}" href="{{ block.settings.link }}" style="{{- btn_style -}}">
+													{{ block.settings.button }} {% unless block.settings.button_icon == 'none'%}{%- render 'icons', icon: block.settings.button_icon, class: "ms-1", attr: buton_icon_size -%}{% endunless %}
+												</a>                 
+											{%- endif -%}
+									{%- endcase -%}
+								{%- endfor -%}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% schema %}
+{
+	"name": "t:sections.video-banner.name",
+	"tag": "section",
+	"class": "velaFramework",
+	"disabled_on": {
+		"groups": ["header", "footer"]
+	},
+	"settings": [
+		{
+            "type": "header",
+            "content": "t:sections.global.settings.header_section.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "full_with",
+            "label": "t:sections.global.settings.full_width.label"
+        },
+        {
+            "type": "text",
+            "id": "max_with",
+            "label": "t:sections.global.settings.max_with.label",
+            "info": "t:sections.global.settings.max_with.info"
+        },
+        {
+            "type": "color",
+            "id": "color_bg",
+            "label": "t:sections.global.settings.bg_color.label",
+            "default": "rgba(0,0,0,0)"
+        },
+        {
+            "type": "text",
+            "id": "padding_block",
+            "label": "t:sections.global.settings.padding.label",
+            "placeholder": "0px 0px",
+            "info": "t:sections.global.settings.padding.info"
+        },
+        {
+            "type": "text",
+            "id": "padding_block_m",
+            "label": "t:sections.global.settings.padding_mobile.label",
+            "placeholder": "0px 0px",
+            "info": "t:sections.global.settings.padding_mobile.info"
+        },
+        {
+            "type": "text",
+            "id": "margin_block",
+            "label": "t:sections.global.settings.margin.label",
+            "placeholder": "0px 0px"
+        },
+		{
+			"type": "header",
+			"content": "Banner"
+		},
+		{
+			"type": "image_picker",
+			"id": "image",
+			"label": "Banner"
+		},
+		{
+			"type": "url",
+			"id": "banner_url",
+			"label": "Banner url"
+		},
+		{
+            "type": "header",
+            "content": "t:sections.global.settings.header_settings.content"
+        },
+        {
+            "type": "url",
+            "id": "video_url",
+            "label": "t:sections.video-background.settings.video_url.label",
+            "info": "t:sections.video-background.settings.video_url.info"
+        },
+        {
+            "type": "checkbox",
+            "id": "muted",
+            "label": "t:sections.video-background.settings.muted.label"
+        },
+        {
+            "type": "range",
+            "id": "aspect_ratios",
+            "label": "t:sections.video-background.settings.aspect_ratios.label",
+            "min": 30,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "default": 50
+        },
+        {
+            "type": "range",
+            "id": "aspect_ratios_m",
+            "label": "Aspect ratios on mobile",
+            "min": 30,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "default": 50
+        },
+		{
+            "type": "header",
+            "content": "Content"
+        },
+        {
+            "type": "select",
+            "id": "content_align",
+            "label": "Content alignment",
+            "default": "center",
+            "options": [
+                {
+                    "value": "start",
+                    "label": "Left"
+                },
+                {
+                    "value": "center",
+                    "label": "Center"
+                },
+                {
+                    "value": "end",
+                    "label": "Right"
+                }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Text alignment",
+            "default": "center",
+            "options": [
+                {
+                    "value": "start",
+                    "label": "Left"
+                },
+                {
+                    "value": "center",
+                    "label": "Center"
+                },
+                {
+                    "value": "end",
+                    "label": "Right"
+                }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "content_max_with",
+            "label": "Content max width?(px)",
+            "default": "600px",
+            "info": "ex: 500px"
+        },
+        {
+            "type": "text",
+            "id": "padding_content",
+            "label": "Padding Content",
+            "placeholder": "0px 0px",
+            "default": "40px",
+            "info": "Use desktop only"
+        },
+        {
+            "type": "text",
+            "id": "padding_content_m",
+            "label": "Padding on mobile",
+            "placeholder": "0px 0px",
+            "default": "20px",
+            "info": "Ex: 0px 0px 0px 0px and use mobile only"
+        },
+        {
+            "type": "color",
+            "id": "content_color_bg",
+            "label": "Content Background Color",
+            "default": "#1F1F27"
+        },
+        {
+            "type": "select",
+            "id": "border_radius",
+            "label": "Border radius",
+            "default": "rounded-0",
+            "options": [
+                {
+                    "value": "rounded-0",
+                    "label": "Rounded 0"
+                },
+                {
+                    "value": "rounded-1",
+                    "label": "Rounded 1"
+                },
+                {
+                    "value": "rounded-2",
+                    "label": "Rounded 2"
+                },
+                {
+                    "value": "rounded-3",
+                    "label": "Rounded 3"
+                },
+                {
+                    "value": "rounded-pill",
+                    "label": "Rounded pill"
+                },
+                {
+                    "value": "rounded-circle",
+                    "label": "Rounded circle"
+                }
+            ]
+        },
+        {
+            "type": "range",
+            "id": "opacity",
+            "label": "Opacity",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "default": 30
+        }
+	],
+	"blocks": [
+        {
+            "type": "text",
+            "name": "Text",
+            "settings": [
+                {
+                    "type": "html",
+                    "id": "text",
+                    "label": "Text",
+                    "default": "<div><p>Use HTML to format your text so it can be easily read.<br/>This text can be used to share information about your brand with customers.</p></div>"
+                },
+                {
+                    "type": "select",
+                    "id": "text_style",
+                    "label": "Font family",
+                    "default": "text",
+                    "options": [
+                        {
+                            "value": "text",
+                            "label": "Text"
+                        },
+                        {
+                            "value": "ff-heading",
+                            "label": "Heading"
+                        },
+                        {
+                            "value": "ff-special",
+                            "label": "Special"
+                        }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "font-weight",
+                    "label": "Font weight",
+                    "default": "fw-normal",
+                    "options": [
+                        {
+                            "value": "fw-normal",
+                            "label": "Normal"
+                        },
+                        {
+                            "value": "fw-light",
+                            "label": "Light"
+                        },
+                        {
+                            "value": "fw-medium",
+                            "label": "Medium"
+                        },
+                        {
+                            "value": "fw-semibold",
+                            "label": "Semibold"
+                        },
+                        {
+                            "value": "fw-bolder",
+                            "label": "Bolder"
+                        },
+                        {
+                            "value": "fw-bold",
+                            "label": "Bold"
+                        }
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Config for desktop"
+                },
+                {
+                    "type": "color",
+                    "id": "text_color_desktop",
+                    "label": "Color",
+                    "default": "#1F1F27"
+                },
+                {
+                    "type": "range",
+                    "id": "text_font_size_desktop",
+                    "min": 10,
+                    "max": 100,
+                    "step": 1,
+                    "unit": "px",
+                    "label": "Font size",
+                    "default": 16
+                },
+                {
+                    "type": "text",
+                    "id": "margin_desktop",
+                    "label": "Margin",
+                    "info": "Ex: 10px 10px 10px 10px"
+                },
+                {
+                    "type": "header",
+                    "content": "Config for Tablets"
+                },
+                {
+                    "type": "range",
+                    "id": "text_font_size_tablet",
+                    "min": 10,
+                    "max": 100,
+                    "step": 1,
+                    "unit": "px",
+                    "label": "Font size",
+                    "default": 16
+                },
+                {
+                    "type": "text",
+                    "id": "margin_tablet",
+                    "label": "Margin",
+                    "info": "Ex: 10px 10px 10px 10px"
+                },
+                {
+                    "type": "header",
+                    "content": "Config for Mobile"
+                },
+                {
+                    "type": "range",
+                    "id": "text_font_size_mobile",
+                    "min": 10,
+                    "max": 100,
+                    "step": 1,
+                    "unit": "px",
+                    "label": "Font size",
+                    "default": 16
+                },
+                {
+                    "type": "text",
+                    "id": "margin_mobile",
+                    "label": "Margin",
+                    "info": "Ex: 10px 10px 10px 10px"
+                }
+            ]
+        },
+        {
+            "type": "button",
+            "name": "Button",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "button",
+                    "label": "Text button",
+                    "default": "Read More"
+                },
+                {
+                    "type": "url",
+                    "id": "link",
+                    "label": "Link"
+                },
+                {
+                    "type": "range",
+                    "id": "button_font_size",
+                    "min": 10,
+                    "max": 30,
+                    "step": 1,
+                    "unit": "px",
+                    "label": "Font size",
+                    "default": 14
+                },
+                {
+                    "type": "text",
+                    "id": "button_padding",
+                    "label": "Padding",
+                    "placeholder": "6px 20px",
+                    "info": "Ex: 10px 10px 10px 10px",
+                    "default": "8px 25px"
+                },              
+                {
+                    "type": "text",
+                    "id": "margin",
+                    "label": "Margin",
+                    "info": "Ex: 10px 10px 10px 10px"
+                },
+                {
+                    "type": "color",
+                    "id": "button_color",
+                    "label": "Button color",
+                    "default": "#ffffff"
+                },
+                {
+                    "type": "text",
+                    "id": "button_border-width",
+                    "label": "Border width",
+                    "default": "1px 1px 1px 1px",
+                    "info": "ex: 1px 1px 1px 1px"
+                },
+                {
+                    "type": "color",
+                    "id": "button_color_border",
+                    "label": "Button border color",
+                    "default": "#1F1F27"
+                },
+                {
+                    "type": "color",
+                    "id": "button_color_bg",
+                    "label": "Button background color",
+                    "default": "#1F1F27"
+                },
+                {
+                    "type": "select",
+                    "id": "border_radius",
+                    "label": "Border radius",
+                    "default": "rounded-0",
+                    "options": [
+                        {
+                            "value": "rounded-0",
+                            "label": "Rounded 0"
+                        },
+                        {
+                            "value": "rounded-1",
+                            "label": "Rounded 1"
+                        },
+                        {
+                            "value": "rounded-2",
+                            "label": "Rounded 2"
+                        },
+                        {
+                            "value": "rounded-3",
+                            "label": "Rounded 3"
+                        },
+                        {
+                            "value": "rounded-pill",
+                            "label": "Rounded pill"
+                        },
+                        {
+                            "value": "rounded-circle",
+                            "label": "Rounded circle"
+                        }
+                    ]
+                },
+                {
+                    "type": "color",
+                    "id": "button_color_hover",
+                    "label": "Button color hover",
+                    "default": "#ffffff"
+                },
+                {
+                    "type": "color",
+                    "id": "button_color_border_hover",
+                    "label": "Button border color hover",
+                    "default": "#1F1F27"
+                },
+                {
+                    "type": "color",
+                    "id": "button_color_bg_hover",
+                    "label": "Button background color hover",
+                    "default": "#1F1F27"
+                },
+                {
+                    "type": "header",
+                    "content": "Config for mobile"
+                },
+                {
+                    "type": "range",
+                    "id": "button_font_size_mobile",
+                    "min": 10,
+                    "max": 30,
+                    "step": 1,
+                    "unit": "px",
+                    "label": "Font size",
+                    "default": 14
+                },
+                {
+                    "type": "text",
+                    "id": "button_padding_mobile",
+                    "label": "Padding",
+                    "placeholder": "6px 20px",
+                    "info": "Ex: 10px 10px 10px 10px",
+                    "default": "6px 20px"
+                },
+                {
+                    "type": "header",
+                    "content": "Icon"
+                },
+                {
+                    "type": "select",
+                    "id": "button_icon",
+                    "label": "Button Icon",
+                    "default": "none",
+                    "options": [
+                        {
+                            "value": "none",
+                            "label": "None"
+                        },
+                        {
+                            "value": "arrow_right",
+                            "label": "Arrow Right"
+                        },
+                        {
+                            "value": "arrow-right-top",
+                            "label": "Arrow Right Top"
+                        },
+                        {
+                            "value": "from-to-left",
+                            "label": "From To Left"
+                        },
+                        {
+                            "value": "angle-right",
+                            "label": "Angle Right"
+                        },
+                        {
+                            "value": "angle-double-right",
+                            "label": "Angle Double Right"
+                        }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "id": "button_icon_size",
+                    "label": "Icon Size (px)",
+                    "placeholder": "14x14",
+                    "default": "14x14",
+                    "info": "Ex: 14x14"
+                }
+            ]
+        }
+        
+    ],
+	"presets": [
+		{
+			"name": "t:sections.video-banner.name",
+			"blocks": [
+                {
+                    "type": "text"
+                },
+                {
+                    "type": "text"
+                }
+            ]
+		}
+	]
+}
+{% endschema %}

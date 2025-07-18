@@ -1,0 +1,168 @@
+if (!customElements.get('localization-form')) {
+  customElements.define(
+    'localization-form',
+    class LocalizationForm extends HTMLElement {
+      constructor() {
+        super();
+        this.mql = window.matchMedia('(min-width: 768px)');
+        this.header = document.querySelector('.header-wrapper');
+        this.elements = {
+          input: this.querySelector('input[name="locale_code"], input[name="country_code"]'),
+          button: this.querySelector('button.localization-form__select'),
+          panel: this.querySelector('.disclosure__list-wrapper'),
+          search: this.querySelector('input[name="country_filter"]'),
+          closeButton: this.querySelector('.country-selector__close-button')
+        };
+        this.addEventListener('keyup', this.onContainerKeyUp.bind(this));
+        this.addEventListener('keydown', this.onContainerKeyDown.bind(this));
+        this.addEventListener('focusout', this.closeSelector.bind(this));
+        this.elements.button.addEventListener('click', this.openSelector.bind(this));
+
+        if (this.elements.closeButton) {
+          this.elements.closeButton.addEventListener('click', this.hidePanel.bind(this));
+        }
+
+
+        this.querySelectorAll('a').forEach((item) => item.addEventListener('click', this.onItemClick.bind(this)));
+      }
+
+      hidePanel() {
+        this.elements.button.setAttribute('aria-expanded', 'false');
+        this.elements.panel.setAttribute('hidden', true);
+        if (this.elements.search) {
+          this.elements.search.value = '';
+          this.filterCountries();
+          this.elements.search.setAttribute('aria-activedescendant', '');
+        }
+        document.querySelector('.menu-drawer').classList.remove('country-selector-open');
+        this.header.preventHide = false;
+      }
+
+      onContainerKeyDown(event) {
+        const focusableItems = Array.from(this.querySelectorAll('a')).filter(
+          (item) => !item.parentElement.classList.contains('hidden')
+        );
+        let focusedItemIndex = focusableItems.findIndex((item) => item === document.activeElement);
+        let itemToFocus;
+
+        switch (event.code.toUpperCase()) {
+          case 'ARROWUP':
+            event.preventDefault();
+            itemToFocus =
+              focusedItemIndex > 0 ? focusableItems[focusedItemIndex - 1] : focusableItems[focusableItems.length - 1];
+            itemToFocus.focus();
+            break;
+          case 'ARROWDOWN':
+            event.preventDefault();
+            itemToFocus =
+              focusedItemIndex < focusableItems.length - 1 ? focusableItems[focusedItemIndex + 1] : focusableItems[0];
+            itemToFocus.focus();
+            break;
+        }
+
+        if (!this.elements.search) return;
+
+        setTimeout(() => {
+          focusedItemIndex = focusableItems.findIndex((item) => item === document.activeElement);
+          if (focusedItemIndex > -1) {
+            this.elements.search.setAttribute('aria-activedescendant', focusableItems[focusedItemIndex].id);
+          } else {
+            this.elements.search.setAttribute('aria-activedescendant', '');
+          }
+        });
+      }
+
+      onContainerKeyUp(event) {
+        event.preventDefault();
+
+        switch (event.code.toUpperCase()) {
+          case 'ESCAPE':
+            if (this.elements.button.getAttribute('aria-expanded') == 'false') return;
+            this.hidePanel();
+            event.stopPropagation();
+            this.elements.button.focus();
+            break;
+          case 'SPACE':
+            if (this.elements.button.getAttribute('aria-expanded') == 'true') return;
+            this.openSelector();
+            break;
+        }
+      }
+
+      onItemClick(event) {
+        event.preventDefault();
+        const form = this.querySelector('form');
+        this.elements.input.value = event.currentTarget.dataset.value;
+        if (form) form.submit();
+      }
+
+      openSelector() {
+        this.elements.button.focus();
+        this.elements.panel.toggleAttribute('hidden');
+        this.elements.button.setAttribute(
+          'aria-expanded',
+          (this.elements.button.getAttribute('aria-expanded') === 'false').toString()
+        );
+        document.querySelector('.menu-drawer').classList.add('country-selector-open');
+      }
+
+      closeSelector(event) {
+        if (
+          event.target.classList.contains('country-selector__overlay') ||
+          !this.contains(event.target) ||
+          !this.contains(event.relatedTarget)
+        ) {
+          this.hidePanel();
+        }
+      }
+
+      normalizeString(str) {
+        return str
+          .normalize('NFD')
+          .replace(/\p{Diacritic}/gu, '')
+          .toLowerCase();
+      }
+
+      filterCountries() {
+        const searchValue = this.normalizeString(this.elements.search.value);
+        const popularCountries = this.querySelector('.popular-countries');
+        const allCountries = this.querySelectorAll('a');
+        let visibleCountries = allCountries.length;
+
+        this.elements.resetButton.classList.toggle('hidden', !searchValue);
+
+        if (popularCountries) {
+          popularCountries.classList.toggle('hidden', searchValue);
+        }
+
+        allCountries.forEach((item) => {
+          const countryName = this.normalizeString(item.querySelector('.country').textContent);
+          if (countryName.indexOf(searchValue) > -1) {
+            item.parentElement.classList.remove('hidden');
+            visibleCountries++;
+          } else {
+            item.parentElement.classList.add('hidden');
+            visibleCountries--;
+          }
+        });
+
+        if (this.elements.liveRegion) {
+          this.elements.liveRegion.innerHTML = window.accessibilityStrings.countrySelectorSearchCount.replace(
+            '[count]',
+            visibleCountries
+          );
+        }
+
+        this.querySelector('.country-selector').scrollTop = 0;
+        this.querySelector('.country-selector__list').scrollTop = 0;
+      }
+
+      resetFilter(event) {
+        event.stopPropagation();
+        this.elements.search.value = '';
+        this.filterCountries();
+        this.elements.search.focus();
+      }
+    }
+  );
+}

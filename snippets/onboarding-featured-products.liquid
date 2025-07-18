@@ -1,0 +1,652 @@
+{%- if product_style == 'list__style1' -%}
+	{%- assign anumber = number | default: 4 -%}
+	{%- if product_style == 'list__style1' -%}
+		<div class="row g-0" style="--bs-gutter-y: 16px;">
+			{%- for i in (1..anumber) -%}
+				<div class="product-card product-{{ product_style }} col-12 d-flex">
+					<div class="product-card__image-wrapper position-relative">
+						<a class="product-card__image-link" href="/admin/products">
+							{%- capture current -%}{% cycle 1, 2, 3, 4 %}{%- endcapture -%}
+							{{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+						</a>
+					</div>
+					<div class="product-card__content ps-3">
+						<div class="product-card__content position-relative pt-1">
+							<div class="product-card__content--inner">
+								<div class="product-card__name line-clamp-1 mb-2 fs-6">
+									<a href="/admin/products">Tank Top Organic Cotton</a>
+								</div>
+								{%- if settings.product_reviews_enable and settings.product_card_review -%}
+									<div class="product-card__review product-review mb-2">
+										<vela-review class="vela-review" data-styles="default" style="">
+											<div class="jdgm-widget jdgm-preview-badge lh-1 jdgm--done-setup" data-id="7682404909109">
+												<div style="display:none" class="jdgm-prev-badge" data-average-rating="0.00" data-number-of-reviews="0" data-number-of-questions="0"> <span class="jdgm-prev-badge__stars" data-score="0.00" tabindex="0" aria-label="0.00 stars" role="button"> <span class="jdgm-star jdgm--off"></span><span class="jdgm-star jdgm--off"></span><span class="jdgm-star jdgm--off"></span><span class="jdgm-star jdgm--off"></span><span class="jdgm-star jdgm--off"></span> </span> <span class="jdgm-prev-badge__text">No reviews</span> </div>
+											</div>
+											<div class="vela-review__content"><span class="vela-review__star"><span class="jdgm-star jdgm--on"></span></span><span class="vela-review__rating">0.00</span><span class="vela-review__count">(0)</span></div>
+										</vela-review>
+									</div>
+								{%- endif -%}
+								<div class="product-group-price d-flex align-items-center w-100 lh-1">
+									<div class="product-price{% if forloop.index == 2 %} product-price__has-sale{% endif %}">$90.00</div>
+									{%- if forloop.index == 2 -%}
+										<div class="product-price product-price--regular ms-1"><span class="money">$100.00</span></div>
+									{%- endif -%}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			{%- endfor -%}
+		</div>
+	{%- else -%}
+	{%- endif -%}
+{%- else -%}
+	{%- assign product_style = product_style | default: settings.product_style -%}
+	{%- assign anumber = number | default: 8 -%}
+	{%- for i in (1..anumber) -%}
+	   	<div class="{% if strGridItem %}{{ strGridItem }}{% else %}slick-carousel__item{% endif %}">
+			{%- if product_style == 'style1' -%}
+				<div class="product-card product-grid grid__{{ product_style  }} {% if slide_variableWidth %} box-width{% endif %}">
+					<div class="product-grid__inner">
+						<div class="product-card__image-wrapper mb-3">
+							<a class="product-card__image-link rounded-2{% if forloop.index == 4 %} image-out-of-stok{% endif %}" href="/admin/products">
+								<div class="card__image position-relative js lazyload" style="padding-top: 120%;">
+									{%- capture current -%}{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+									{{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg position-absolute top-50 translate-middle-y start-0 w-100' }}
+								</div>
+							</a>
+							<div class="product-card__label position-absolute d-flex flex-column {{ settings.badge_position }}-0">
+								{%- if settings.product_card_new -%}
+									<span class="d-flex justify-content-start"><span class="label-new d-block overflow-hidden py-1 px-2 rounded-pill mb-0">{{ 'products.general.label_new' | t }}</span></span>
+								{%- endif -%}
+								{%- if forloop.index == 2 -%}
+									<span class="d-flex justify-content-start"><span class="label-on-sale d-block overflow-hidden py-1 px-2 rounded-pill mb-0">-10%</span></span>		
+								{%- endif -%}
+								{%- if forloop.index == 4 -%}
+									<span class="d-flex justify-content-start"><span class="label-sold-out d-block overflow-hidden py-1 px-2 rounded-pill mb-0">{{ 'products.general.out_stock' | t }}</span></span>		
+								{%- endif -%}
+							</div>
+							{%- if forloop.index == 2 and settings.product_card_countdown -%}
+								{% assign date_now = 'now' | date: '%s' %}
+								{% assign   endate = date_now | plus: 2592000 %}
+								{% assign countdownTime = endate | date: '%Y/%m/%d' %}
+								<div class="product-card__countdown d-flex position-absolute bottom-0 start-50 translate-middle-x bg-white rounded-pill py-1 px-3" data-countdown="{{ countdownTime }}"></div>
+							{%- endif -%}
+							<div class="shop-action position-absolute top-0 {% if settings.badge_position == 'start' %}end-0{% else %}start-0{% endif %}">
+								{%- if settings.product_wishlist and  settings.product_card_wishlist -%}
+									<button class="btn btn--action btn--wishlist show-tooltip" type="button">				
+										{% render 'icons', icon: 'heart', class: 'heart', attr: 'width="18" height="18"' %}
+										<div class="tooltip bs-tooltip-{% if settings.badge_position == 'start' %}start{% else %}end{% endif %}" role="tooltip">
+											<div class="tooltip-arrow"></div>
+											<div class="tooltip-inner">
+												{{ 'products.product.add_to_wishlist' | t }}
+											</div>
+										</div>
+									</button>
+								{%- endif -%}
+								{%- if settings.quickview_enable -%}
+									<button class="btn btn--action show-tooltip btn--quickview" type="button">
+										{% render 'icons', icon: 'eye', attr: 'width="18" height="18"' %}
+										<div class="tooltip bs-tooltip-{% if settings.badge_position == 'start' %}start{% else %}end{% endif %}" role="tooltip">
+											<div class="tooltip-arrow"></div>
+											<div class="tooltip-inner">
+												{{ 'products.product.quickview' | t }}
+											</div>
+										</div>
+									</button>
+								{%- endif -%}
+								{%- if forloop.index == 4 -%}
+									{% if settings.outofstock_enable %}
+										<button class="btn btn--action show-tooltip btn--quickview" type="button">
+											{% render 'icons', icon: 'bell', attr: 'width="18" height="18"' %}
+											<div class="tooltip bs-tooltip-{% if settings.badge_position == 'start' %}start{% else %}end{% endif %}" role="tooltip">
+												<div class="tooltip-arrow"></div>
+												<div class="tooltip-inner">
+													{{ 'products.product.notify_me' | t }}
+												</div>
+											</div>
+										</button>
+									{% endif %}
+								{% else %}
+									{%- if settings.product_card_addtocart -%}
+										<button class="btn btn--action show-tooltip btn--add-to-cart" type="button">
+											{% render 'icons', icon: 'handbag', class: 'icon-cart', attr: 'width="18" height="18"' %}
+											<div class="tooltip bs-tooltip-{% if settings.badge_position == 'start' %}start{% else %}end{% endif %}" role="tooltip">
+												<div class="tooltip-arrow"></div>
+												<div class="tooltip-inner">
+													{{ 'products.product.add_to_cart' | t }}
+												</div>
+											</div>
+										</button>
+									{%- endif -%}
+								{%- endif -%}
+							</div>
+						</div>
+						<div class="product-card__content">
+							<div class="product-card__content--inner">
+								{%- if settings.product_vendor_enable -%}
+									<div class="product-card__vendor mb-1"><label class="me-1">{{'products.general.label_vendor' | t }}</label>Aceno</div>
+								{%- endif -%}
+								{%- if settings.product_reviews_enable and settings.product_card_review -%}
+									<div class="product-card__review product-review mb-2">
+										<vela-review class="vela-review" data-styles="{{ settings.product_card_review_style }}">
+											<div class="jdgm-widget jdgm-preview-badge lh-1 jdgm--done-setup">
+											  	<div class="jdgm-prev-badge d-block"> 
+													<span class="jdgm-prev-badge__stars" data-score="5.00" tabindex="0" aria-label="5.00 stars" role="button"> 
+														<span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span> 
+													</span> 
+													<span class="jdgm-prev-badge__text">1 Review</span> 
+												</div>
+											</div>
+										  	<div class="vela-review__content">
+												<span class="vela-review__star">
+													<span class="jdgm-star jdgm--on"></span>
+												</span>
+												<span class="vela-review__rating">5.00</span>
+												<span class="vela-review__count">(1)</span>
+											</div>
+										</vela-review>
+									</div>
+								{%- endif -%}
+								<h6 class="product-card__name fs-6 line-clamp-2 mb-2">
+									<a class="line-title fw-normal" href="/admin/products">Balloon Denim Mini Skirt</a>
+								</h6>
+								<div class="product-group-price d-flex align-items-center justify-content-start w-100 lh-1">
+									<div class="product-price {% if forloop.index == 2 %}product-price__has-sale{% endif %}">{{ '9000' | money }}</div>
+									{%- if forloop.index == 2 -%}
+										<div class="product-price product-price--regular ms-1">{{ '10000' | money }}</div>
+									{%- endif -%}
+									{%- if shop.taxes_included and settings.product_card_tax -%}
+										<span class="ms-2">
+											{{ 'products.general.include_taxes' | t }}
+										</span>
+									{%- endif -%}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			{%- elsif product_style == 'style2' -%}
+				<div class="product-card product-grid grid__{{ product_style  }} {% if slide_variableWidth %} box-width{% endif %}">
+					<div class="product-grid__inner">
+						<div class="product-card__image-wrapper mb-3">
+							<a class="product-card__image-link rounded-2{% if forloop.index == 4 %} image-out-of-stok{% endif %}" href="/admin/products">
+								<div class="card__image position-relative js lazyload" style="padding-top: 120%;">
+									{%- capture current -%}{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+									{{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg position-absolute top-50 translate-middle-y start-0 w-100' }}
+								</div>
+							</a>
+							<div class="product-card__label position-absolute d-flex flex-column {{ settings.badge_position }}-0">
+								{%- if settings.product_card_new -%}
+									<span class="d-flex justify-content-start"><span class="label-new d-block overflow-hidden py-1 px-2 rounded-pill mb-0">{{ 'products.general.label_new' | t }}</span></span>
+								{%- endif -%}
+								{%- if forloop.index == 2 -%}
+									<span class="d-flex justify-content-start"><span class="label-on-sale d-block overflow-hidden py-1 px-2 rounded-pill mb-0">-10%</span></span>		
+								{%- endif -%}
+								{%- if forloop.index == 4 -%}
+									<span class="d-flex justify-content-start"><span class="label-sold-out d-block overflow-hidden py-1 px-2 rounded-pill mb-0">{{ 'products.general.out_stock' | t }}</span></span>		
+								{%- endif -%}
+							</div>
+							{%- if forloop.index == 2 and settings.product_card_countdown -%}
+								{% assign date_now = 'now' | date: '%s' %}
+								{% assign   endate = date_now | plus: 2592000 %}
+								{% assign countdownTime = endate | date: '%Y/%m/%d' %}
+								<div class="product-card__countdown d-flex position-absolute bottom-0 start-50 translate-middle-x bg-white rounded-pill py-1 px-3" data-countdown="{{ countdownTime }}"></div>
+							{%- endif -%}
+							<div class="shop-action position-absolute top-0 {% if settings.badge_position == 'start' %}end-0{% else %}start-0{% endif %}">
+								{%- if settings.product_wishlist and  settings.product_card_wishlist -%}
+									<a class="btn btn--wishlist show-tooltip">				
+										{% render 'icons', icon: 'heart', class: 'heart', attr: 'width="18" height="18"' %}
+										<div class="tooltip bs-tooltip-{% if settings.badge_position == 'start' %}start{% else %}end{% endif %}" role="tooltip">
+											<div class="tooltip-arrow"></div>
+											<div class="tooltip-inner">
+												{{ 'products.product.add_to_wishlist' | t }}
+											</div>
+										</div>
+									</a>
+								{%- endif -%}
+								{%- if settings.quickview_enable -%}
+									<a class="btn btn--action show-tooltip btn--quickview">
+										{% render 'icons', icon: 'eye', attr: 'width="18" height="18"' %}
+										<div class="tooltip bs-tooltip-{% if settings.badge_position == 'start' %}start{% else %}end{% endif %}" role="tooltip">
+											<div class="tooltip-arrow"></div>
+											<div class="tooltip-inner">
+												{{ 'products.product.quickview' | t }}
+											</div>
+										</div>
+									</a>
+								{%- endif -%}
+							</div>
+							{%- if forloop.index == 4 -%}
+								{% if settings.outofstock_enable %}
+									<div class="product-card__buttons position-absolute mx-lg-3 end-0">
+										<button class="btn btn--add-to-cart d-flex align-items-center justify-content-center d-lg-block w-100">
+											{% render 'icons', icon: 'bell', class: "d-lg-none", attr: 'width="14" height="14"' %}
+											<span class="text d-none d-lg-block">
+												{{ 'products.product.notify_me' | t }}
+											</span>
+										</button>
+									</div>
+								{% endif %}
+							{% else %}
+								{%- if settings.product_card_addtocart -%}
+									<div class="product-card__buttons position-absolute mx-lg-3 end-0">
+										<button class="btn btn--add-to-cart d-flex align-items-center justify-content-center d-lg-block w-100" title="{{ 'products.product.add_to_cart' | t }}">
+											{% render 'icons', icon: 'handbag', class: 'icon-cart d-lg-none', attr: 'width="14" height="14"' %}
+											<span class="text d-none d-lg-block">{{ 'products.product.add_to_cart' | t }}</span>
+										</button>
+									</div>
+								{%- endif -%}
+							{%- endif -%}
+						</div>
+						<div class="product-card__content">
+							<div class="product-card__content--inner text-center">
+								{%- if settings.product_vendor_enable -%}
+									<div class="product-card__vendor mb-1"><label class="me-1">{{'products.general.label_vendor' | t }}</label>Aceno</div>
+								{%- endif -%}
+								{%- if settings.product_reviews_enable and settings.product_card_review -%}
+									<div class="product-card__review product-review d-flex justify-content-center mb-2">
+										<vela-review class="vela-review" data-styles="{{ settings.product_card_review_style }}">
+											<div class="jdgm-widget jdgm-preview-badge lh-1 jdgm--done-setup" data-average-rating="0.00" data-number-of-reviews="0" data-number-of-questions="0">
+												<div class="jdgm-prev-badge d-block"> 
+													<span class="jdgm-prev-badge__stars" data-score="5.00" tabindex="0" aria-label="5.00 stars" role="button"> 
+														<span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span> 
+													</span> 
+													<span class="jdgm-prev-badge__text">1 Review</span> 
+												</div>
+											</div>
+											<div class="vela-review__content">
+												<span class="vela-review__star">
+													<span class="jdgm-star jdgm--on"></span>
+												</span>
+												<span class="vela-review__rating">5.00</span>
+												<span class="vela-review__count">(1)</span>
+											</div>
+										</vela-review>
+									</div>
+								{%- endif -%}
+								<h6 class="product-card__name fs-6 line-clamp-2 mb-2">
+									<a class="line-title fw-normal" href="/admin/products">Balloon Denim Mini Skirt</a>
+								</h6>
+								<div class="product-group-price d-flex align-items-center justify-content-center w-100 lh-1">
+									<div class="product-price {% if forloop.index == 2 %}product-price__has-sale{% endif %}">{{ '9000' | money }}</div>
+									{%- if forloop.index == 2 -%}
+										<div class="product-price product-price--regular ms-1">{{ '10000' | money }}</div>
+									{%- endif -%}
+									{%- if shop.taxes_included and settings.product_card_tax -%}
+										<span class="ms-2">
+											{{ 'products.general.include_taxes' | t }}
+										</span>
+									{%- endif -%}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			{%- elsif product_style == 'style3'-%}
+				<div class="product-card product-grid grid__{{ product_style  }} {% if slide_variableWidth %} box-width{% endif %}">
+					<div class="product-grid__inner">
+						<div class="product-card__image-wrapper mb-3">
+							<a class="product-card__image-link rounded-2{% if forloop.index == 4 %} image-out-of-stok{% endif %}" href="/admin/products">
+								<div class="card__image position-relative js lazyload" style="padding-top: 120%;">
+									{%- capture current -%}{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+									{{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg position-absolute top-50 translate-middle-y start-0 w-100' }}
+								</div>
+							</a>
+							<div class="product-card__label position-absolute d-flex flex-column {{ settings.badge_position }}-0">
+								{%- if settings.product_card_new -%}
+									<span class="d-flex justify-content-start"><span class="label-new d-block overflow-hidden py-1 px-2 rounded-pill mb-0">{{ 'products.general.label_new' | t }}</span></span>
+								{%- endif -%}
+								{%- if forloop.index == 2 -%}
+									<span class="d-flex justify-content-start"><span class="label-on-sale d-block overflow-hidden py-1 px-2 rounded-pill mb-0">-10%</span></span>		
+								{%- endif -%}
+								{%- if forloop.index == 4 -%}
+									<span class="d-flex justify-content-start"><span class="label-sold-out d-block overflow-hidden py-1 px-2 rounded-pill mb-0">{{ 'products.general.out_stock' | t }}</span></span>		
+								{%- endif -%}
+							</div>
+							{%- if forloop.index == 2 and settings.product_card_countdown -%}
+								{% assign date_now = 'now' | date: '%s' %}
+								{% assign   endate = date_now | plus: 2592000 %}
+								{% assign countdownTime = endate | date: '%Y/%m/%d' %}
+								<div class="product-card__countdown d-flex position-absolute bottom-0 start-50 translate-middle-x bg-white rounded-pill py-1 px-3" data-countdown="{{ countdownTime }}"></div>
+							{%- endif -%}
+							<div class="shop-action position-absolute d-flex justify-content-center align-items-center">
+								{%- if forloop.index == 4 -%}
+									{% if settings.outofstock_enable %}
+										<a class="btn btn--action show-tooltip btn--quickview">
+											{% render 'icons', icon: 'bell', attr: 'width="18" height="18"' %}
+											<div class="tooltip bs-tooltip-top" role="tooltip">
+												<div class="tooltip-arrow"></div>
+												<div class="tooltip-inner">
+													{{ 'products.product.notify_me' | t }}
+												</div>
+											</div>
+										</a>
+									{% endif %}
+								{% else %}
+									{%- if settings.product_card_addtocart -%}
+										<a class="btn btn--action show-tooltip btn--add-to-cart">
+											{% render 'icons', icon: 'handbag', class: 'icon-cart', attr: 'width="18" height="18"' %}
+											<div class="tooltip bs-tooltip-top" role="tooltip">
+												<div class="tooltip-arrow"></div>
+												<div class="tooltip-inner">
+													{{ 'products.product.add_to_cart' | t }}
+												</div>
+											</div>
+										</a>
+									{%- endif -%}
+								{%- endif -%}
+								{%- if settings.quickview_enable -%}
+									<a class="btn btn--action show-tooltip btn--quickview">
+										{% render 'icons', icon: 'eye', attr: 'width="18" height="18"' %}
+										<div class="tooltip bs-tooltip-top" role="tooltip">
+											<div class="tooltip-arrow"></div>
+											<div class="tooltip-inner">
+												{{ 'products.product.quickview' | t }}
+											</div>
+										</div>
+									</a>
+								{%- endif -%}
+								{%- if settings.product_wishlist and  settings.product_card_wishlist -%}
+									<a class="btn btn--action btn--wishlist show-tooltip">				
+										{% render 'icons', icon: 'heart', class: 'heart', attr: 'width="18" height="18"' %}
+										<div class="tooltip bs-tooltip-top" role="tooltip">
+											<div class="tooltip-arrow"></div>
+											<div class="tooltip-inner">
+												{{ 'products.product.add_to_wishlist' | t }}
+											</div>
+										</div>
+									</a>
+								{%- endif -%}
+							</div>
+						</div>
+						<div class="product-card__content">
+							<div class="product-card__content--inner">
+								{%- if settings.product_vendor_enable -%}
+									<div class="product-card__vendor mb-1"><label class="me-1">{{'products.general.label_vendor' | t }}</label>Aceno</div>
+								{%- endif -%}
+								{%- if settings.product_reviews_enable and settings.product_card_review -%}
+									<div class="product-card__review product-review mb-2">
+										<vela-review class="vela-review" data-styles="{{ settings.product_card_review_style }}">
+											<div class="jdgm-widget jdgm-preview-badge lh-1 jdgm--done-setup">
+												<div class="jdgm-prev-badge d-block"> 
+													<span class="jdgm-prev-badge__stars" data-score="5.00" tabindex="0" aria-label="5.00 stars" role="button"> 
+														<span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span> 
+													</span> 
+													<span class="jdgm-prev-badge__text">1 Review</span> 
+												</div>
+											</div>
+											<div class="vela-review__content">
+												<span class="vela-review__star">
+													<span class="jdgm-star jdgm--on"></span>
+												</span>
+												<span class="vela-review__rating">5.00</span>
+												<span class="vela-review__count">(1)</span>
+											</div>
+										</vela-review>
+									</div>
+								{%- endif -%}
+								<h6 class="product-card__name fs-6 line-clamp-2 mb-2">
+									<a class="line-title fw-normal" href="/admin/products">Balloon Denim Mini Skirt</a>
+								</h6>
+								<div class="product-group-price d-flex align-items-center justify-content-start w-100 lh-1">
+									<div class="product-price {% if forloop.index == 2 %}product-price__has-sale{% endif %}">{{ '9000' | money }}</div>
+									{%- if forloop.index == 2 -%}
+										<div class="product-price product-price--regular ms-1">{{ '10000' | money }}</div>
+									{%- endif -%}
+									{%- if shop.taxes_included and settings.product_card_tax -%}
+										<span class="ms-2">
+											{{ 'products.general.include_taxes' | t }}
+										</span>
+									{%- endif -%}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			{%- elsif product_style == 'style4'-%}
+				<div class="product-card product-grid grid__{{ product_style  }} {% if slide_variableWidth %} box-width{% endif %}">
+					<div class="product-grid__inner">
+						<div class="product-card__image-wrapper mb-3">
+							<a class="product-card__image-link rounded-2{% if forloop.index == 4 %} image-out-of-stok{% endif %}" href="/admin/products">
+								<div class="card__image position-relative js lazyload" style="padding-top: 120%;">
+									{%- capture current -%}{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+									{{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg position-absolute top-50 translate-middle-y start-0 w-100' }}
+								</div>
+							</a>
+							<div class="product-card__label position-absolute d-flex flex-column {{ settings.badge_position }}-0">
+								{%- if settings.product_card_new -%}
+									<span class="d-flex justify-content-start"><span class="label-new d-block overflow-hidden py-1 px-2 rounded-pill mb-0">{{ 'products.general.label_new' | t }}</span></span>
+								{%- endif -%}
+								{%- if forloop.index == 2 -%}
+									<span class="d-flex justify-content-start"><span class="label-on-sale d-block overflow-hidden py-1 px-2 rounded-pill mb-0">-10%</span></span>		
+								{%- endif -%}
+								{%- if forloop.index == 4 -%}
+									<span class="d-flex justify-content-start"><span class="label-sold-out d-block overflow-hidden py-1 px-2 rounded-pill mb-0">{{ 'products.general.out_stock' | t }}</span></span>		
+								{%- endif -%}
+							</div>
+							{%- if forloop.index == 2 and settings.product_card_countdown -%}
+								{% assign date_now = 'now' | date: '%s' %}
+								{% assign   endate = date_now | plus: 2592000 %}
+								{% assign countdownTime = endate | date: '%Y/%m/%d' %}
+								<div class="product-card__countdown d-flex position-absolute bottom-0 start-50 translate-middle-x bg-white rounded-pill py-1 px-3" data-countdown="{{ countdownTime }}"></div>
+							{%- endif -%}
+							<div class="shop-action position-absolute top-0 {% if settings.badge_position == 'start' %}end-0{% else %}start-0{% endif %}">
+								{%- if settings.product_wishlist and  settings.product_card_wishlist -%}
+									<a class="btn btn--wishlist show-tooltip top-0 {% if settings.badge_position == 'start' %}end-0{% else %}start-0{% endif %}">				
+										{% render 'icons', icon: 'heart', class: 'heart', attr: 'width="18" height="18"' %}
+										<div class="tooltip bs-tooltip-{% if settings.badge_position == 'start' %}start{% else %}end{% endif %}" role="tooltip">
+											<div class="tooltip-arrow"></div>
+											<div class="tooltip-inner">
+												{{ 'products.product.add_to_wishlist' | t }}
+											</div>
+										</div>
+									</a>
+								{%- endif -%}
+								{%- if settings.quickview_enable -%}
+									<a class="btn btn--action show-tooltip btn--quickview">
+										{% render 'icons', icon: 'eye', attr: 'width="18" height="18"' %}
+										<div class="tooltip bs-tooltip-{% if settings.badge_position == 'start' %}start{% else %}end{% endif %}" role="tooltip">
+											<div class="tooltip-arrow"></div>
+											<div class="tooltip-inner">
+												{{ 'products.product.quickview' | t }}
+											</div>
+										</div>
+									</a>
+								{%- endif -%}
+								{%- if forloop.index == 4 -%}
+									{% if settings.outofstock_enable %}
+										<a class="btn btn--action show-tooltip btn--quickview">
+											{% render 'icons', icon: 'bell', attr: 'width="18" height="18"' %}
+											<div class="tooltip bs-tooltip-{% if settings.badge_position == 'start' %}start{% else %}end{% endif %}" role="tooltip">
+												<div class="tooltip-arrow"></div>
+												<div class="tooltip-inner">
+													{{ 'products.product.notify_me' | t }}
+												</div>
+											</div>
+										</a>
+									{% endif %}
+								{% else %}
+									{%- if settings.product_card_addtocart -%}
+										<a class="btn btn--action show-tooltip btn--add-to-cart">
+											{% render 'icons', icon: 'handbag', class: 'icon-cart', attr: 'width="18" height="18"' %}
+											<div class="tooltip bs-tooltip-{% if settings.badge_position == 'start' %}start{% else %}end{% endif %}" role="tooltip">
+												<div class="tooltip-arrow"></div>
+												<div class="tooltip-inner">
+													{{ 'products.product.add_to_cart' | t }}
+												</div>
+											</div>
+										</a>
+									{%- endif -%}
+								{%- endif -%}
+							</div>
+						</div>
+						<div class="product-card__content">
+							<div class="product-card__content--inner">
+								{%- if settings.product_vendor_enable -%}
+									<div class="product-card__vendor mb-1"><label class="me-1">{{'products.general.label_vendor' | t }}</label>Aceno</div>
+								{%- endif -%}
+								{%- if settings.product_reviews_enable and settings.product_card_review -%}
+									<div class="product-card__review product-review mb-2">
+										<vela-review class="vela-review" data-styles="{{ settings.product_card_review_style }}">
+											<div class="jdgm-widget jdgm-preview-badge lh-1 jdgm--done-setup">
+												<div class="jdgm-prev-badge d-block"> 
+													<span class="jdgm-prev-badge__stars" data-score="5.00" tabindex="0" aria-label="5.00 stars" role="button"> 
+														<span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span> 
+													</span> 
+													<span class="jdgm-prev-badge__text">1 Review</span> 
+												</div>
+											</div>
+											<div class="vela-review__content">
+												<span class="vela-review__star">
+													<span class="jdgm-star jdgm--on"></span>
+												</span>
+												<span class="vela-review__rating">5.00</span>
+												<span class="vela-review__count">(1)</span>
+											</div>
+										</vela-review>
+									</div>
+								{%- endif -%}
+								<h6 class="product-card__name fs-6 line-clamp-2 mb-2">
+									<a class="line-title fw-normal" href="/admin/products">Balloon Denim Mini Skirt</a>
+								</h6>
+								<div class="product-group-price d-flex align-items-center justify-content-start w-100 lh-1">
+									<div class="product-price {% if forloop.index == 2 %}product-price__has-sale{% endif %}">{{ '9000' | money }}</div>
+									{%- if forloop.index == 2 -%}
+										<div class="product-price product-price--regular ms-1">{{ '10000' | money }}</div>
+									{%- endif -%}
+									{%- if shop.taxes_included and settings.product_card_tax -%}
+										<span class="ms-2">
+											{{ 'products.general.include_taxes' | t }}
+										</span>
+									{%- endif -%}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			{%- else -%}
+				<div class="product-card product-grid grid__style5 {% if slide_variableWidth %} box-width{% endif %}">
+					<div class="product-grid__inner">
+						<div class="product-card__image-wrapper mb-3">
+							<a class="product-card__image-link rounded-2" href="/admin/products">
+								<div class="card__image position-relative js lazyload" style="padding-top: 120%;">
+									{%- capture current -%}{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+									{{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg position-absolute top-50 translate-middle-y start-0 w-100' }}
+								</div>
+							</a>
+							<div class="product-card__label position-absolute d-flex flex-column {{ settings.badge_position }}-0">
+								{%- if settings.product_card_new -%}
+									<span class="d-flex justify-content-start"><span class="label-new d-block overflow-hidden py-1 px-2 rounded-pill mb-0">{{ 'products.general.label_new' | t }}</span></span>
+								{%- endif -%}
+								{%- if forloop.index == 2 -%}
+									<span class="d-flex justify-content-start"><span class="label-on-sale d-block overflow-hidden py-1 px-2 rounded-pill mb-0">-10%</span></span>		
+								{%- endif -%}
+								{%- if forloop.index == 4 -%}
+									<span class="d-flex justify-content-start"><span class="label-sold-out d-block overflow-hidden py-1 px-2 rounded-pill mb-0">{{ 'products.general.out_stock' | t }}</span></span>		
+								{%- endif -%}
+							</div>
+							{%- if forloop.index == 2 and settings.product_card_countdown -%}
+								{% assign date_now = 'now' | date: '%s' %}
+								{% assign   endate = date_now | plus: 2592000 %}
+								{% assign countdownTime = endate | date: '%Y/%m/%d' %}
+								<div class="product-card__countdown d-flex position-absolute bottom-0 start-50 translate-middle-x bg-white rounded-pill py-1 px-3" data-countdown="{{ countdownTime }}"></div>
+							{%- endif -%}
+							{%- if settings.product_wishlist and  settings.product_card_wishlist -%}
+								<button type="button" aria-label="{{ 'products.product.wishlist' | t }}" class="btn--wishlist position-absolute show-tooltip top-0 {% if settings.badge_position == 'start' %}end-0{% else %}start-0{% endif %}">				
+									{% render 'icons', icon: 'heart', class: 'heart', attr: 'width="18" height="18"' %}
+									<div class="tooltip bs-tooltip-{% if settings.badge_position == 'start' %}start{% else %}end{% endif %}" role="tooltip">
+										<div class="tooltip-arrow"></div>
+										<div class="tooltip-inner">
+											{{ 'products.product.add_to_wishlist' | t }}
+										</div>
+									</div>
+								</button>
+							{%- endif -%}
+							<div class="shop-action position-absolute bottom-0 start-0 end-0 mx-3">
+								<div class="shop-action__wrapper row g-1" style="--bs-gutter-x: 8px;">
+									{%- if forloop.index == 4 -%}
+										{% if settings.outofstock_enable %}
+											<div class="d-flex justify-content-center d-lg-block{% if settings.quickview_enable %} col-12 col-lg-6{% else %} col-12{% endif %}">
+												<a class="btn btn--action btn--add-to-cart">
+													{% render 'icons', icon: 'bell', class: "d-lg-none", attr: 'width="14" height="14"' %}
+													<span class="text">
+														{{ 'products.product.notify_me' | t }}
+													</span>
+												</a>
+											</div>
+										{% endif %}
+									{% else %}
+										{%- if settings.product_card_addtocart -%}
+											<div class="product-card__buttons d-flex justify-content-center d-lg-block{% if settings.quickview_enable %} col-12 col-lg-6{% else %} col-12{% endif %}">
+												<div class="product-card__form">
+													<button class="btn btn--action btn--add-to-cart" title="{{ 'products.product.add_to_cart' | t }}">
+														{% render 'icons', icon: 'handbag', class: 'icon-cart d-lg-none', attr: 'width="14" height="14"' %}
+														<span class="text">{{ 'products.product.add_to_cart' | t }}</span>
+													</button>
+												</div>
+											</div>
+										{%- endif -%}
+									{%- endif -%}
+									{%- if settings.quickview_enable -%}
+										<div class="col-6 d-none d-lg-block">
+											<button class="btn btn--action btn--quickview">
+												{% render 'icons', icon: 'search', class: 'd-none', attr: 'width="22" height="22"' %}
+												<span class="text">{{ 'products.product.quickview' | t }}</span>
+												<div class="d-none proShortDesc">
+													{{ shortDescription }}
+												</div>
+											</button>
+										</div>
+									{%- endif -%}
+								</div>
+							</div>
+						</div>
+						<div class="product-card__content">
+							<div class="product-card__content--inner text-center">
+								{%- if settings.product_vendor_enable -%}
+									<div class="product-card__vendor mb-1"><label class="me-1">{{'products.general.label_vendor' | t }}</label>Aceno</div>
+								{%- endif -%}
+								{%- if settings.product_reviews_enable and settings.product_card_review -%}
+									<div class="product-card__review product-review d-flex justify-content-center mb-2">
+										<vela-review class="vela-review" data-styles="{{ settings.product_card_review_style }}">
+											<div class="jdgm-widget jdgm-preview-badge lh-1 jdgm--done-setup" data-average-rating="0.00" data-number-of-reviews="0" data-number-of-questions="0">
+												<div class="jdgm-prev-badge d-block"> 
+													<span class="jdgm-prev-badge__stars" data-score="5.00" tabindex="0" aria-label="5.00 stars" role="button"> 
+														<span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span><span class="jdgm-star jdgm--on"></span> 
+													</span> 
+													<span class="jdgm-prev-badge__text">1 Review</span> 
+												</div>
+											</div>
+											<div class="vela-review__content">
+												<span class="vela-review__star">
+													<span class="jdgm-star jdgm--on"></span>
+												</span>
+												<span class="vela-review__rating">5.00</span>
+												<span class="vela-review__count">(1)</span>
+											</div>
+										</vela-review>
+									</div>
+								{%- endif -%}
+								<h6 class="product-card__name fs-6 line-clamp-2 mb-2">
+									<a class="line-title fw-normal" href="/admin/products">Balloon Denim Mini Skirt</a>
+								</h6>
+								<div class="product-group-price d-flex align-items-center justify-content-center w-100 lh-1">
+									<div class="product-price {% if forloop.index == 2 %}product-price__has-sale{% endif %}">{{ '9000' | money }}</div>
+									{%- if forloop.index == 2 -%}
+										<div class="product-price product-price--regular ms-1">{{ '10000' | money }}</div>
+									{%- endif -%}
+									{%- if shop.taxes_included and settings.product_card_tax -%}
+										<span class="ms-2">
+											{{ 'products.general.include_taxes' | t }}
+										</span>
+									{%- endif -%}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			{%- endif -%}
+		</div>
+	{%- endfor -%}
+{%- endif -%}

@@ -1,0 +1,59 @@
+.predictive-search--search-template {
+  z-index: 2; }
+
+predictive-search[open] .predictive-search,
+predictive-search[loading] .predictive-search {
+  display: block; }
+
+.predictive-search__results-list:empty,
+.predictive-search__results-list:empty ~ #predictive-search-option-search-keywords,
+predictive-search:not([loading]) .predictive-search__heading .spinner,
+predictive-search:not([loading]) .predictive-search__loading-state,
+predictive-search:not([loading]) .predictive-search-status__loading {
+  display: none; }
+
+predictive-search[loading] .predictive-search__loading-state {
+  display: flex;
+  justify-content: center;
+  padding: 1rem; }
+
+predictive-search[loading] .predictive-search__heading ~ .predictive-search__loading-state,
+predictive-search[loading] .predictive-search__results-list:first-child {
+  display: none; }
+
+.predictive-search__item {
+  color: var(--secondary);
+  line-height: 20px; }
+  .predictive-search__item:hover {
+    color: var(--heading-color); }
+  .predictive-search__item mark {
+    background-color: #CFFF00;
+    color: var(--heading-color);
+    padding: 0; }
+
+.predictive-search__product .product-card__swatch {
+  display: none !important; }
+
+.predictive-search__product .shop-action {
+  display: none !important; }
+
+@media (max-width: 767.98px) {
+  .predictive-search__product .product-grid__inner {
+    display: flex; }
+  .predictive-search__product .product-card__image-wrapper {
+    width: 90px;
+    margin-bottom: 0 !important;
+    border-radius: 4px; }
+  .predictive-search__product .product-card__content {
+    padding-left: 15px;
+    margin-top: 8px;
+    width: calc(100% - 135px); }
+  .predictive-search__product .product-card__content--inner {
+    text-align: left !important; }
+  .predictive-search__product .product-group-price {
+    justify-content: flex-start !important; } }
+
+@media (max-width: 991.98px) {
+  .predictive-search__product .js-btn-wishlist,
+  .predictive-search__product .product-card__label {
+    display: none !important; } }

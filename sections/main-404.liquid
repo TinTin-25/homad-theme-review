@@ -1,0 +1,148 @@
+{{- 'template-404.css' | asset_url | stylesheet_tag -}}
+{%- include 'section_style' -%}
+<div class="template-404 d-flex align-items-center text-center vela-section overflow-hidden" style="{{- section_style -}}">
+	<div class="container">
+		<div class="template-404__inner">
+			<div class="template-404__heading h2 mb-4 heading-color"{% if section.settings.image != blank %} style=" margin-left: auto; margin-right: auto; max-width: {{section.settings.image.width}}px;"{% endif %}>
+				{%- if section.settings.image != blank -%}
+					{% render 'img-global', image: section.settings.image, image_style: true %}
+				{%- else -%}
+					{{ 'templates.404.subtext' | t }}
+				{%- endif -%}
+			</div>
+			{%- if section.settings.sub_heading != blank -%}
+				<div class="template-404__sub-title mb-1">{{ section.settings.sub_heading }}</div>
+			{%- endif -%}
+			<h1 class="template-404__title  position-relative mb-2" style="font-size: {{ section.settings.heading_font_size }}px;">
+				{%- if section.settings.heading != blank -%}
+					{{ section.settings.heading }}
+				{%- else -%}
+					{{ 'templates.404.title' | t }}
+				{%- endif -%}
+			</h1>
+			{%- if section.settings.info != blank -%}
+				<p class="text mb-4 mb-lg-5 fw-medium">
+					{{ section.settings.info }}
+				</p>
+			{%- endif -%}
+			{%- if section.settings.search_form -%}
+				<form action="{{ routes.search_url }}" method="get" role="search" class="template-404__search mb-4 mx-auto">
+					<div class="input-group border overflow-hidden">
+						<input
+							class="search__input form-control border-0"
+							id="Search-In-Template"
+							type="search"
+							name="q"
+							value="{{ search.terms | escape }}"
+							{% if search.performed %}autofocus{% endif %}
+							placeholder="{{ 'templates.search.search-placeholder' | t }}"
+						>
+						<input name="options[prefix]" type="hidden" value="last">
+						<span class="p-0">
+							<button type="submit" class="link vela-icon py-2 px-3 border-0 bg-white fw-medium" aria-label="{{ 'general.search.search' | t }}">
+								<span class="d-inline-block my-1 d-none">{{ 'general.search.search' | t }}</span>
+								{% render 'icons', icon: 'search', class: 'icon-search', attr: 'width="22" height="24"' %}
+							</button>
+						</span>
+					</div>
+				</form>
+			{%- endif -%}
+			<a href="javascript:history.go(-1)" class="btn btn-default fs-6">
+				<span class="d-inline-block">{{ 'templates.404.go_back' | t }}</span>
+			</a>
+		</div>
+	</div>
+</div>
+<script>
+    $(document).ready(function() {
+		var gFooterHeight = 0;
+        $('[class^="shopify-section shopify-section-group-footer-"]').each(function( index ) {
+			gFooterHeight = gFooterHeight + Math.ceil($( this ).outerHeight());
+		});
+		document.documentElement.style.setProperty('--footer-group-height', `${gFooterHeight}px`);
+    });
+</script>
+{% schema %}
+    {
+        "name": "Template 404",
+        "settings": [
+            {
+                "type": "header",
+                "content": "General Settings"
+            },
+            {
+                "type": "image_picker",
+                "id": "image_bg",
+                "label": "Background image"
+            },
+			{
+                "type": "color",
+                "id": "color_bg",
+                "label": "Background Color",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "Padding",
+                "placeholder": "0px 0px"
+            },
+			{
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "Padding on mobile",
+                "placeholder": "0px 0px",
+                "info": "Ex: 0px 0px 0px 0px and use mobile only"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "Margin",
+                "placeholder": "0px 0px"
+            },
+			{
+				"type": "header",
+				"content": "General Settings"
+			},
+			{
+				"type": "image_picker",
+				"id": "image",
+				"label": "Image"
+			},
+			{
+				"type": "text",
+				"id": "sub_heading",
+				"label": "Sub heading",
+				"default": "404"
+			},
+			{
+				"type": "html",
+				"id": "heading",
+				"label": "Heading",
+				"default": "Oops! That page can't be found."
+			},
+			{
+				"type": "range",
+				"id": "heading_font_size",
+				"min": 10,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Font size",
+				"default": 72
+			},
+			{
+				"type": "textarea",
+				"id": "info",
+				"label": "Info",
+				"default": "We're really sorry but we can't seem to find the page you were looking for."
+			},
+			{
+				"type": "checkbox",
+				"id": "search_form",
+				"label": "Enable search form",
+				"default": true
+			}
+        ]
+    }
+{% endschema %}

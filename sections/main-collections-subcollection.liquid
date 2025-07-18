@@ -1,0 +1,534 @@
+{{- 'collection-list.css' | asset_url | stylesheet_tag -}}
+{%- include 'section_style' -%}
+{%- include 'carousel-settings' -%}
+<div class="vela-section collection-subCollections overflow-hidden{% if section.settings.layout == 'carousel' and section.settings.slide_variableWidth %} slick-carousel__variableWidth{% endif %}{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-fluid{% endif %}">
+        <div class="vela-section__inner position-relative">
+            <div class="vela-section__content">
+                {%- assign pageTile = page_title | handle -%}
+                {%- for block in section.blocks -%}
+                    {%- if block.settings.parent_handle == collection.handle or pageTile == 'products'  -%}
+                        {%- if block.settings.heading != blank  -%}
+                            <div class="heading-group mb-3 pb-2 text-center">
+                                <h2 class="heading mb-0">
+                                    <span>{{ block.settings.heading }}</span>
+                                </h2>
+                            </div>
+                        {%- endif -%}
+                        <div 
+                            {% if section.settings.layout == 'carousel' %}
+                                class="js-carousel slick-carousel row g-3 g-lg-{{ section.settings.space_between }}"
+                                data-nav="{{ nav }}"
+                                data-dots="{{ pagination }}"
+                                data-infinite="{{ infinite }}"
+                                data-autoplay="{{ autoplay }}"
+                                data-variableWidth="{{ variableWidth }}"
+                                data-autoplayspeed="{{ autoplay_speed }}"
+                                data-columnone="{{ owlColumn1 }}" 
+                                data-columntwo="{{ owlColumn2 }}" 
+                                data-columnthree="{{ owlColumn3 }}"
+                            {%  else %}
+                                class="row g-3 g-lg-{{ section.settings.space_between }} row-cols-{{ owlColumn3 }} row-cols-md-{{ owlColumn2 }} row-cols-lg-{{ owlColumn1 }}"
+                            {% endif %}
+                        >
+                            {%- for i in (1..10) -%}
+                                {%- assign collectionTitle = "collection_title" | append: forloop.index -%}
+                                {%- assign collectionImage = "collection_image" | append: forloop.index -%}
+                                {%- assign collectionHandle1 = "collection_handle" | append: forloop.index -%}
+                                {%- assign collectionHandle = block.settings[collectionHandle1] -%}
+                                {%- if collectionHandle != blank -%}
+                                    <div class="slick-carousel__item">
+                                        {%- if section.settings.collection_style == "style1" -%}
+                                            <div class="collection-subCollections__box effectSix collection-wrapper text-center box-width px-xl-2">
+                                                <a  class="position-relative" href="{{ collections[collectionHandle].url }}">
+                                                    <div class="collection-subCollections--image mb-2 rounded-circle overflow-hidden">
+                                                            {%- if block.settings[collectionImage] != blank -%}
+                                                                {% render 'img-global', image: block.settings[collectionImage], image_ratio: 'square', crop: 'center', image_style: true%}
+                                                            {%- elsif  collections[collectionHandle].image != blank -%}
+                                                                {% render 'img-global', image: collections[collectionHandle].image, image_ratio: 'square', crop: 'center', image_style: true%}
+                                                            {%- else -%}
+                                                                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                                            {%- endif -%}
+                                                    </div>
+                                                    <div class="collection-subCollections__content">
+                                                        <div class="collection-subCollections__title fs-6 fw-medium line-clamp-1 mb-1 link lh-1"> 
+                                                            <span class="position-relative">
+                                                                {%- if block.settings[collectionTitle] != blank -%}
+                                                                    {{ block.settings[collectionTitle] }}
+                                                                {%- else -%}
+                                                                    {{ collections[collectionHandle].title }}
+                                                                {%- endif -%}
+                                                            </span>
+                                                        </div>
+                                                        {%- if section.settings.collection_count -%}
+                                                            {%- assign productCount = collections[collectionHandle].products_count -%}
+                                                            <p class="collection-subCollections__count text-secondary pt-1 lh-1">{% if productCount > 1 %}{{ 'collections.general.product_count.other' | t: product_count: productCount }}{% else %}{{ 'collections.general.product_count.one' | t: product_count: productCount }}{% endif %}</p>
+                                                        {%- endif -%}
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        {%- else -%}
+                                            <div class="collection-subCollections__box effectSix collection-wrapper text-center box-width">
+                                                <a  class="position-relative d-block" href="{{ collections[collectionHandle].url }}">
+                                                    
+                                                    <div class="collection-subCollections--image rounded-1 overflow-hidden">
+                                                        {%- if block.settings[collectionImage] != blank -%}
+                                                            {% render 'img-global', image: block.settings[collectionImage], image_style: true %}
+                                                        {%- elsif  collections[collectionHandle].image != blank -%}
+                                                            {% render 'img-global', image: collections[collectionHandle].image, image_style: true %}
+                                                        {%- else -%}
+                                                            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                                        {%- endif -%}
+                                                    </div>
+                                                    <div class="collection-subCollections__content position-absolute start-0 d-flex justify-content-center w-100 bottom-0 mb-3 px-2">
+                                                        <div class="collection-subCollections__title link bg-white rounded-pill px-3 py-1" style="min-width: 145px;"> 
+                                                            <span class="position-relative line-clamp-1">
+                                                                {%- if block.settings[collectionTitle] != blank -%}
+                                                                    {{ block.settings[collectionTitle] }}
+                                                                {%- else -%}
+                                                                    {{ collections[collectionHandle].title }}
+                                                                {%- endif -%}
+                                                            </span>
+                                                            {%- if section.settings.collection_count -%}
+                                                                {%- assign productCount = collections[collectionHandle].products_count -%}
+                                                                <span class="collection-subCollections__count text-secondary mb-0 fs-13 d-block">{% if productCount > 1 %}{{ 'collections.general.product_count.other' | t: product_count: productCount }}{% else %}{{ 'collections.general.product_count.one' | t: product_count: productCount }}{% endif %}</span>
+                                                            {%- endif -%}
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        {%- endif -%}
+                                    </div>
+                                {%- endif -%}
+                            {%- endfor -%} 
+                        </div>
+                        {%- break -%}
+                    {%- endif -%}
+                {%- endfor -%}
+            </div>
+        </div>       
+    </div>
+</div>
+{% schema %}
+{
+	"name": "Sub collection",
+    "tag": "section",
+    "class": "velaFramework",
+    "disabled_on": {
+        "groups": ["header", "footer"]
+    },
+	"settings": [
+		{
+            "type": "header",
+            "content": "t:sections.global.settings.header_section.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "full_with",
+            "label": "t:sections.global.settings.full_width.label"
+        },
+        {
+            "type": "text",
+            "id": "max_with",
+            "label": "t:sections.global.settings.max_with.label",
+            "info": "t:sections.global.settings.max_with.info"
+        },
+        {
+            "type": "color",
+            "id": "color_bg",
+            "label": "t:sections.global.settings.bg_color.label",
+            "default": "rgba(0,0,0,0)"
+        },
+        {
+            "type": "text",
+            "id": "padding_block",
+            "label": "t:sections.global.settings.padding.label",
+            "placeholder": "0px 0px",
+            "info": "t:sections.global.settings.padding.info"
+        },
+        {
+            "type": "text",
+            "id": "padding_block_m",
+            "label": "t:sections.global.settings.padding_mobile.label",
+            "placeholder": "0px 0px",
+            "info": "t:sections.global.settings.padding_mobile.info"
+        },
+        {
+            "type": "text",
+            "id": "margin_block",
+            "label": "t:sections.global.settings.margin.label",
+            "placeholder": "0px 0px"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.global.settings.header_settings.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "collection_count",
+            "label": "Show product count?",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Layout Settings"
+        },
+        {
+            "type": "select",
+            "id": "layout",
+            "label": "Layout",
+            "default": "grid",
+            "options": [
+                {
+                    "value": "grid",
+                    "label": "Grid"
+                },
+                {
+                    "value": "carousel",
+                    "label": "Carousel"
+                }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "space_between",
+            "label": "Space between item",
+            "default": "4",
+            "options": [
+                {
+                    "value": "3",
+                    "label": "20px"
+                },
+                {
+                    "value": "4",
+                    "label": "30px"
+                },
+                {
+                    "value": "5",
+                    "label": "40px"
+                }
+            ]
+        },
+        {
+            "type": "range",
+            "id": "column1",
+            "min": 1,
+            "max": 8,
+            "step": 1,
+            "label": "Number of columns on desktop",
+            "default": 4,
+            "info": "Desktops"
+        },
+        {
+            "type": "range",
+            "id": "column2",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "label": "Number of columns on tablet",
+            "default": 3,
+            "info": "Tablets landscape"
+        },
+        {
+            "type": "range",
+            "id": "column3",
+            "min": 1,
+            "max": 5,
+            "step": 1,
+            "label": "Number of columns on mobile",
+            "default": 2,
+            "info": "Mobile phone landscape"
+        },
+        {
+            "type": "header",
+            "content": "Item settings"
+        },
+        {
+            "type": "select",
+            "id": "collection_style",
+            "options": [
+                {
+                    "value": "default",
+                    "label": "Default"
+                },
+                {
+                    "value": "style1",
+                    "label": "Style1"
+                }
+            ],
+            "default": "default",
+            "label": "Style"
+        },
+        {
+            "type": "header",
+            "content": "Carousel settings"
+        },
+        {
+            "type": "checkbox",
+            "id": "slide_variableWidth",
+            "label": "Variable width",
+            "default": false,
+            "info": "Variable width slides on the mobile"
+        },
+        {
+            "type": "checkbox",
+            "id": "navigation",
+            "label": "Show navigation",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "pagination",
+            "label": "Show dot indicators",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "infinite",
+            "label": "Infinite loop sliding",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "autoplay",
+            "label": "Enable autoplay",
+            "default": false
+        },
+        {
+            "type": "text",
+            "id": "autoplay_speed",
+            "label": "Autoplay speed",
+            "info": "Autoplay speed in milliseconds. Type: int(ms)",
+            "default": "10000"
+        }
+	],
+	"blocks": [
+		{
+            "type": "collection",
+            "name": "Collection list",
+            "settings": [
+                {
+                    "type": "collection",
+                    "id": "parent_handle",
+                    "label": "Select parent collection"
+                },
+                {
+					"type": "text",
+                    "id": "heading",
+					"label": "Heading"
+				},
+                {
+					"type": "header",
+					"content": "Collection 1"
+				},
+                {
+                    "type": "text",
+                    "id": "collection_title1",
+                    "label": "Title",
+                    "info": "Default is collection title if it's blank"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "collection_image1",
+                    "label": "Collection Image",
+                    "info": "Default is collection image if it's blank"
+                },
+                {
+                    "type": "collection",
+                    "id": "collection_handle1",
+                    "label": "Collection"
+                },
+                {
+					"type": "header",
+					"content": "Collection 2"
+				},
+                {
+                    "type": "text",
+                    "id": "collection_title2",
+                    "label": "Title",
+                    "info": "Default is collection title if it's blank"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "collection_image2",
+                    "label": "Collection Image",
+                    "info": "Default is collection image if it's blank"
+                },
+                {
+                    "type": "collection",
+                    "id": "collection_handle2",
+                    "label": "Collection"
+                },
+                {
+					"type": "header",
+					"content": "Collection 3"
+				},
+                {
+                    "type": "text",
+                    "id": "collection_title3",
+                    "label": "Title",
+                    "info": "Default is collection title if it's blank"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "collection_image3",
+                    "label": "Collection Image",
+                    "info": "Default is collection image if it's blank"
+                },
+                {
+                    "type": "collection",
+                    "id": "collection_handle3",
+                    "label": "Collection"
+                },
+                {
+					"type": "header",
+					"content": "Collection 4"
+				},
+                {
+                    "type": "text",
+                    "id": "collection_title4",
+                    "label": "Title",
+                    "info": "Default is collection title if it's blank"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "collection_image4",
+                    "label": "Collection Image",
+                    "info": "Default is collection image if it's blank"
+                },
+                {
+                    "type": "collection",
+                    "id": "collection_handle4",
+                    "label": "Collection"
+                },
+                {
+					"type": "header",
+					"content": "Collection 5"
+				},
+                {
+                    "type": "text",
+                    "id": "collection_title5",
+                    "label": "Title",
+                    "info": "Default is collection title if it's blank"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "collection_image5",
+                    "label": "Collection Image",
+                    "info": "Default is collection image if it's blank"
+                },
+                {
+                    "type": "collection",
+                    "id": "collection_handle5",
+                    "label": "Collection"
+                },
+                {
+					"type": "header",
+					"content": "Collection 6"
+				},
+                {
+                    "type": "text",
+                    "id": "collection_title6",
+                    "label": "Title",
+                    "info": "Default is collection title if it's blank"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "collection_image6",
+                    "label": "Collection Image",
+                    "info": "Default is collection image if it's blank"
+                },
+                {
+                    "type": "collection",
+                    "id": "collection_handle6",
+                    "label": "Collection"
+                },
+                {
+					"type": "header",
+					"content": "Collection 7"
+				},
+                {
+                    "type": "text",
+                    "id": "collection_title7",
+                    "label": "Title",
+                    "info": "Default is collection title if it's blank"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "collection_image7",
+                    "label": "Collection Image",
+                    "info": "Default is collection image if it's blank"
+                },
+                {
+                    "type": "collection",
+                    "id": "collection_handle7",
+                    "label": "Collection"
+                },
+                {
+					"type": "header",
+					"content": "Collection 8"
+				},
+                {
+                    "type": "text",
+                    "id": "collection_title8",
+                    "label": "Title",
+                    "info": "Default is collection title if it's blank"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "collection_image8",
+                    "label": "Collection Image",
+                    "info": "Default is collection image if it's blank"
+                },
+                {
+                    "type": "collection",
+                    "id": "collection_handle8",
+                    "label": "Collection"
+                },
+                {
+					"type": "header",
+					"content": "Collection 9"
+				},
+                {
+                    "type": "text",
+                    "id": "collection_title9",
+                    "label": "Title",
+                    "info": "Default is collection title if it's blank"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "collection_image9",
+                    "label": "Collection Image",
+                    "info": "Default is collection image if it's blank"
+                },
+                {
+                    "type": "collection",
+                    "id": "collection_handle9",
+                    "label": "Collection"
+                },
+                {
+					"type": "header",
+					"content": "Collection 10"
+				},
+                {
+                    "type": "text",
+                    "id": "collection_title10",
+                    "label": "Title",
+                    "info": "Default is collection title if it's blank"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "collection_image10",
+                    "label": "Collection Image",
+                    "info": "Default is collection image if it's blank"
+                },
+                {
+                    "type": "collection",
+                    "id": "collection_handle10",
+                    "label": "Collection"
+                }
+            ]
+		}
+	]
+}
+{% endschema %}

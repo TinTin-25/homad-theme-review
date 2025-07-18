@@ -1,0 +1,290 @@
+{{ 'product-tab-information.css' | asset_url | stylesheet_tag }}
+{%- include 'section_style' -%}
+<div id="product-more-info" class="vela-section product-more-info{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{%- if section.settings.full_with -%}-full{%- endif -%}">
+        {%- if section.blocks.size > 0 -%}
+            <div class="product-more-info__inner">
+                <div class="more-info-tabs__heading{% if section.settings.proTabInfo_style == 'collapse' %} d-none d-md-block{% endif %}">
+                    <ul class="more-info-tabs__nav nav d-flex flex-column flex-md-row justify-content-md-center list-unstyled">
+                        {%- for block in section.blocks -%}
+                            {%- if block.type == "review" and settings.product_reviews_enable -%}
+                                <li class="more-info-tabs__nav-item">
+                                    <a class="more-info-tabs__nav-link {% if forloop.first %} active{% endif %}" data-bs-toggle="tab" href="#js-more-info-tabs-review">
+                                        {{- block.settings.review -}}
+                                        {%- render 'icons', icon: 'angle-right', class: 'icon float-end d-block d-md-none', attr: 'width="7" height="12"'-%}
+                                    </a>
+                                </li>
+                            {%- else -%}
+                                <li class="more-info-tabs__nav-item">
+                                    <a class="more-info-tabs__nav-link {% if forloop.first %} active{% endif %}" data-bs-toggle="tab" href="#js-more-info-tabs-{{ forloop.index }}">
+                                        {{- block.settings.heading -}}
+                                        {%- render 'icons', icon: 'angle-right', class: 'icon float-end d-block d-md-none', attr: 'width="7" height="12"'-%}
+                                    </a>
+                                </li>
+                            {%- endif -%}
+                        {%- endfor -%}
+                    </ul>
+                </div>
+                <div class="more-info-tabs__content tab-content">
+                    {%- for block in section.blocks -%}
+                        {%- if block.type == "review" and settings.product_reviews_enable -%}
+                            <div id="js-more-info-tabs-review" class="tab-pane fade {% if forloop.first %}show active{% endif %}">
+                                {%- if section.settings.proTabInfo_style == 'Offcanvas' -%}
+                                    <div class="more-info-tabs__offcanvas-header position-relatvie d-block d-md-none">
+                                        <div class="heading-color fs-13 fw-semibold text-uppercase">{{- block.settings.review -}}</div>
+                                        <button type="button" class="vela__btn-close position-absolute border-0 top-0 end-0 mt-1 me-2" data-bs-dismiss="offcanvas" aria-label="Close">
+                                            {% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+                                            {% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+                                        </button>
+                                    </div>
+                                {%- else -%}
+                                    <a class="multiple-collapse__heading d-block d-md-none position-relative collapsed fs-13 fw-semibold text-uppercase lh-1" data-bs-toggle="collapse" href="#more-info-collapse__review" role="button" aria-expanded="true" aria-controls="collapseItem1">
+                                        {{- block.settings.review -}}
+                                        <svg class="icon-plus position-absolute end-0 top-50 translate-middle-y me-3" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 11V1M11 6H1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                        <svg class="icon-minus position-absolute end-0 top-50 translate-middle-y me-3" width="12" height="12" viewBox="0 0 12 2" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 1H1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    </a>
+                                {%- endif -%}
+                                <div class="more-info-tabs__wrapper"{% if section.settings.proTabInfo_style == 'collapse' %}  id="more-info-collapse__review" data-bs-parent="#product-more-info"{% endif %}>
+                                    <div class="product-single__from-reviews">
+                                        <!-- Start of Judge.me code --> 
+                                        <div style='clear:both'></div> 
+                                        <div id='judgeme_product_reviews' class='jdgm-widget jdgm-review-widget' data-id='{{ product.id }}'> 
+                                            {{ product.metafields.judgeme.widget }} 
+                                        </div> 
+                                        <!-- End of Judge.me code -->
+                                    </div>
+                                </div>
+                            </div>
+                        {%- else -%}
+                            <div id="js-more-info-tabs-{{ forloop.index }}" class="tab-pane fade {% if forloop.first %}show active{% endif %}">
+                                {%- if section.settings.proTabInfo_style == 'Offcanvas' -%}
+                                    <div class="more-info-tabs__offcanvas-header position-relatvie d-block d-md-none">
+                                        <div class="heading-color fs-13 fw-semibold text-uppercase">{{- block.settings.heading -}}</div>
+                                        <button type="button" class="vela__btn-close position-absolute border-0 top-0 end-0 mt-1 me-2" data-bs-dismiss="offcanvas" aria-label="Close">
+                                            {% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+                                            {% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+                                        </button>
+                                    </div>
+                                {%- else -%}
+                                    <a class="multiple-collapse__heading d-block d-md-none position-relative collapsed fs-13 fw-semibold text-uppercase lh-1" data-bs-toggle="collapse" href="#more-info-collapse-{{ forloop.index }}" role="button" aria-expanded="true" aria-controls="collapseItem1">
+                                        {{- block.settings.heading -}}
+                                        <svg class="icon-plus position-absolute end-0 top-50 translate-middle-y me-3" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 11V1M11 6H1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                        <svg class="icon-minus position-absolute end-0 top-50 translate-middle-y me-3" width="12" height="12" viewBox="0 0 12 2" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 1H1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    </a>
+                                {%- endif -%}
+                                <div class="rte more-info-tabs__wrapper"{% if section.settings.proTabInfo_style == 'collapse' %} id="more-info-collapse-{{ forloop.index }}" data-bs-parent="#product-more-info"{% endif %}>
+                                    {% if block.type == "description" %}
+                                        {{ product.description }}
+                                    {%- else -%}
+                                        {{ block.settings.content }}
+                                        {{ block.settings.content_1 }}
+                                        {%- if block.settings.image != blank -%}
+                                            <div class="more-info-tabs__image mb-2">
+                                                <img class="img-fluid lazyload" data-src="{{ block.settings.image | img_url: 'master'}}" data-size="auto" />
+                                            </div>
+                                        {%- endif -%}
+                                    {%- endif -%}
+                                </div>
+                            </div>
+                        {%- endif -%}
+                    {%- endfor -%}
+                </div>
+            </div>
+        {%- endif -%}
+    </div>
+</div>
+{%- if section.settings.proTabInfo_style == 'Offcanvas' -%}
+    <script>
+        update = () => {
+            var proTabInfo = document.getElementById('product-more-info');
+            if( window.innerWidth > 768) {
+                document.body.style = '';
+                if (proTabInfo.querySelector('.offcanvas-backdrop') != null ) {
+                    proTabInfo.querySelector('.offcanvas-backdrop').remove();
+                }
+                
+                proTabInfo.querySelectorAll('.more-info-tabs__nav-link').forEach((element,index) => {
+                    element.setAttribute("data-bs-toggle", "tab");
+                    if(index==0){
+                        element.setAttribute("class", "more-info-tabs__nav-link active");
+                    } else {
+                        element.setAttribute("class", "more-info-tabs__nav-link");
+                    }
+                });
+                proTabInfo.querySelectorAll('.offcanvas').forEach((element,index) => {
+                    element.setAttribute("style", "");
+                    if(index==0){
+                        element.setAttribute("class", "tab-pane fade active show");
+                    } else {
+                        element.setAttribute("class", "tab-pane fade");
+                    }
+                });
+            } else {
+                proTabInfo.querySelectorAll('.more-info-tabs__nav-link').forEach((element) => {
+                    element.setAttribute("data-bs-toggle", "offcanvas");
+                });
+                proTabInfo.querySelectorAll('.tab-pane').forEach((element) => {
+                    element.setAttribute("class", "offcanvas offcanvas-end");
+                });
+            }
+        }
+        window.update();
+        window.addEventListener('resize', update);
+    </script>
+{%- else -%}
+    <script>
+        update = () => {
+            var proTabInfo = document.getElementById('product-more-info');
+            if( window.innerWidth > 768) {
+                proTabInfo.querySelectorAll('.more-info-tabs__multiple-collapse').forEach((element,index) => {
+                    if(index==0){
+                        element.setAttribute("class", "tab-pane fade active show");
+                    } else {
+                        element.setAttribute("class", "tab-pane fade");
+                    }
+                });
+                proTabInfo.querySelectorAll('.more-info-tabs__wrapper').forEach((element,index) => {
+                    element.setAttribute("class", "more-info-tabs__wrapper");
+                });
+            } else {
+                proTabInfo.querySelectorAll('.tab-pane').forEach((element) => {
+                    element.setAttribute("class", "more-info-tabs__multiple-collapse");
+                });
+                proTabInfo.querySelectorAll('.more-info-tabs__wrapper').forEach((element) => {
+                    element.setAttribute("class", "more-info-tabs__wrapper collapse");
+                });
+            }
+        }
+        window.update();
+        window.addEventListener('resize', update);
+    </script>
+{%- endif -%}
+{% schema %}
+{
+    "name": "Product tab information",
+    "tag": "section",
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.global.settings.header_section.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "full_with",
+            "label": "t:sections.global.settings.full_width.label"
+        },
+        {
+            "type": "text",
+            "id": "max_with",
+            "label": "t:sections.global.settings.max_with.label",
+            "info": "t:sections.global.settings.max_with.info"
+        },
+        {
+            "type": "color",
+            "id": "color_bg",
+            "label": "t:sections.global.settings.bg_color.label",
+            "default": "rgba(0,0,0,0)"
+        },
+        {
+            "type": "text",
+            "id": "padding_block",
+            "label": "t:sections.global.settings.padding.label",
+            "placeholder": "0px 0px",
+            "info": "t:sections.global.settings.padding.info"
+        },
+        {
+            "type": "text",
+            "id": "padding_block_m",
+            "label": "t:sections.global.settings.padding_mobile.label",
+            "placeholder": "0px 0px",
+            "info": "t:sections.global.settings.padding_mobile.info"
+        },
+        {
+            "type": "text",
+            "id": "margin_block",
+            "label": "t:sections.global.settings.margin.label",
+            "placeholder": "0px 0px"
+        },
+        {
+			"type": "header",
+			"content": "Mobile Layout"
+		},
+		{
+			"type": "select",
+			"id": "proTabInfo_style",
+			"label": "Style",
+			"default": "Offcanvas",
+			"options": [
+				{
+					"value": "Offcanvas",
+					"label": "Offcanvas"
+				},
+				{
+					"value": "collapse",
+					"label": "Collapse"
+				}
+			]
+		}
+    ],
+    "blocks": [
+        {
+            "type": "description",
+            "name": "Description",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "html",
+                    "id": "heading",
+                    "default": "Tab heading",
+                    "info": "Include a heading that explains the content.",
+                    "label": "Heading"
+                }
+            ]
+        },
+        {
+            "type": "extra_tab",
+            "name": "Extra tab",
+            "limit": 5,
+            "settings": [
+                {
+                    "type": "html",
+                    "id": "heading",
+                    "default": "Tab heading",
+                    "info": "Include a heading that explains the content.",
+                    "label": "Heading"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "html",
+                    "id": "content",
+                    "label": "Tab content",
+                    "info": "HTML"
+                },
+                {
+                    "type": "richtext",
+                    "id": "content_1",
+                    "label": "Tab content"
+                }
+            ]
+        },
+        {
+            "type": "review",
+            "name": "Review",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "html",
+                    "id": "review",
+                    "default": "Reviews",
+                    "info": "Our theme supports Judge.me Product Reviews app. you can find it [here](https:\/\/apps.shopify.com\/judgeme)",
+                    "label": "Heading"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

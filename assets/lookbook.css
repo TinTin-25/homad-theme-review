@@ -1,0 +1,246 @@
+.lookbook-card {
+  position: relative; }
+
+.lookbook-card__item {
+  z-index: 1; }
+  .lookbook-card__item:hover, .lookbook-card__item:focus {
+    z-index: 2; }
+
+.lookbook-card__point {
+  top: -12px;
+  left: -12px; }
+  .lookbook-card__point:hover .lookbook-card__btn:after, .lookbook-card__point:focus .lookbook-card__btn:after {
+    background-color: var(--heading-color); }
+  .lookbook-card__point:hover .lookbook-card__btn > span, .lookbook-card__point:focus .lookbook-card__btn > span {
+    color: #fff; }
+    .lookbook-card__point:hover .lookbook-card__btn > span .icon-line1, .lookbook-card__point:focus .lookbook-card__btn > span .icon-line1 {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg); }
+    .lookbook-card__point:hover .lookbook-card__btn > span .icon-line, .lookbook-card__point:focus .lookbook-card__btn > span .icon-line {
+      -webkit-transform: rotate(90deg);
+      transform: rotate(90deg); }
+  .lookbook-card__point:hover .lookbook-card__content, .lookbook-card__point:focus .lookbook-card__content {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto; }
+  .lookbook-card__point:hover.lookbook-card--top-left .lookbook-card__content, .lookbook-card__point:focus.lookbook-card--top-left .lookbook-card__content {
+    padding-right: 26px;
+    padding-bottom: 26px; }
+  .lookbook-card__point:hover.lookbook-card--top-right .lookbook-card__content, .lookbook-card__point:focus.lookbook-card--top-right .lookbook-card__content {
+    padding-left: 30px;
+    padding-bottom: 30px; }
+  .lookbook-card__point:hover.lookbook-card--center-left .lookbook-card__content, .lookbook-card__point:focus.lookbook-card--center-left .lookbook-card__content {
+    padding-right: 35px; }
+  .lookbook-card__point:hover.lookbook-card--center-top .lookbook-card__content, .lookbook-card__point:focus.lookbook-card--center-top .lookbook-card__content {
+    padding-bottom: 35px; }
+  .lookbook-card__point:hover.lookbook-card--center-right .lookbook-card__content, .lookbook-card__point:focus.lookbook-card--center-right .lookbook-card__content {
+    padding-left: 35px; }
+  .lookbook-card__point:hover.lookbook-card--center-bottom .lookbook-card__content, .lookbook-card__point:focus.lookbook-card--center-bottom .lookbook-card__content {
+    padding-top: 35px; }
+  .lookbook-card__point:hover.lookbook-card--bottom-left .lookbook-card__content, .lookbook-card__point:focus.lookbook-card--bottom-left .lookbook-card__content {
+    padding-top: 30px;
+    padding-right: 30px; }
+  .lookbook-card__point:hover.lookbook-card--bottom-right .lookbook-card__content, .lookbook-card__point:focus.lookbook-card--bottom-right .lookbook-card__content {
+    padding-top: 26px;
+    padding-left: 26px; }
+
+.lookbook-card__button {
+  cursor: pointer; }
+
+.lookbook-card__review .spr-badge-caption {
+  display: none; }
+
+.lookbook-card__review .spr-badge-starrating .spr-icon {
+  font-size: calc(var(--font-size-base) - 2px) !important; }
+
+.lookbook-card__btn {
+  width: 24px;
+  height: 24px;
+  color: #fff;
+  z-index: 3; }
+  @media (min-width: 992px) {
+    .lookbook-card__btn {
+      pointer-events: none; } }
+  .lookbook-card__btn > span {
+    color: var(--heading-color);
+    z-index: 1; }
+    .lookbook-card__btn > span .icon-line1,
+    .lookbook-card__btn > span .icon-line {
+      margin-left: -4px;
+      margin-top: -4px; }
+    .lookbook-card__btn > span .icon-line {
+      -webkit-transform: rotate(135deg);
+      transform: rotate(135deg); }
+    .lookbook-card__btn > span .icon-line1 {
+      -webkit-transform: rotate(45deg);
+      transform: rotate(45deg); }
+  .lookbook-card__btn:before, .lookbook-card__btn:after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    display: block;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    background-color: #fff;
+    transform: translate(-50%, -50%);
+    transition: all .3s ease; }
+    @media (min-width: 768px) {
+      .lookbook-card__btn:before, .lookbook-card__btn:after {
+        width: 26px;
+        height: 26px; } }
+  .lookbook-card__btn:before {
+    opacity: .3;
+    animation: lookbook-button 3s infinite; }
+
+.lookbook-card__content {
+  z-index: 2;
+  opacity: 0;
+  visibility: hidden;
+  transition: all .15s ease;
+  pointer-events: none; }
+  .lookbook-card__content:after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    display: none; }
+
+.lookbook-card--top-left .lookbook-card__content {
+  right: -25px;
+  bottom: -25px;
+  padding-right: 50px;
+  padding-bottom: 50px; }
+
+.lookbook-card--top-right .lookbook-card__content {
+  left: 0;
+  bottom: -25px;
+  padding-left: 50px;
+  padding-bottom: 50px; }
+
+.lookbook-card--center-left .lookbook-card__content {
+  top: 50%;
+  right: -25px;
+  padding-right: 55px;
+  transform: translate(0, -50%); }
+
+.lookbook-card--center-left .lookbook-card__content::after {
+  top: 50%;
+  right: -15px;
+  margin-top: -12px;
+  border-left: 15px solid white;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent; }
+
+.lookbook-card--center-top .lookbook-card__content {
+  left: 50%;
+  bottom: -25px;
+  padding-bottom: 55px;
+  transform: translate(-50%, 0); }
+  .lookbook-card--center-top .lookbook-card__content:after {
+    left: 50%;
+    bottom: -15px;
+    margin-left: -12px;
+    border-top: 15px solid white;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent; }
+
+.lookbook-card--center-right .lookbook-card__content {
+  top: 50%;
+  left: 0;
+  padding-left: 55px;
+  transform: translate(0, -50%); }
+  .lookbook-card--center-right .lookbook-card__content:after {
+    top: 50%;
+    left: -15px;
+    margin-top: -12px;
+    border-right: 15px solid white;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent; }
+
+.lookbook-card--center-bottom .lookbook-card__content {
+  left: 50%;
+  top: 0;
+  padding-top: 55px;
+  transform: translate(-50%, 0); }
+  .lookbook-card--center-bottom .lookbook-card__content:after {
+    left: 50%;
+    top: -15px;
+    margin-left: -12px;
+    border-bottom: 15px solid white;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent; }
+
+.lookbook-card--bottom-left .lookbook-card__content {
+  top: 0;
+  right: -25px;
+  padding-top: 50px;
+  padding-right: 50px; }
+
+.lookbook-card--bottom-right .lookbook-card__content {
+  top: 0;
+  left: 0;
+  padding-top: 60px;
+  padding-left: 60px; }
+
+.lookbook-product {
+  width: 204px;
+  padding: 12px;
+  background-color: white;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05); }
+
+.lookbook-product__price {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center; }
+
+.lookbook-modal .modal-header {
+  padding: 10px 15px 5px;
+  border-bottom: 0; }
+  .lookbook-modal .modal-header .btn-close {
+    z-index: 2; }
+
+.lookbook-modal .modal-body {
+  padding-top: 0; }
+
+.lookbook-product__link {
+  color: var(--primary);
+  background-image: linear-gradient(to right, var(--primary) 0%, var(--primary) 100%);
+  background-position: 0 100%;
+  background-size: 100% 1px;
+  transition: background-size 0.25s cubic-bezier(0.785, 0.135, 0.15, 0.86) 0s;
+  background-repeat: no-repeat; }
+  .lookbook-product__link:hover {
+    color: var(--heading-color);
+    background-size: 0 1px; }
+
+.section-lookbook .js-btn-quickview {
+  color: var(--heading-color);
+  background-image: linear-gradient(to right, var(--primary) 0%, var(--primary) 100%);
+  background-position: 0 100%;
+  background-size: 0 1px;
+  transition: background-size 0.25s cubic-bezier(0.785, 0.135, 0.15, 0.86) 0s;
+  background-repeat: no-repeat; }
+  .section-lookbook .js-btn-quickview:hover {
+    color: var(--primary);
+    background-size: 100% 1px; }
+
+@media (max-width: 575.98px) {
+  .section-lookbook .modal-dialog {
+    max-width: calc(100% - 30px);
+    margin: 1.75rem auto; } }
+
+@keyframes lookbook-button {
+  0% {
+    opacity: 1;
+    width: 16px;
+    height: 16px; }
+  50% {
+    opacity: 0.2;
+    width: 40px;
+    height: 40px; }
+  100% {
+    opacity: 1;
+    width: 16px;
+    height: 16px; } }

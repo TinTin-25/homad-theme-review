@@ -1,0 +1,364 @@
+{{ 'product-tab.css' | asset_url | stylesheet_tag }}
+{%- include 'section_style' -%}
+{%- include 'carousel-settings' -%}
+{%- assign proLimit = section.settings.limit -%}
+<div class="vela-section product-tabs-dropdown overflow-hidden{% if section.settings.layout == 'carousel' and section.settings.slide_variableWidth %} slick-carousel__variableWidth{% endif %}{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+	<div class="container{% if section.settings.full_with %}-fluid{% endif %}">
+		<div class="vela-section__inner">
+			<div class="product-tabs__heading heading-group d-flex justify-content-start justify-content-md-center">
+                {%- if section.settings.heading != blank -%}
+                    <h2 class="heading text-secondary mb-0 me-3 lh-1">{{ section.settings.heading }}</h2>
+                {%- endif -%}
+                <protabs-dropdown class="product-tabs__dropdown dropdown">
+					<button class="heading bg-transparent btn-dropdown-toggle d-block position-relative border-0 px-0 mb-0 lh-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="text">
+                            {%- for block in section.blocks -%}
+                                {% if forloop.first %}
+                                    {{- block.settings.title | escape -}}
+                                    {% break %}
+                                {% endif %}
+                            {%- endfor -%}
+                        </span>
+						{% render 'icons', icon: 'angle-down', class: "text-secondary me-2", attr: 'width="10" height="6"' %}
+					</button>
+                    <ul class="nav d-flex flex-column list-unstyled mb-0 dropdown-menu border-0" aria-labelledby="dropdownMenuButton1">
+                        {%- for block in section.blocks -%}
+                             {%- assign tab_heading =  block.settings.title | escape -%}
+                            <li class="nav-item product-tabs__nav-item">
+                                <a class="product-tabs__nav-link tabs-dropdown__nav-link overflow-hidden rounded-1 fw-medium fs-6 d-block lh-1 {% if forloop.first %} active{% endif %}"  data-bs-toggle="tab"
+                                href="#product-tabs-{{ section.id }}{{ forloop.index }}">
+                                <span>{{- tab_heading -}}</span>
+                                </a>
+                            </li>
+                        {%- endfor -%}
+                    </ul>
+                </protabs-dropdown>
+			</div>
+			<div class="vela-section__content">
+				<div class="tab-banner_content">
+					<div class="tab-content product-tabs__content">
+						{%- for block in section.blocks -%}
+							{%- assign proCollection = block.settings.collection -%}
+							<div class="tab-pane fade{% if forloop.first %} show active{% endif %}" id="product-tabs-{{ section.id }}{{ forloop.index }}">
+								<div
+									{% if section.settings.layout == 'carousel' %}
+                    				 	class="js-carousel carousel-custom slick-carousel row g-2 g-md-{{ section.settings.space_between }}"
+										data-nav="{{ nav }}"
+										data-dots="{{ pagination }}"
+										data-infinite="{{ infinite }}"
+										data-autoplay="{{ autoplay }}"
+										data-variableWidth="{{ variableWidth }}"
+										data-autoplayspeed="{{ autoplay_speed }}"
+										data-columnone="{{ owlColumn1 }}" 
+										data-columntwo="{{ owlColumn2 }}" 
+										data-columnthree="{{ owlColumn3 }}"
+									{%- else -%}
+										class="row gx-2 gx-md-3 g-lg-4 gy-4 gy-lg-5 g-lg-{{ section.settings.space_between }} row-cols-{{ owlColumn3 }} row-cols-md-{{ owlColumn2 }} row-cols-lg-{{ owlColumn1 }}"
+									{% endif %}
+								>
+									{%- if proCollection == blank or collections[proCollection] == empty or collections[proCollection].products_count == 0 -%}
+										{% render 'onboarding-featured-products', product_style: section.settings.product_style, slide_variableWidth: section.settings.slide_variableWidth %}
+									{%- else -%}
+										{%- for product in collections[proCollection].products limit: proLimit -%}
+											<div class="{% if section.settings.layout == 'carousel' %}slick-carousel__item{% else %}col{% endif %}">
+												{% render 'product-grid-item', product: product, product_style: section.settings.product_style, slide_variableWidth: section.settings.slide_variableWidth %}
+											</div>
+										{%- endfor -%}
+									{%- endif -%}
+								</div>
+								{%- if section.settings.button_text != blank -%}
+									<div class="text-center pt-lg-3">
+										<a class="btn--viewall fs-6 btn mt-4 mt-md-5" href="{{ collections[proCollection].url }}" title="{{ section.settings.button_text | strip_html }}"><span>{{ section.settings.button_text }}</span></a>
+									</div>
+								{%- endif -%}
+							</div>
+						{%- endfor -%}
+					</div>
+				</div>
+			</div>
+		</div>
+  	</div>
+</div>
+<script>
+    class proTabsDropdown extends HTMLElement {
+        constructor () {
+            super();
+            this.button = this.querySelector('.btn-dropdown-toggle .text');
+            this.querySelectorAll('.tabs-dropdown__nav-link').forEach((item) => {
+                item.addEventListener('click', this.setButtonText.bind(this));
+            });
+            this.setButtonText();
+        }
+        setButtonText () {
+            this.querySelectorAll('.tabs-dropdown__nav-link').forEach((item) => {
+                if(item.classList.contains("active")) {
+                    this.button.innerHTML = item.innerHTML;
+                }
+            });
+        }
+    }
+    customElements.define('protabs-dropdown', proTabsDropdown);
+</script>
+{% schema %}
+{
+	"name": "Product tabs dropdown",
+	"tag": "section",
+	"class": "velaFramework",
+	"disabled_on": {
+		"groups": ["header", "footer"]
+	},
+	"settings": [
+		{
+			"type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+		},
+		{
+			"type": "checkbox",
+			"id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+		},
+		{
+			"type": "text",
+			"id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+		},
+		{
+			"type": "color",
+			"id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+			"default": "rgba(0,0,0,0)"
+		},
+		{
+			"type": "text",
+			"id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+			"placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+		},
+		{
+			"type": "text",
+			"id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+			"placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+		},
+		{
+			"type": "text",
+			"id": "margin_block",
+			"label": "t:sections.global.settings.margin.label",
+			"placeholder": "0px 0px"
+		},
+		{
+			"type": "header",
+			"content": "General Settings"
+		},
+        {
+            "type": "html",
+            "id": "heading",
+            "label": "t:sections.global.settings.heading_section.label",
+            "default": "You are in"
+        },
+		{
+			"type": "range",
+			"id": "limit",
+			"min": 1,
+			"max": 20,
+			"step": 1,
+			"label": "Maximum products to show",
+			"default": 8
+		},
+		{
+			"type": "text",
+			"id": "button_text",
+			"label": "Button read more",
+			"placeholder": "View all",
+			"info": "Hidden, if it's blank"
+		},
+		{
+			"type": "header",
+			"content": "Layout Settings"
+		},
+		{
+			"type": "select",
+			"id": "layout",
+			"label": "Layout",
+			"default": "grid",
+			"options": [
+				{
+					"value": "grid",
+					"label": "Grid"
+				},
+				{
+					"value": "carousel",
+					"label": "Carousel"
+				}
+			]
+		},
+		{
+			"type": "select",
+			"id": "space_between",
+			"label": "Space between item",
+			"default": "4",
+			"options": [
+				{
+					"value": "2",
+					"label": "20px"
+				},
+				{
+					"value": "3",
+					"label": "20px"
+				},
+				{
+					"value": "4",
+					"label": "30px"
+				},
+				{
+					"value": "5",
+					"label": "40px"
+				}
+			]
+		},
+		{
+			"type": "range",
+			"id": "column1",
+			"min": 1,
+			"max": 6,
+			"step": 1,
+			"label": "Number of columns on desktop",
+			"default": 4,
+			"info": "Desktops"
+		},
+		{
+			"type": "range",
+			"id": "column2",
+			"min": 1,
+			"max": 5,
+			"step": 1,
+			"label": "Number of columns on tablet",
+			"default": 3,
+			"info": "Tablets landscape"
+		},
+		{
+			"type": "range",
+			"id": "column3",
+			"min": 1,
+			"max": 5,
+			"step": 1,
+			"label": "Number of columns on mobile",
+			"default": 2,
+			"info": "Mobile phone landscape"
+		},
+		{
+			"type": "header",
+			"content": "Item settings"
+		},
+		{
+			"type": "select",
+			"id": "product_style",
+			"label": "Product style",
+			"default": "style1",
+			"options": [
+				{
+					"value": "style1",
+					"label": "Style1"
+				},
+				{
+					"value": "style2",
+					"label": "Style2"
+				},
+				{
+					"value": "style3",
+					"label": "Style3"
+				},
+				{
+					"value": "style4",
+					"label": "Style4"
+				},
+				{
+					"value": "style5",
+					"label": "Style5"
+				}
+			]
+		},
+		{
+			"type": "header",
+			"content": "Carousel settings"
+		},
+		{
+			"type": "checkbox",
+			"id": "slide_variableWidth",
+			"label": "Variable width",
+			"default": false,
+			"info": "Variable width slides on the mobile"
+		},
+		{
+			"type": "checkbox",
+			"id": "navigation",
+			"label": "Show navigation",
+			"default": true
+		},
+		{
+			"type": "checkbox",
+			"id": "pagination",
+			"label": "Show dot indicators",
+			"default": false
+		},
+		{
+			"type": "checkbox",
+			"id": "infinite",
+			"label": "Infinite loop sliding",
+			"default": true
+		},
+		{
+			"type": "checkbox",
+			"id": "autoplay",
+			"label": "Enable autoplay",
+			"default": false
+		},
+		{
+			"type": "text",
+			"id": "autoplay_speed",
+			"label": "Autoplay speed",
+			"info": "Autoplay speed in milliseconds. Type: int(ms)",
+			"default": "10000"
+		}
+  	],
+	"blocks": [
+		{
+			"type": "tab",
+			"name": "Tab item",
+			"settings": [
+				{
+					"type": "text",
+					"id": "title",
+					"label": "Heading",
+					"default": "Tab heading"
+				},
+				{
+					"type": "collection",
+					"id": "collection",
+					"label": "Collection"
+				}
+			]
+		}
+	],
+	"presets": [
+		{
+			"name": "Product tabs dropdown",
+			"category": "3. Product",
+			"blocks": [
+				{
+					"type": "tab"
+				},
+				{
+					"type": "tab"
+				},
+				{
+					"type": "tab"
+				}
+			]
+		}
+	]
+}
+{% endschema %}

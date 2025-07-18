@@ -1,0 +1,9 @@
+<div class="product-price{% if on_sale %} product-price__has-sale{% endif %}">{{ product.price | money }}</div>
+{%- if on_sale -%}
+    <div class="product-price product-price--regular ms-1">{{ product.compare_at_price | money }}</div>
+{%- endif -%}
+{%- if shop.taxes_included and settings.product_card_tax -%}
+    <span class="ms-2">
+        {{ 'products.general.include_taxes' | t }}
+    </span>
+{%- endif -%}

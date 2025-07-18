@@ -1,0 +1,73 @@
+.section-services .services-title {
+  color: var(--sv-h-cl);
+  font-size: var(--sv-h-fs); }
+  @media (max-width: 767.98px) {
+    .section-services .services-title {
+      font-size: 18px; } }
+
+.section-services .services-desc {
+  color: var(--sv-desc-cl);
+  font-size: var(--sv-desc-fs); }
+  @media (max-width: 767.98px) {
+    .section-services .services-desc {
+      font-size: var(--sv-desc-fs-m); } }
+
+.section-services .services-btn {
+  padding-bottom: 6px;
+  color: var(--heading-color); }
+  .section-services .services-btn:after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--heading-color);
+    transition: all .3s ease; }
+  .section-services .services-btn:hover {
+    color: var(--body-color); }
+    .section-services .services-btn:hover::after {
+      background-color: var(--body-color); }
+
+.services__default .services-box {
+  border: 1px solid var(--border-lighter-color);
+  padding: 24px; }
+
+@media (min-width: 1380px) {
+  .services__style1 .services-box {
+    padding-left: 30px;
+    padding-right: 30px; } }
+
+.services__style2 .services__item {
+  position: relative; }
+  .services__style2 .services__item:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    background-color: var(--border-color);
+    display: block; }
+    @media (min-width: 992px) {
+      .services__style2 .services__item:not(:last-child)::before {
+        width: 1px;
+        top: 0;
+        bottom: 0;
+        right: 0; } }
+    @media (max-width: 991.98px) {
+      .services__style2 .services__item:not(:last-child)::before {
+        height: 1px;
+        bottom: calc(-.5 * var(--bs-gutter-x));
+        right: calc(var(--bs-gutter-x) * .5);
+        left: calc(var(--bs-gutter-x) * .5); } }
+  .services__style2 .services__item .services-box {
+    padding: 32px 16px; }
+    @media (max-width: 767.98px) {
+      .services__style2 .services__item .services-box {
+        padding: 10px 16px; } }
+
+.services__style2 .services-btn {
+  color: #fff;
+  padding: 11px 30px; }
+  .services__style2 .services-btn::after {
+    display: none; }
+  .services__style2 .services-btn:hover {
+    color: #fff; }

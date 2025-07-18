@@ -1,0 +1,428 @@
+{{- 'ourservice.css' | asset_url | stylesheet_tag -}}
+{%- include 'section_style' -%}
+{% include 'carousel-settings' %}
+
+{%- liquid
+  assign icon_size = 32
+  if section.settings.iconsize != blank
+    assign icon_size = section.settings.iconsize | plus: 0
+  endif
+-%}
+<div class="vela-section section-services overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{%- if section.settings.full_with -%}-fluid{%- endif -%}">
+        <div class="vela-section__inner">
+            {%- if section.settings.heading != blank -%}
+                <div class="heading-group mb-3 mb-md-4 pb-1 {{ section.settings.text_align }}">
+                    <h2 class="heading mb-0">
+                        <span>{{ section.settings.heading }}</span>
+                    </h2>
+                    {%- if section.settings.sub_heading != blank -%}
+                        <div class="sub-heading pt-1">
+                            {{ section.settings.sub_heading }}
+                        </div>
+                    {%- endif -%}
+                </div>
+            {%- endif -%}
+            <div class="vela-section__content services__{{ section.settings.service_style }}">
+                <div
+                    {% if section.settings.layout == 'carousel' %} 
+                        class="js-carousel carousel-custom slick-carousel row g-3 g-md-4"
+                        data-nav="{{ nav }}"
+                        data-dots="{{ pagination }}"
+                        data-infinite="{{ infinite }}"
+                        data-autoplay="{{ autoplay }}"
+                        data-variableWidth="{{ variableWidth }}"
+                        data-autoplayspeed="{{ autoplay_speed }}"
+                        data-columnone="{{ owlColumn1 }}" 
+                        data-columntwo="{{ owlColumn2 }}" 
+                        data-columnthree="{{ owlColumn3 }}"
+                    {% else %}
+                        class="row g-3 g-md-4 row-cols-{{ owlColumn3 }} row-cols-md-{{ owlColumn2 }} row-cols-lg-{{ owlColumn1 }}"
+                    {% endif %}
+                >
+                    {% for block in section.blocks %}
+                        <div class="services__item {% if section.settings.layout == 'carousel' %}slick-carousel__item{% else %}col{% endif %}">
+                            {%- if section.settings.service_style == 'default' -%}
+                                <div class="services-box d-flex justify-content-center rounded-2">
+                                    <div class="d-flex">
+                                        {%- if block.settings.icon != blank -%}
+                                            <div class="services-box__image oveflow-hidden rounded-1 me-2">
+                                                {%- render 'img-global', image: block.settings.icon, max_width: icon_size, image_style: true, img_fix_w: true -%}
+                                            </div>
+                                        {%- endif -%}
+                                        <div class="services-box__content">
+                                            {%- if block.settings.box_title != blank -%}
+                                                <div class="services-title mb-1 fw-semibold" style="--sv-h-cl: {{block.settings.heading_color }};--sv-h-fs: {{block.settings.box_title_size }}px;--sv-h-fs-m: {{block.settings.box_title_size_m }}px;">{{ block.settings.box_title }}</div>
+                                            {%- endif -%}
+                                            {%- if block.settings.box_desc != blank -%}
+                                                <div class="services-desc mx-auto" style="--sv-desc-cl: {{block.settings.desc_color }};--sv-desc-fs: {{block.settings.box_desc_size }}px;--sv-desc-fs-m: {{block.settings.box_desc_size_m }}px;">
+                                                    {{ block.settings.box_desc }}
+                                                </div>
+                                            {%- endif -%}
+                                            {%- if block.settings.button_text != blank -%}
+                                                <a class="services-btn d-inline-block lh-1 position-relative mt-md-3" href="{{ block.settings.button_url }}">{{ block.settings.button_text }}</a>
+                                            {%- endif -%}
+                                        </div>
+                                    </div>
+                                </div>
+                            {%- elsif section.settings.service_style == 'style1' -%}
+                                <div class="services-box text-center">
+                                    {%- if block.settings.icon != blank -%}
+                                        <div class="services-box__image mb-2 pb-1">
+                                            {%- render 'img-global', image_class: 'mx-auto', image: block.settings.icon, max_width: icon_size, image_style: true, img_fix_w: true -%}
+                                        </div>
+                                    {%- endif -%}
+                                    <div class="services-box__content">
+                                        {%- if block.settings.box_title != blank -%}
+                                            <div class="services-title mb-1 fw-medium" style="--sv-h-cl: {{block.settings.heading_color }};--sv-h-fs: {{block.settings.box_title_size }}px;--sv-h-fs-m: {{block.settings.box_title_size_m }}px;">{{ block.settings.box_title }}</div>
+                                        {%- endif -%}
+                                        {%- if block.settings.box_desc != blank -%}
+                                            <div class="services-desc mx-auto" style="--sv-desc-cl: {{block.settings.desc_color }};--sv-desc-fs: {{block.settings.box_desc_size }}px;--sv-desc-fs-m: {{block.settings.box_desc_size_m }}px;">
+                                                {{ block.settings.box_desc }}
+                                            </div>
+                                        {%- endif -%}
+                                        {%- if block.settings.button_text != blank -%}
+                                            <a class="services-btn d-inline-block lh-1 position-relative mt-md-3" href="{{ block.settings.button_url }}">{{ block.settings.button_text }}</a>
+                                        {%- endif -%}
+                                    </div>
+                                </div>
+                            {%- else -%}
+                                <div class="services-box text-center">
+                                    {%- if block.settings.icon != blank -%}
+                                        <div class="services-box__image mb-2">
+                                            {%- render 'img-global', image_class: 'mx-auto', image: block.settings.icon, max_width: icon_size, image_style: true, img_fix_w: true -%}
+
+                                        </div>
+                                    {%- endif -%}
+                                    <div class="services-box__content">
+                                        {%- if block.settings.box_title != blank -%}
+                                            <h6 class="services-title mb-1" style="--sv-h-cl: {{block.settings.heading_color }};--sv-h-fs: {{block.settings.box_title_size }}px;--sv-h-fs-m: {{block.settings.box_title_size_m }}px;">{{ block.settings.box_title }}</h6>
+                                        {%- endif -%}
+                                        {%- if block.settings.box_desc != blank -%}
+                                            <div class="services-desc mx-auto" style="--sv-desc-cl: {{block.settings.desc_color }};--sv-desc-fs: {{block.settings.box_desc_size }}px;--sv-desc-fs-m: {{block.settings.box_desc_size_m }}px;">
+                                                {{ block.settings.box_desc }}
+                                            </div>
+                                        {%- endif -%}
+                                        {%- if block.settings.button_text != blank -%}
+                                            <a class="services-btn btn btn-default mt-3" href="{{ block.settings.button_url }}">{{ block.settings.button_text }}</a>
+                                        {%- endif -%}
+                                    </div>
+                                </div>
+                            {%- endif -%}
+                            
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+    {
+        "name": "Vela Service",
+        "class": "velaFramework",
+        "settings": [
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            },
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_settings.content"
+            },
+            {
+                "type": "html",
+                "id": "heading",
+                "label": "t:sections.global.settings.heading_section.label",
+                "default": "Heading"
+            },
+            {
+                "type": "text",
+                "id": "sub_heading",
+                "label": "t:sections.global.settings.subheading_section.label",
+                "default": "sub heading"
+            },
+            {
+                "type": "select",
+                "id": "text_align",
+                "label": "Text alignment",
+                "default": "text-start",
+                "options": [
+                    {
+                        "value": "text-start",
+                        "label": "Left"
+                    },
+                    {
+                        "value": "text-center",
+                        "label": "Center"
+                    },
+                    {
+                        "value": "text-end",
+                        "label": "Right"
+                    }
+                ]
+            },
+            {
+                "type": "header",
+                "content": "Layout Settings"
+            },
+            {
+                "type": "select",
+                "id": "layout",
+                "label": "Layout",
+                "default": "grid",
+                "options": [
+                    {
+                        "value": "grid",
+                        "label": "Grid"
+                    },
+                    {
+                        "value": "carousel",
+                        "label": "Carousel"
+                    }
+                ]
+            },
+            {
+                "type": "range",
+                "id": "column1",
+                "min": 1,
+                "max": 6,
+                "step": 1,
+                "label": "Number of columns on desktop",
+                "default": 4
+            },
+            {
+                "type": "range",
+                "id": "column2",
+                "min": 1,
+                "max": 5,
+                "step": 1,
+                "label": "Number of columns on tablet",
+                "default": 3
+            },
+            {
+                "type": "range",
+                "id": "column3",
+                "min": 1,
+                "max": 5,
+                "step": 1,
+                "label": "Number of columns on mobile",
+                "default": 2
+            },
+            {
+                "type": "header",
+                "content": "Item settings"
+            },
+            {
+                "type": "text",
+                "id": "iconsize",
+                "label": "Icon Size (px)",
+                "default": "32",
+                "placeholder": "32"
+            },
+            {
+                "type": "select",
+                "id": "service_style",
+                "options": [
+                    {
+                        "value": "default",
+                        "label": "Default"
+                    },
+                    {
+                        "value": "style1",
+                        "label": "Style1"
+                    },
+                    {
+                        "value": "style2",
+                        "label": "Style2"
+                    }
+                ],
+                "default": "default",
+                "label": "Layout style"
+            },
+            {
+                "type": "header",
+                "content": "Carousel settings"
+            },
+            {
+                "type": "checkbox",
+                "id": "navigation",
+                "label": "Show navigation",
+                "default": true
+            },
+            {
+				"type": "checkbox",
+				"id": "pagination",
+				"label": "Show dot indicators",
+				"default": false
+			},
+            {
+                "type": "checkbox",
+                "id": "infinite",
+                "label": "Infinite loop sliding",
+                "default": false
+            },
+            {
+                "type": "checkbox",
+                "id": "autoplay",
+                "label": "Enable autoplay",
+                "default": false
+            },
+            {
+                "type": "text",
+                "id": "autoplay_speed",
+                "label": "Autoplay speed",
+                "info": "Autoplay speed in milliseconds. Type: int(ms)",
+                "default": "10000"
+            }
+        ],
+        "blocks": [
+            {
+                "type": "item",
+                "name": "Service item",
+                "settings": [
+                    {
+                        "type": "image_picker",
+                        "id": "icon",
+                        "label": "Icon"
+                    },
+                    {
+                        "type": "html",
+                        "id": "box_title",
+                        "label": "Title",
+                        "default": "heading"
+                    },
+                    {
+                        "type": "color",
+                        "id": "heading_color",
+                        "label": "Heading color",
+                        "default": "#1F1F27"
+                    },
+                    {
+						"type": "range",
+						"id": "box_title_size",
+						"min": 8,
+						"max": 100,
+						"step": 1,
+						"unit": "px",
+						"label": "Font size",
+						"default": 40,
+						"info": "Use desktops"
+					},
+					{
+						"type": "range",
+						"id": "box_title_size_m",
+						"min": 8,
+						"max": 100,
+						"step": 1,
+						"unit": "px",
+						"label": "Font size",
+						"default": 20,
+						"info": "Use Mobile phone"
+					},
+                    {
+                        "type": "html",
+                        "id": "box_desc",
+                        "label": "Description",
+                        "default": "30 Day Return"
+                    },
+                    {
+                        "type": "color",
+                        "id": "desc_color",
+                        "label": "Description color",
+                        "default": "#1F1F27"
+                    },
+                    {
+						"type": "range",
+						"id": "box_desc_size",
+						"min": 8,
+						"max": 100,
+						"step": 1,
+						"unit": "px",
+						"label": "Font size",
+						"default": 20,
+						"info": "Use desktops"
+					},
+					{
+						"type": "range",
+						"id": "box_desc_size_m",
+						"min": 8,
+						"max": 100,
+						"step": 1,
+						"unit": "px",
+						"label": "Font size",
+						"default": 16,
+						"info": "Use Mobile phone"
+					},
+                    {
+                        "type": "text",
+                        "id": "button_text",
+                        "label": "Button text",
+                        "default": "Read more"
+                    },
+                    {
+                        "type": "url",
+                        "id": "button_url",
+                        "label": "Url"
+                    }
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name": "Our services",
+                "blocks": [
+                    {
+                        "type": "item"
+                    },
+                    {
+                        "type": "item"
+                    },
+                    {
+                        "type": "item"
+                    },
+                    {
+                        "type": "item"
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

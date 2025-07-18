@@ -1,0 +1,107 @@
+{%- assign on_sale = false -%}
+{%- if product.compare_at_price > product.price -%}
+    {%- assign on_sale = true -%}
+{%- endif -%}
+{%- assign sold_out = true -%}
+{%- if product.available -%}
+    {%- assign sold_out = false -%}
+{%- endif -%}
+{%- assign variant = product.selected_or_first_available_variant -%}
+{%- if product.metafields.custom.shortdescription != blank -%}
+    {%- assign shortDescription = product.metafields.custom.shortdescription -%}
+{%- else -%}
+    {%- assign shortDescription = 'A cropped merino wool cardigan taken up a notch, thanks to the flecks of metallic thread throughout. We love it even more paired with the matching sweater-pants.' -%}
+{%- endif -%}
+{%- if product.metafields.custom.pre_order and settings.pre-order and variant.inventory_policy == "continue" -%}
+    {%- assign preOrder = true -%}
+{%- else -%}
+    {%- assign preOrder = false -%}
+{%- endif -%}
+{%- assign image_crop = '' -%}
+{%- if settings.crop -%}
+    {%- assign image_crop = 'center' -%}
+{%- endif -%}
+{% assign date_created = product.created_at | date:'%s' %}
+{% assign date_now = 'now' | date: '%s' %}
+{% assign   difference = date_now | minus: date_created %}
+{%- assign product_style = product_style | default: settings.product_style -%}
+{%- assign slide_variableWidth = slide_variableWidth | default: false -%}
+{%- assign page_wishlist = page_wishlist | default: false -%}
+{%- if product_style == 'style1' -%}
+    {% render 'product-grid-style1',
+        product: product,
+        on_sale: on_sale,
+        sold_out: sold_out,
+        shortDescription: shortDescription,
+        variant: variant,
+        slide_variableWidth: slide_variableWidth,
+        preOrder: preOrder,
+        image_crop: image_crop,
+        difference: difference,
+        page_wishlist: page_wishlist,
+        product_style: product_style,
+        section_id: section.id
+    %}
+{%- elsif product_style == 'style2' -%}
+    {% render 'product-grid-style2',
+        product: product,
+        on_sale: on_sale,
+        sold_out: sold_out,
+        shortDescription: shortDescription,
+        variant: variant,
+        slide_variableWidth: slide_variableWidth,
+        preOrder: preOrder,
+        image_crop: image_crop,
+        difference: difference,
+        page_wishlist: page_wishlist,
+        product_style: product_style,
+        section_id: section.id
+    %}
+{%- elsif product_style == 'style3' -%}
+    {% render 'product-grid-style3',
+        product: product,
+        on_sale: on_sale,
+        sold_out: sold_out,
+        shortDescription: shortDescription,
+        variant: variant,
+        slide_variableWidth: slide_variableWidth,
+        preOrder: preOrder,
+        image_crop: image_crop,
+        difference: difference,
+        page_wishlist: page_wishlist,
+        product_style: product_style,
+        section_id: section.id
+    %}
+{%- elsif product_style == 'style4' -%}
+    {% render 'product-grid-style4',
+        product: product,
+        on_sale: on_sale,
+        sold_out: sold_out,
+        shortDescription: shortDescription,
+        variant: variant,
+        slide_variableWidth: slide_variableWidth,
+        preOrder: preOrder,
+        image_crop: image_crop,
+        difference: difference,
+        page_wishlist: page_wishlist,
+        product_style: product_style,
+        section_id: section.id
+    %}
+{%- elsif product_style == 'style5' -%}
+    {% render 'product-grid-style5',
+        product: product,
+        on_sale: on_sale,
+        sold_out: sold_out,
+        shortDescription: shortDescription,
+        variant: variant,
+        slide_variableWidth: slide_variableWidth,
+        preOrder: preOrder,
+        image_crop: image_crop,
+        difference: difference,
+        page_wishlist: page_wishlist,
+        product_style: product_style,
+        section_id: section.id
+    %}
+
+{%- endif -%}
+

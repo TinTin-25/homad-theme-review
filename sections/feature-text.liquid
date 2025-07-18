@@ -1,0 +1,248 @@
+{{- 'feature-text.css' | asset_url | stylesheet_tag -}}
+{%- include 'section_style' -%}
+<div class="vela-section feature-text overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}{% if section.settings.space_between == '0' %}-full{% else%}-fluid{% endif %}{% endif %}">
+        <div class="vela-section__inner">
+            <div class="vela-section__content">
+                <div class="row g-4 align-items-center {% if section.settings.banner_aligment == 'end' %}flex-row-reverse{% endif %}">
+                    <div class="feature-text__image col-12" style="--plh-svg-h: 570px; --ft-col-dt: {{ section.settings.width_desk }}%; --ft-col-tl: {{ section.settings.width_tablet }}%;">
+                        {%- if section.settings.banner != blank -%}
+                            {% render 'img-global', image: section.settings.banner %}
+                        {%- else -%}
+                            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                        {%- endif -%}
+                    </div>
+                    <div class="feature-text__col col">
+                        <div class="{% if section.settings.banner_aligment == 'end' %}me-lg-4{% else %}ms-lg-4{% endif %}">
+                            <div class="row g-3 g-lg-4 row-cols-1 row-cols-md-2">
+                                {% for block in section.blocks %}  
+                                    <div class="feature-text__wrapper col">
+                                        <div class="feature-text__content text-center">
+                                            {%- if  block.settings.title != blank -%}
+                                                <h3 class="feature-text__title mb-1 mb-md-2" style="--ft-h-cl: {{ block.settings.heading_color }};--ft-h-fs: {{ block.settings.heading_size }}px;--ft-h-fs-m: {{ block.settings.heading_size_m }}px;">
+                                                    {{ block.settings.title }}
+                                                </h3>
+                                            {%- endif -%}
+                                            {%- if  block.settings.content != blank -%}
+                                                <div class="feature-text__desc" style="--ft-desc-cl: {{ block.settings.text_color }};--ft-desc-fs: {{ block.settings.text_size }}px;--ft-desc-fs-m: {{ block.settings.text_size_m }}px;">{{ block.settings.content }}</div>
+                                            {%- endif -%}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        <div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% schema %}
+    {
+        "name": "Feature text",
+        "tag": "section",
+        "class": "velaFramework",
+        "disabled_on": {
+            "groups": ["header", "footer"]
+        },
+        "settings": [
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            },
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_settings.content"
+            },
+            {
+                "type": "image_picker",
+                "id": "banner",
+                "label": "Banner"
+            },
+            {
+                "type": "select",
+                "id": "banner_aligment",
+                "label": "Banner alignment",
+                "options": [
+                  {
+                    "value": "start",
+                    "label": "Left"
+                  },
+                  {
+                    "value": "end",
+                    "label": "Right"
+                  }
+                ],
+                "default": "start"
+            },
+            {
+                "type": "header",
+                "content": "Layout Settings"
+            },
+            {
+                "type": "range",
+                "id": "width_desk",
+                "min": 33,
+                "max": 100,
+                "step": 1,
+                "unit": "%",
+                "label": "Column witdh on desktop",
+                "default": 50
+            },
+            {
+                "type": "range",
+                "id": "width_tablet",
+                "min": 20,
+                "max": 100,
+                "step": 1,
+                "unit": "%",
+                "label": "Column witdh on tablet",
+                "default": 50
+            }
+        ],
+        "blocks": [
+            {
+                "type": "feature_item",
+                "name": "Feature Item",
+                "settings": [
+                    {
+                        "type": "html",
+                        "id": "title",
+                        "label": "Title"
+                    },
+                    {
+                        "type": "color",
+                        "id": "heading_color",
+                        "label": "Title color",
+                        "default": "#1F1F27"
+                    },
+                    {
+						"type": "range",
+						"id": "heading_size",
+						"min": 8,
+						"max": 100,
+						"step": 1,
+						"unit": "px",
+						"label": "Font size desktop",
+						"default": 20
+					},
+                    {
+						"type": "range",
+						"id": "heading_size_m",
+						"min": 8,
+						"max": 100,
+						"step": 1,
+						"unit": "px",
+						"label": "Font size mobile",
+						"default": 20
+					},
+                    {
+                        "type": "html",
+                        "id": "content",
+                        "label": "HTML",
+                        "default": "<div><p>Use HTML to format your text so it can be easily read.<br/>This text can be used to share information about your brand with customers.</p></div>"
+                    },
+                    {
+                        "type": "color",
+                        "id": "text_color",
+                        "label": "Text color",
+                        "default": "#1F1F27"
+                    },
+                    {
+						"type": "range",
+						"id": "text_size",
+						"min": 8,
+						"max": 100,
+						"step": 1,
+						"unit": "px",
+						"label": "Font size desktop",
+						"default": 14
+					},
+                    {
+						"type": "range",
+						"id": "text_size_m",
+						"min": 8,
+						"max": 100,
+						"step": 1,
+						"unit": "px",
+						"label": "Font size mobile",
+						"default": 14
+					}
+                ]
+            }
+        ],
+		"presets": [
+            {
+                "name": "Feature text",
+                "blocks": [
+                    {
+                        "type":"feature_item",
+                        "settings":{
+                            "title": "Duis autem vel eum",
+                            "content": "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat"
+                        }
+                    },
+                    {
+                        "type":"feature_item",
+                        "settings":{
+                            "title": "Duis autem vel eum",
+                            "content": "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat"
+                        }
+                    },
+                    {
+                        "type":"feature_item",
+                        "settings":{
+                            "title": "Duis autem vel eum",
+                            "content": "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat"
+                        }
+                    },
+                    {
+                        "type":"feature_item",
+                        "settings":{
+                            "title": "Duis autem vel eum",
+                            "content": "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

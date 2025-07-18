@@ -1,0 +1,24 @@
+{%- assign image_crop = nil -%}
+{%- if section.settings.crop -%}
+    {%- assign image_crop = 'center' -%}
+{%- endif -%}
+<div class="product-card d-flex">
+    <div class="product-card__image-wrapper position-relative">
+        <a class="product-card__image-link" href="{{ product.url }}" title="{{ product.title | strip_html }}">
+            {% render 'img-global', image: product.featured_media.preview_image, image_ratio: settings.image_ratio, crop: image_crop, max_width: 200, image_style: true,img_fix_w: true %}    
+        </a>
+    </div>
+    <div class="product-card__content ms-2 ps-1">
+        {%- if settings.product_reviews_enable and showReview -%}
+            <div class="product-card__review product-review mb-2 mt-1">
+                {% render 'product-review-card', product: product %}
+            </div>
+        {%- endif -%}
+        <div class="product-card__name line-clamp-2 mb-3 fs-6">
+            <a class="line-title fw-normal fs-bs" href="{{ product.url }}" title="{{ product.title | strip_html }}">{{ product.title }}</a>
+        </div>
+        <div class="product-group-price d-flex align-items-center lh-1">
+            {% render 'product-card-price', product: product, on_sale: on_sale %}
+        </div>
+    </div>
+</div>

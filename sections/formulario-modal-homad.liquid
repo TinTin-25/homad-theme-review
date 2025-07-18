@@ -1,0 +1,557 @@
+<style>
+/* === MODAL GENERAL === */
+.homad-modal {
+  display: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(10px);
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font-body-family); /* TIPOGRAFÍA PRINCIPAL */
+}
+
+/* === TIPOGRAFÍA SECUNDARIA === */
+.homad-modal h1,
+.homad-modal h2,
+.homad-modal h3,
+.homad-modal legend,
+.homad-modal .form-subtitle {
+  font-family: var(--font-heading-family); /* TIPOGRAFÍA SECUNDARIA */
+}
+
+/* Activar modal */
+.homad-modal.active {
+  display: flex;
+  visibility: visible;
+  opacity: 1;
+}
+
+/* === CONTENEDOR === */
+.homad-modal-container {
+  width: {{ section.settings.modal_width }};
+  max-width: 100%;
+  max-height: 90vh;
+  background: #fff;
+  border-radius: var(--modal-radius, 16px);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+}
+
+/* === COLUMNA IZQUIERDA === */
+.homad-modal .left {
+  flex: 1;
+  background-image: url('{{ section.settings.background_image | image_url }}');
+  background-size: cover;
+  background-position: center;
+  min-height: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 1rem;
+}
+
+/* === LOGO === */
+.homad-modal .left .logo-overlay {
+  max-width: {{ section.settings.logo_width }};
+  height: auto;
+}
+
+/* === COLUMNA DERECHA === */
+.homad-modal .right {
+  flex: 1;
+  padding: var(--modal-padding, 1.5rem);
+  overflow-y: auto;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* === BOTÓN DE CIERRE === */
+.homad-modal .close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+/* === SCROLL PROGRESS === */
+.homad-modal .scroll-progress-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 3px;
+  width: 60%;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.homad-modal .scroll-progress-bar {
+  height: 100%;
+  width: 0%;
+  background-color: {{ section.settings.button_background | default: '#1f1f27' }};
+  transition: width 0.2s ease-out;
+}
+
+/* === FORMULARIO GENERAL === */
+.homad-modal .form-control {
+  width: 100%;
+  margin-bottom: 0.6rem;
+  padding: 0.5rem;
+  font-size: inherit;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: box-shadow 0.2s ease;
+}
+
+.homad-modal .form-control:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(31, 31, 39, 0.2);
+}
+
+.homad-modal fieldset {
+  border: 1px solid #e5e5e5;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+}
+
+.homad-modal legend {
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  padding: 0 0.5rem;
+  color: #333;
+}
+
+.form-subtitle {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+  text-align: left;
+}
+
+/* === FILAS EN FORMULARIO === */
+.homad-modal .row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.homad-modal .row .form-control {
+  box-sizing: border-box;
+}
+
+.homad-modal .row input[name="contact[Name]"] {
+  flex: 0 0 55%;
+}
+
+.homad-modal .row input[name="contact[email]"] {
+  flex: 1;
+}
+
+.homad-modal .row input[name="contact[Phone]"] {
+  flex: 0 0 40%;
+}
+
+.homad-modal .row input[name="contact[Location]"] {
+  flex: 1;
+}
+
+/* === BOTÓN DE ENVÍO === */
+.homad-modal button[type=submit] {
+  background-color: {{ section.settings.button_background | default: '#1f1f27' }};
+  color: {{ section.settings.button_text_color | default: '#ffffff' }};
+  padding: 0.6rem 1.2rem;
+  border: 1px solid {{ section.settings.button_border_color | default: '#1f1f27' }};
+  font-size: inherit;
+  cursor: pointer;
+  border-radius: {{ section.settings.button_radius | default: 6 }}px;
+  transition: all 0.3s ease;
+  display: block;
+  margin: 1rem auto 0 auto;
+}
+
+.homad-modal button[type=submit]:hover {
+  filter: brightness(1.1);
+}
+
+/* === MENSAJES DE ESTADO === */
+.form-success-message,
+.form-error-message {
+  font-size: 0.95rem;
+  margin-top: 1rem;
+  text-align: center;
+  border-radius: 6px;
+  padding: 0.75rem;
+}
+
+.form-success-message {
+  background-color: #e6f6e6;
+  color: #257a2e;
+  border: 1px solid #b5e7b5;
+}
+
+.form-error-message {
+  background-color: #fbe9e9;
+  color: #d93025;
+  border: 1px solid #f5b5b5;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .homad-modal-container {
+    width: 95% !important;
+    max-width: 95%;
+    border-radius: 12px;
+    flex-direction: column;
+  }
+
+  .homad-modal .left {
+    height: 10vh;
+    min-height: 10vh;
+    padding: 0.5rem;
+  }
+
+  .homad-modal .right {
+    height: 90vh;
+    padding: 1rem !important;
+  }
+
+  .homad-modal .scroll-progress-container {
+    width: 80%;
+  }
+
+  #architecture_fields label,
+  #architecture_fields .form-control,
+  #landscape_fields label,
+  #landscape_fields .form-control,
+  #installation_fields label,
+  #installation_fields .form-control {
+    margin-bottom: 0.4rem;
+  }
+
+  #architecture_fields .row,
+  #landscape_fields .row,
+  #installation_fields .row {
+    margin-bottom: 0.5rem;
+  }
+
+  #architecture_fields .row > div,
+  #installation_fields .row > div {
+    width: 100%;
+    margin-bottom: 0.4rem;
+  }
+
+  #architecture_fields .row > div label,
+  #installation_fields .row > div label {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.2rem;
+  }
+
+  #architecture_fields .row > div select,
+  #installation_fields .row > div select {
+    width: 100%;
+  }
+}
+</style>
+
+
+
+<div id="open-homad-modal" class="homad-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="homad-modal-container {{ section.settings.border_radius }}" style="width: {{ section.settings.modal_width }};">
+    <!-- COLUMNA IZQUIERDA -->
+    <div class="left">
+      {% if section.settings.logo_image %}
+        <img class="logo-overlay"
+             src="{{ section.settings.logo_image | image_url }}"
+             alt="{{ section.settings.logo_alt | default: 'Logo' }}"
+             style="max-width: {{ section.settings.logo_width }}px; height: auto;"
+             width="{{ section.settings.logo_width }}" />
+      {% endif %}
+    </div>
+
+    <!-- COLUMNA DERECHA -->
+    <div class="right" style="padding: {{ section.settings.padding }};">
+      <div class="scroll-progress-container">
+        <div class="scroll-progress-bar"></div>
+      </div>
+
+      <!-- BOTÓN CIERRE -->
+      <button class="close" aria-label="Close modal" id="close-homad-modal">✕</button>
+
+      <!-- TÍTULO Y SUBTÍTULO -->
+      <h2 id="modalTitle" style="margin-bottom: 1rem; font-size: 1.25rem;">Start Your Project</h2>
+      {% if section.settings.subtitle %}
+        <p class="form-subtitle">{{ section.settings.subtitle }}</p>
+      {% endif %}
+
+      <!-- MENSAJES -->
+      <div class="form-success-message" style="display:none;">✓ Message sent successfully.</div>
+      <div class="form-error-message" style="display:none;">✗ Something went wrong. Please try again.</div>
+
+      <!-- FORMULARIO -->
+      <form method="post" action="/contact#customForm" enctype="multipart/form-data" id="customForm" accept-charset="UTF-8">
+        <input type="hidden" name="form_type" value="contact">
+        <input type="hidden" name="utf8" value="✓">
+
+        <!-- INFORMACIÓN DE PROYECTO -->
+        <fieldset>
+          <legend>🛠️ Project Information</legend>
+          <label>Type of Service<span style="color:red;">*</span></label>
+          <select class="form-control" id="project_type" name="contact[Project Type]" required onchange="toggleFields(this.value)">
+            <option value="">Select a service</option>
+            <option value="Landscape Design">Landscape Design</option>
+            <option value="Sustainable Architecture">Sustainable Architecture</option>
+            <option value="Installation">Installation</option>
+          </select>
+
+          <!-- Campos Landscape -->
+          <div id="landscape_fields" style="display: none;">
+            <label>Outdoor Space Type</label>
+            <select class="form-control" name="contact[Landscape - Space Type]">
+              <option>Garden</option>
+              <option>Terrace</option>
+              <option>Patio</option>
+              <option>Rooftop</option>
+            </select>
+            <label>Area (m²)</label>
+            <input class="form-control" name="contact[Landscape - Area]" type="text">
+          </div>
+
+          <!-- Campos Architecture -->
+          <div id="architecture_fields" style="display: none;">
+            <label>Project Type</label>
+            <select class="form-control" name="contact[Architecture - Project Type]">
+              <option>Home</option>
+              <option>Bungalows</option>
+              <option>Commercial</option>
+            </select>
+            <label>Own land?</label>
+            <select class="form-control" name="contact[Architecture - Owns Land]">
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+            <label>Built Area (m²)</label>
+            <input class="form-control" name="contact[Architecture - Area]" type="text">
+          </div>
+
+          <!-- Campos Installation -->
+          <div id="installation_fields" style="display: none;">
+            <label>Installation Type</label>
+            <select class="form-control" name="contact[Installation - Type]">
+              <option>Solar Lighting</option>
+              <option>Garden Setup</option>
+              <option>Wall Fixture</option>
+            </select>
+            <label>Already Purchased Product?</label>
+            <select class="form-control" name="contact[Installation - Has Product]">
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+            <label>Installation Address</label>
+            <input class="form-control" name="contact[Installation - Address]" placeholder="Street, Number, City">
+          </div>
+        </fieldset>
+
+        <!-- INFORMACIÓN PERSONAL -->
+        <fieldset>
+          <legend>👤 Personal Information</legend>
+          <label for="name">Full Name<span style="color:red;">*</span></label>
+          <input class="form-control" name="contact[Name]" id="name" placeholder="Full Name*" required>
+
+          <label for="email">Email<span style="color:red;">*</span></label>
+          <input class="form-control" name="contact[email]" id="email" type="email" placeholder="Email*" required>
+
+          <label for="phone">Phone (optional)</label>
+          <input class="form-control" name="contact[Phone]" id="phone" placeholder="Phone (optional)">
+
+          <label for="location">Location (City, Country)</label>
+          <input class="form-control" name="contact[Location]" id="location" placeholder="Location (City, Country)">
+
+          <label for="file">Upload files (optional)</label>
+          <input class="form-control" type="file" name="contact[File]" id="file">
+        </fieldset>
+
+        <!-- COMENTARIOS -->
+        <fieldset>
+          <legend>📝 Additional Comments</legend>
+          <label>Comments</label>
+          <textarea class="form-control" rows="4" name="contact[Message]"></textarea>
+        </fieldset>
+
+        <!-- BOTÓN DE ENVÍO -->
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  function toggleFields(value) {
+    document.getElementById('landscape_fields').style.display = value === 'Landscape Design' ? 'block' : 'none';
+    document.getElementById('architecture_fields').style.display = value === 'Sustainable Architecture' ? 'block' : 'none';
+    document.getElementById('installation_fields').style.display = value === 'Installation' ? 'block' : 'none';
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const modalWrapper = document.getElementById('open-homad-modal');
+    const modalContent = modalWrapper.querySelector('.right');
+    const progressBar = modalWrapper.querySelector('.scroll-progress-bar');
+
+    // Scroll progress dentro del modal
+    if (modalContent && progressBar) {
+      modalContent.addEventListener('scroll', function () {
+        const scrollTop = modalContent.scrollTop;
+        const scrollHeight = modalContent.scrollHeight - modalContent.clientHeight;
+        const progress = (scrollTop / scrollHeight) * 100;
+        progressBar.style.width = progress + '%';
+      });
+    }
+
+    // Abrir modal desde botones o enlaces
+    const observer = new MutationObserver(function () {
+      const triggers = document.querySelectorAll('[data-modal="open-homad-modal"]');
+      triggers.forEach(el => {
+        el.addEventListener('click', function (e) {
+          e.preventDefault();
+          modalWrapper.classList.add('active');
+        });
+      });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Cierre con botón ✕
+    document.getElementById('close-homad-modal')?.addEventListener('click', function () {
+      modalWrapper.classList.remove('active');
+    });
+    // 🔽 AGREGA ESTO 🔽
+    // Cierre al hacer clic en el fondo desenfocado
+    modalWrapper.addEventListener('click', function (e) {
+     if (e.target === modalWrapper) {
+     modalWrapper.classList.remove('active');
+      }
+    });
+
+    // Cierre con tecla Esc
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        modalWrapper.classList.remove('active');
+      }
+    });
+  });
+</script>
+
+
+{% schema %}
+{
+  "name": "Formulario Modal Homad",
+  "tag": "section",
+  "class": "section-modal-homad",
+  "settings": [
+    {
+      "type": "select",
+      "id": "border_radius",
+      "label": "Border radius",
+      "default": "rounded-1",
+      "options": [
+        { "value": "rounded-0", "label": "Sin bordes" },
+        { "value": "rounded-1", "label": "Borde 1" },
+        { "value": "rounded-2", "label": "Borde 2" },
+        { "value": "rounded-3", "label": "Borde 3" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "padding",
+      "label": "Padding interno",
+      "default": "2rem"
+    },
+    {
+      "type": "text",
+      "id": "modal_width",
+      "label": "Ancho del formulario",
+      "default": "90%"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Imagen lateral del formulario"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo en la imagen lateral"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 40,
+      "max": 300,
+      "step": 10,
+      "default": 120,
+      "label": "Ancho del logo (px)"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Color del botón",
+      "default": "#1f1f27"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Color del texto del botón",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Color del borde del botón",
+      "default": "#1f1f27"
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "label": "Radio del borde del botón (px)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Texto debajo del título principal",
+      "default": "Fill out the form and we’ll get in touch soon."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Formulario Modal Homad"
+    }
+  ]
+}
+{% endschema %}

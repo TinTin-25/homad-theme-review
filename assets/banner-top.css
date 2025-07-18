@@ -1,0 +1,28 @@
+#bannerTop {
+  position: relative;
+  overflow: hidden;
+  transition: all .3s ease-in-out 0s;
+  font-weight: 500; }
+  #bannerTop .btn-bannerTop {
+    color: #fff;
+    cursor: pointer;
+    z-index: 1;
+    transition: all .3s ease;
+    background-color: rgba(255, 255, 255, 0.05);
+    width: 24px;
+    height: 24px; }
+  #bannerTop .bannerTop__text,
+  #bannerTop .bannerTop__text a {
+    color: var(--bnt-t-cl); }
+  #bannerTop .bannerTop__countdown .countdown__item {
+    margin: 0;
+    line-height: 20px;
+    position: relative;
+    color: #fff;
+    text-transform: lowercase; }
+    #bannerTop .bannerTop__countdown .countdown__item:not(:last-child):after {
+      content: ":";
+      display: inline-block;
+      margin: 0 5px; }
+    #bannerTop .bannerTop__countdown .countdown__item span:first-child {
+      margin-right: 3px; }

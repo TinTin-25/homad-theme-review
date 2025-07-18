@@ -1,0 +1,53 @@
+{%- assign collection 			= collections[settings.collection_notification] -%}
+{%- assign limit 				= settings.limit_notification -%}
+{%- assign start_time 			= settings.start_time -%}
+{%- assign start_time_unit 		= settings.start_time_unit -%}
+{%- assign stay_time 			= settings.stay_time -%}
+{%- assign show_timeago 		= settings.show_timeago -%}
+{%- assign show_verified 		= settings.show_verified -%}
+{%- assign show_close 			= settings.show_close -%}
+{%- assign stay_time_unit 		= settings.stay_time_unit -%}
+{%- assign animation_notification = settings.animation_notification -%}
+{% capture list_product %}
+	{%- for product in collection.products limit:limit -%}
+		{{ product.handle | json }}
+	{%- endfor -%}
+{% endcapture %}
+{% assign list_products = list_product | split: ' '%}
+<div class="notification-sale overflow-hidden rounded-1 {{ animation_notification }} {{ settings.style_notification }}" data-start="{{ start_time }}"
+							data-start_unit="{{ start_time_unit }}"
+							data-stay="{{ stay_time }}"
+							data-stay_unit="{{ stay_time_unit }}"
+							data-limit="{{ limit }}"
+							data-list_product='{{ list_products }}'
+							>
+	<div class="notification-card">
+		<div class="notification-container">
+			<div class="notification-image overflow-hidden rounded-1">
+				<a href="#"><img class="img-fluid" id="img" src="" alt=""></a>
+			</div>
+			<div class="notification-content">
+				<div class="notification-purchased fs-13 fw-medium lh-1 mb-1 text-secondary">
+					<span class="name heading-color"></span> {{ settings.text_purchased }}
+				</div>
+				<div class="product-title heading-color fs-14 fw-medium line-clamp-2 mb-2"><a href="#"></a></div>
+				<div class="suggest text-secondary d-flex fs-13 lh-1 pt-1">
+					{%- if show_timeago -%} <div class="time-suggest"></div> {%- endif -%}
+					{%- if show_verified -%} 
+					<div class="verified ps-2 ms-1 d-flex align-items-center">
+						<svg class="me-1" width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.50001 12.2778C9.69099 12.2778 12.2778 9.69099 12.2778 6.50001C12.2778 3.30903 9.69099 0.722229 6.50001 0.722229C3.30903 0.722229 0.722229 3.30903 0.722229 6.50001C0.722229 9.69099 3.30903 12.2778 6.50001 12.2778Z" stroke="#1F1F27" stroke-width="1.2" stroke-miterlimit="10"/><path d="M8.66668 5.05554L5.77779 7.94443L4.33334 6.49999" stroke="#1F1F27" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+						{{ settings.text_verified }}
+					</div>
+				{%- endif -%}
+				</div>
+			</div>
+		</div>
+		{%- if show_close -%}
+			<div class="close-notification vela__btn-close text-secondary border-0">
+				{% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+				{% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+			</div>
+		{%- endif -%}
+		<div class="scroll-notification"></div>
+	</div>
+</div>

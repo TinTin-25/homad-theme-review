@@ -1,0 +1,169 @@
+/*filter top*/
+.product-filter__top .block-sidebar__inner {
+  margin-top: 0; }
+
+.product-filter__top .block-sidebar {
+  padding: 0; }
+
+.filter-top__lable {
+  color: var(--heading-color);
+  font-weight: var(--font-heading-weight);
+  line-height: 22px;
+  font-weight: 600;
+  margin-bottom: 10px; }
+
+.filter-top__title {
+  transition: all .2s ease;
+  color: var(--heading-color);
+  cursor: pointer;
+  white-space: nowrap; }
+  .filter-top__title facet-remove {
+    display: none; }
+  .filter-top__title .facets__selected {
+    margin-right: auto;
+    position: relative;
+    background: var(--body-color);
+    color: #fff;
+    min-width: 16px;
+    height: 16px;
+    text-align: center;
+    border-radius: 50%;
+    line-height: 1;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 3px;
+    top: -5px; }
+    @media (min-width: 768px) {
+      .filter-top__title .facets__selected {
+        display: none; } }
+  .filter-top__title .btn-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    transition: all .2s ease; }
+  .filter-top__title.collapsed .btn-arrow {
+    color: var(--secondary);
+    transform: rotate(180deg); }
+  .filter-top__title:hover {
+    color: var(--primary); }
+
+@media (max-width: 767.98px) {
+  #offcanvasFilterBottom {
+    margin-bottom: 20px;
+    border-radius: 8px;
+    max-height: calc(100vh - 90px);
+    max-width: 320px; }
+    #offcanvasFilterBottom > .vela__btn-close {
+      color: var(--primary);
+      margin-top: -50px; }
+    #offcanvasFilterBottom .collection-header__top {
+      overflow: auto; }
+  .product-filter__top {
+    margin-bottom: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    overflow: hidden; }
+    .product-filter__top .btn-arrow {
+      margin-right: -12px; }
+  .filter-top__title {
+    padding: 10px 24px;
+    color: var(--heading-color); }
+    .filter-top__title.collapsed {
+      color: var(--body-color);
+      background-color: #EFF0F2; }
+  .filter-top__inner {
+    padding: 10px 24px 24px; } }
+
+@media (min-width: 768px) {
+  .product-filter__wrapper {
+    display: flex;
+    flex-wrap: wrap; }
+  #offcanvasFilterBottom {
+    position: relative;
+    max-width: inherit;
+    transform: translateY(0);
+    visibility: visible; }
+    #offcanvasFilterBottom .collection-header__top {
+      padding-bottom: 8px; }
+  .product-filter__top--wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px; }
+  .product-filter__top {
+    margin-right: 35px; }
+    .product-filter__top.collection-filters__field {
+      margin-right: 0; }
+  .filter-top__title .collection-filters__label {
+    color: var(--secondary);
+    margin-right: 8px; }
+  #SortBy {
+    white-space: nowrap;
+    right: 0;
+    width: auto;
+    box-shadow: var(--shadow);
+    width: 250px;
+    background: #fff;
+    border: 0;
+    border-radius: 0;
+    position: absolute;
+    top: auto;
+    padding: 16px 24px;
+    margin-top: 10px; } }
+
+/*filter top1*/
+#offcanvasFilterBottom {
+  z-index: 2; }
+  #offcanvasFilterBottom.show {
+    z-index: 1041; }
+
+.fixed-bottom {
+  z-index: 2; }
+
+@media (max-width: 767.98px) {
+  .collection-header__top1 #FacetFiltersForm {
+    display: block; }
+  #offcanvasFilterBottom .collection-header__top1 {
+    overflow: auto;
+    padding: 14px 24px 24px; } }
+
+@media (min-width: 768px) {
+  .collection-header__top1 .product-filter__top--wrapper {
+    align-items: center; }
+  .collection-header__top1 #FacetFiltersForm {
+    box-shadow: var(--shadow);
+    width: 100%;
+    background: #fff;
+    border: 0;
+    border-radius: 0;
+    position: absolute;
+    top: 40px;
+    padding: 30px 40px;
+    margin-top: 10px; }
+  .collection-header__top1 .collection-product-count {
+    margin-right: auto; }
+  .collection-header__top1 .product-filter__top {
+    margin-right: 0; }
+  .collection-header__top1 .filter-top__title {
+    font-size: 15px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 16px;
+    pointer-events: none; }
+    .collection-header__top1 .filter-top__title .btn-arrow {
+      display: none; }
+  .collection-header__top1 .collection-filters__field .btn-arrow {
+    display: flex; }
+  .collection-header__top1 .collection-filters__field .filter-top__title {
+    font-weight: 400;
+    pointer-events: auto;
+    padding-bottom: 0;
+    border-bottom: 0; }
+  .collection-header__top1 .filter-top__content:not(#SortBy) {
+    display: block !important;
+    position: relative;
+    padding-top: 16px; } }

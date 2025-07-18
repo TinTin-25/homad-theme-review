@@ -1,0 +1,298 @@
+{{- 'complementary-products.css' | asset_url | stylesheet_tag -}}
+{%- include 'section_style' -%}
+
+<style>
+  @media (max-width: 767.98px) {
+    .complementary-products__image {
+      max-height: 300px; /* Ajusta el alto máximo de la imagen en móvil */
+      overflow: hidden;
+    }
+    .complementary-products__image img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+    {% for block in section.blocks %}
+    .complementary-products__image .instagram-shop__btn:nth-child({{ forloop.index }}) {
+      top: {{ block.settings.top_mobile | default: block.settings.top }}% !important;
+      left: {{ block.settings.left_mobile | default: block.settings.left }}% !important;
+    }
+    {% endfor %}
+  }
+</style>
+
+<div class="vela-section complementary-products{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+  <div class="container{% if section.settings.full_with %}-full{% endif %}">
+    <div class="vela-section__inner">
+      <div class="vela-section__content">
+        <div class="row g-4">
+          <div class="col-12 col-lg-6">
+            <div class="complementary-products__image position-relative overflow-hidden rounded-3" style="--plh-svg-h: 750px;">
+              {%- if section.settings.image != blank -%}
+                {% render 'img-global' with image: section.settings.image %}
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+              <div class="slider-nav slick-carousel" data-columnone="{{ section.blocks.size }}">
+                {% for block in section.blocks %}
+                  <div class="instagram-shop__btn bg-transparent p-0 d-block border-0 position-absolute" style="top: {{ block.settings.top }}%; left: {{ block.settings.left }}%;">
+                    <span class="position-relative d-flex justify-content-center align-items-center">
+                      {% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="8" height="8"' %}
+                      {% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="8" height="8"' %}
+                    </span>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-6">
+            {%- if section.settings.heading != blank  -%}
+              <div class="heading-group mb-3 mb-md-4 pb-1 {{ section.settings.text_align }}">
+                <h2 class="heading mb-0">
+                  <span>{{ section.settings.heading }}</span>
+                </h2>
+                {%- if section.settings.sub_heading != blank -%}
+                  <div class="sub-heading pt-1">
+                    {{ section.settings.sub_heading }}
+                  </div>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+            <div class="complementary-products__content row g-0 overflow-hidden justify-content-center">
+              <div class="complementary-products__product col-6">
+                <div class="js-carousel slider-for slick-carousel row g-2 g-md-4"
+                    data-nav="false"
+                    data-dots="true"
+                    data-infinite="true"
+                    data-columnone="1" 
+                    data-columntwo="1" 
+                    data-columnthree="1">
+                  {% for block in section.blocks %}
+                    {%- if block.settings.product != blank -%}
+                      {% assign product = all_products[block.settings.product] %}
+                      <div class="slick-carousel__item">
+                        {% render 'product-grid-item', product: product %}
+                      </div>
+                    {%- else -%}
+                      {% render 'onboarding-featured-products', number: 1 %}
+                    {%- endif -%}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('.slider-for').slick({
+      asNavFor: '.slider-nav',
+      dots: true,
+      arrows: false,
+      rows: 0
+    });
+    var navToShow = $('.slider-nav').data('columnone');
+    $('.slider-nav').slick({
+      slidesToShow: navToShow,
+      asNavFor: '.slider-for',
+      focusOnSelect: true,
+      swipeToSlide: true,
+      rows: 0,
+      variableWidth: true
+    });
+  });
+</script>
+
+
+{% schema %}
+{
+    "name": "complementary products",
+    "tag": "section",
+    "class": "velaFramework",
+    "disabled_on": {
+        "groups": ["header", "footer"],
+        "templates": ["product"]
+    },
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.global.settings.header_section.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "full_with",
+            "label": "t:sections.global.settings.full_width.label"
+        },
+        {
+            "type": "text",
+            "id": "max_with",
+            "label": "t:sections.global.settings.max_with.label",
+            "info": "t:sections.global.settings.max_with.info"
+        },
+        {
+            "type": "color",
+            "id": "color_bg",
+            "label": "t:sections.global.settings.bg_color.label",
+            "default": "rgba(0,0,0,0)"
+        },
+        {
+            "type": "text",
+            "id": "padding_block",
+            "label": "t:sections.global.settings.padding.label",
+            "placeholder": "0px 0px",
+            "info": "t:sections.global.settings.padding.info"
+        },
+        {
+            "type": "text",
+            "id": "padding_block_m",
+            "label": "t:sections.global.settings.padding_mobile.label",
+            "placeholder": "0px 0px",
+            "info": "t:sections.global.settings.padding_mobile.info"
+        },
+        {
+            "type": "text",
+            "id": "margin_block",
+            "label": "t:sections.global.settings.margin.label",
+            "placeholder": "0px 0px"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.global.settings.header_settings.content"
+        },
+        {
+            "type": "html",
+            "id": "heading",
+            "label": "t:sections.global.settings.heading_section.label",
+            "default": "Heading"
+        },
+        {
+            "type": "text",
+            "id": "sub_heading",
+            "label": "t:sections.global.settings.subheading_section.label",
+            "default": "sub heading"
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Text alignment",
+            "default": "text-start",
+            "options": [
+                {
+                    "value": "text-start",
+                    "label": "Left"
+                },
+                {
+                    "value": "text-center",
+                    "label": "Center"
+                },
+                {
+                    "value": "text-end",
+                    "label": "Right"
+                }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Banner"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Banner"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "item",
+            "name": "Product",
+            "settings": [
+                {
+                    "type": "product",
+                    "id": "product",
+                    "label": "Choose product"
+                },
+                {
+                    "type": "range",
+                    "id": "top",
+                    "min": 0,
+                    "max": 100,
+                    "step": 1,
+                    "unit": "%",
+                    "label": "Offset top",
+                    "default": 50
+                },
+                {
+                    "type": "range",
+                    "id": "left",
+                    "min": 0,
+                    "max": 100,
+                    "step": 1,
+                    "unit": "%",
+                    "label": "Offset left",
+                    "default": 50
+                },
+                {
+                    "type": "range",
+                    "id": "top_mobile",
+                    "min": 0,
+                    "max": 100,
+                    "step": 1,
+                    "unit": "%",
+                    "label": "Offset top mobile",
+                    "default": 50
+                },
+                {
+                    "type": "range",
+                    "id": "left_mobile",
+                    "min": 0,
+                    "max": 100,
+                    "step": 1,
+                    "unit": "%",
+                    "label": "Offset left mobile",
+                    "default": 50
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "complementary products",
+            "blocks": [
+                {
+                    "type": "item",
+                    "settings": {
+                        "product": "",
+                        "top": 30,
+                        "left": 49,
+                        "top_mobile": 20,
+                        "left_mobile": 40
+                    }
+                },
+                {
+                    "type": "item",
+                    "settings": {
+                        "top": 49,
+                        "left": 37,
+                        "top_mobile": 40,
+                        "left_mobile": 30
+                    }
+                },
+                {
+                    "type": "item",
+                    "settings": {
+                        "product": "",
+                        "top": 90,
+                        "left": 50,
+                        "top_mobile": 70,
+                        "left_mobile": 50
+                    }
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

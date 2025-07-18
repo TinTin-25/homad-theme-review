@@ -1,0 +1,220 @@
+{%- include 'section_style' -%}
+<div class="vela-section text-animations overflow-hidden position-relative{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-full{% endif %}">
+        <div class="vela-section__inner overflow-hidden">
+            <div class="text-animation__content marquee d-flex">
+                {%- for block in section.blocks -%}	
+                    {%- capture text_style -%}
+                        --vl-t-cl: {{- block.settings.text_color -}};
+                        --vl-t-fs: {{- block.settings.text_size -}}px;
+                        --vl-t-fs-tl: {{ block.settings.text_size_l }}px;
+                        --vl-t-fs-m: {{- block.settings.text_size_m -}}px; 
+                    {%- endcapture -%}                   
+                    <{% if block.settings.link != blank %}a href="{{ block.settings.link }}" title="" {% else %}span{% endif %} class="text-animation__text-item vela-text {{  block.settings.text_font_weight}} {{ block.settings.text_style }} px-3 px-md-5 mx-6" style="{{- text_style -}};white-space: nowrap; color: {{- block.settings.text_color -}}!important;">			
+                        {{ block.settings.text }}
+                    </{%- if block.settings.link != blank -%}a{%- else -%}span{%- endif -%}>
+                {%- endfor -%}
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+    {
+        "name": "t:sections.text-animation.name",
+        "class": "velaFramework",
+        "settings":[
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "image_picker",
+                "id": "image_bg",
+                "label": "t:sections.global.settings.bg_image.label"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            }
+        ],
+        "blocks": [
+          {
+            "type": "text-item",
+            "name": "t:sections.text-animation.blocks.text-item.name",
+            "settings": [
+                {
+                    "type": "html",
+                    "id": "text",
+                    "default": "Welcome to our store",
+                    "label": "t:sections.text-animation.blocks.text-item.settings.text.label"
+                },
+                {
+                    "type": "select",
+                    "id": "text_alignment",
+                    "label": "t:sections.text-animation.blocks.text-item.settings.text_alignment.label",
+                    "default": "text-start",
+                    "options": [
+                        {
+                            "value": "text-start",
+                            "label": "t:sections.text-animation.blocks.text-item.settings.text_alignment.options__1.label"
+                        },
+                        {
+                            "value": "text-center",
+                            "label": "t:sections.text-animation.blocks.text-item.settings.text_alignment.options__2.label"
+                        },
+                        {
+                            "value": "text-end",
+                            "label": "t:sections.text-animation.blocks.text-item.settings.text_alignment.options__3.label"
+                        }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "text_style",
+                    "label": "Font family",
+                    "default": "text",
+                    "options": [
+                        {
+                            "value": "text",
+                            "label": "Text"
+                        },
+                        {
+                            "value": "ff-heading",
+                            "label": "Heading"
+                        },
+                        {
+                            "value": "ff-special",
+                            "label": "Special"
+                        }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "text_font_weight",
+                    "label": "Font weight",
+                    "default": "fw-normal",
+                    "options": [
+                        {
+                            "value": "fw-normal",
+                            "label": "Normal"
+                        },
+                        {
+                            "value": "fw-light",
+                            "label": "Light"
+                        },
+                        {
+                            "value": "fw-medium",
+                            "label": "Medium"
+                        },
+                        {
+                            "value": "fw-semibold",
+                            "label": "Semibold"
+                        },
+                        {
+                            "value": "fw-bolder",
+                            "label": "Bolder"
+                        },
+                        {
+                            "value": "fw-bold",
+                            "label": "Bold"
+                        }
+                    ]
+                },
+                {
+                    "type": "color",
+                    "id": "text_color",
+                    "label": "Text color",
+                    "default": "#1F1F27"
+                },
+                {
+                    "type": "range",
+                    "id": "text_size",
+                    "min": 8,
+                    "max": 60,
+                    "step": 1,
+                    "unit": "px",
+                    "label": "Font size",
+                    "default": 30,
+                    "info": "Use desktops"
+                },
+                {
+                    "type": "range",
+                    "id": "text_size_l",
+                    "min": 8,
+                    "max": 60,
+                    "step": 1,
+                    "unit": "px",
+                    "label": "Font size ",
+                    "default": 24,
+                    "info": "Use Tablets landscape"
+                },
+                {
+                    "type": "range",
+                    "id": "text_size_m",
+                    "min": 8,
+                    "max": 60,
+                    "step": 1,
+                    "unit": "px",
+                    "label": "Font size",
+                    "default": 20,
+                    "info": "Use Mobile phone"
+                },
+                {
+                    "type": "url",
+                    "id": "link",
+                    "label": "t:sections.text-animation.blocks.text-item.settings.link.label"
+                }
+            ]
+          }
+        ],
+        "presets": [
+            {
+              "name": "t:sections.text-animation.name",
+              "blocks": [
+                {
+                  "type": "text-item"
+                },
+                {
+                  "type": "text-item"
+                },
+                {
+                  "type": "text-item"
+                }
+              ]
+            }
+        ]
+    }
+{% endschema %}

@@ -1,0 +1,377 @@
+{
+  "sections": {
+    "breadcrumb": {
+      "type": "breadcrumb-product",
+      "settings": {
+        "full_with": false,
+        "max_with": "",
+        "margin_block": "",
+        "breadcrumb_title": "",
+        "enable_title": "none",
+        "breadcrumb_bg": "#ffffff",
+        "breadcrumb_color_heading": "#1f1f27",
+        "breadcrumb_color": "#1f1f27",
+        "breadcrumb_color_link": "#7c99a9",
+        "breadcrumb-height": "75px",
+        "breadcrumb-mheight": "75px",
+        "text-align": "start"
+      }
+    },
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "vendor_WkbfwY": {
+          "type": "vendor",
+          "settings": {
+            "block_margin": "mb-md-1",
+            "block_margin_m": "mb-1"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "block_margin": "mb-md-2",
+            "block_margin_m": "mb-1"
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "block_margin": "mb-md-3",
+            "block_margin_m": "mb-3"
+          }
+        },
+        "509eaadc-6fa8-4e60-8a01-f28019888676": {
+          "type": "text",
+          "settings": {
+            "text": "<p>A cropped merino wool cardigan taken up a notch, thanks to the flecks of metallic thread throughout. We love it even more paired with the matching sweater-pants.<\/p>",
+            "text_color": "#515167",
+            "text_size": 15,
+            "block_margin": "mb-md-3",
+            "block_margin_m": "mb-2"
+          }
+        },
+        "product_count_sale_FXhbtU": {
+          "type": "product_count_sale",
+          "settings": {
+            "block_margin": "mb-md-2",
+            "block_margin_m": "mb-1",
+            "product_sale_count": "30-40",
+            "product_sale_time": "10-24",
+            "product_count_sale_text": "sold in last",
+            "product_count_sale_unit": "hours"
+          }
+        },
+        "product_real_time_JeJ6zH": {
+          "type": "product_real_time",
+          "settings": {
+            "block_margin": "mb-md-3",
+            "block_margin_m": "mb-2",
+            "product_real_time_count": "30-40",
+            "product_real_time_change": "5000",
+            "product_real_time_text": "customers are viewing this product"
+          }
+        },
+        "fb8bae5f-a47f-44ca-a4f4-caea832ea54d": {
+          "type": "countdown",
+          "settings": {
+            "block_margin": "mb-md-4",
+            "block_margin_m": "mb-3",
+            "heading": "Remains until the end of the offer"
+          }
+        },
+        "11dfdc72-3642-46dc-9c56-c6ed3777d74d": {
+          "type": "product_sold",
+          "settings": {
+            "text_before": "Hurry Up! Sold:",
+            "text_after": "products in stock.",
+            "block_margin": "mb-md-4",
+            "block_margin_m": "mb-3"
+          }
+        },
+        "variant_picker_aEMEwE": {
+          "type": "variant_picker",
+          "settings": {
+            "block_margin": "mb-md-3",
+            "block_margin_m": "mb-2",
+            "product_selector": "radio",
+            "product_unavailable_variants": "hide",
+            "product_color_enable": true
+          }
+        },
+        "more_action_hYVzAJ": {
+          "type": "more-action",
+          "settings": {
+            "block_margin": "mb-md-4",
+            "block_margin_m": "mb-4",
+            "product_size_charts": true,
+            "product_size_charts_title": "Size Charts",
+            "product_question": true,
+            "product_question_title": "Ask A Question",
+            "product_share": true,
+            "share_label": "Share"
+          }
+        },
+        "border_VXa87j": {
+          "type": "border",
+          "settings": {
+            "border_style": "solid",
+            "border_width": 1,
+            "border_color": "#dadbe0",
+            "block_margin": "mb-md-4",
+            "block_margin_m": "mb-4"
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "block_margin": "mb-md-3",
+            "block_margin_m": "mb-3",
+            "quantity_enabled": true,
+            "quantity_selector": "text",
+            "product_wishlist": true,
+            "enable_payment_button": true,
+            "enable_pickup_availability": true
+          }
+        },
+        "product_organization": {
+          "type": "product_organization",
+          "settings": {
+            "product_available_enable": true,
+            "product_sku_enable": true,
+            "product_type_enable": true,
+            "product_tag_enable": true,
+            "product_collection_enable": true,
+            "product_collection_title": "Collections:",
+            "product_coll_limit": 10,
+            "block_margin": "mb-md-4",
+            "block_margin_m": "mb-4"
+          }
+        },
+        "bb35d3c0-fa32-4b86-9e81-44ce53f148cd": {
+          "type": "border",
+          "settings": {
+            "border_style": "solid",
+            "border_width": 1,
+            "border_color": "#e6e2e0",
+            "block_margin": "mb-md-4",
+            "block_margin_m": "mb-4"
+          }
+        },
+        "complementary_yn7kQq": {
+          "type": "complementary",
+          "settings": {
+            "complementary_addtocart": true,
+            "heading": "Complete your look",
+            "products_to_show": 5,
+            "column1": 3,
+            "column2": 2,
+            "column3": 1,
+            "block_margin": "mb-md-3",
+            "block_margin_m": "mb-3"
+          }
+        },
+        "d2556500-9561-429c-a87a-8081f074e2cb": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "<div class=\"row\" style=\"--bs-gutter-x: 16px; --bs-gutter-y: 16px;\">\n    <div class=\"col-12\">\n        <div class=\"vela-free-shipping-label rounded-2 overflow-hidden px-3 py-2 h-100\" style=\"background: #EFF0F2;\">\n            <span class=\"d-flex align-items-center fs-13 fw-semibold lh-1 my-1\">\n                <svg class=\"d-flex me-1\" width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http:\/\/www.w3.org\/2000\/svg\"><path d=\"M9.65 1.40997L1 3.99997L5.83 7.21997C6.57 7.71997 7.5 7.84997 8.36 7.59997L17.01 5.00997L12.18 1.78997C11.44 1.28997 10.51 1.15997 9.65 1.40997Z\" stroke=\"#515167\" stroke-width=\"1.5\" stroke-linejoin=\"round\"\/><path d=\"M1 4V12.76C1 13.52 1.43 14.21 2.11 14.55L5.94 16.47C6.62 16.81 7.41 16.88 8.14 16.66L15.58 14.43C16.43 14.18 17.01 13.4 17.01 12.51V5\" stroke=\"#515167\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"\/><path d=\"M7 8V16\" stroke=\"#515167\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"\/><path d=\"M6.77002 2.56006L12 6.00006V9.00006\" stroke=\"#515167\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"\/><\/svg>\n                SHIPPING\n            <\/span>\n            <div class=\"mb-1\">\n                Spend <span class=\"heading-color fw-semibold\">{{ '100000' | money }}<\/span> for Free Shipping \n            <\/div>\n        <\/div>\n    <\/div>\n    <div class=\"col-12\">\n        {%- assign date = 'now' | date: '%s' -%}\n        {%- assign seconds = 9 | times: 86400 -%}\n        <div class=\"vela-estimate-delivery-label rounded-2 overflow-hidden px-3 py-2 h-100\" style=\"background: #EFF0F2;\">\n            <span class=\"d-flex align-items-center fs-13 fw-semibold lh-1 my-1\">\n                <svg class=\"d-flex me-1\" width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http:\/\/www.w3.org\/2000\/svg\"><path d=\"M5 11H7\" stroke=\"#515167\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"\/><path d=\"M11 11H13\" stroke=\"#515167\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"\/><path d=\"M5 14H7\" stroke=\"#515167\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"\/><path d=\"M11 14H13\" stroke=\"#515167\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"\/><path d=\"M16.37 15.16C15.66 16.27 14.42 17 13 17H5C2.79 17 1 15.21 1 13V8H17V13C17 13.8 16.77 14.54 16.37 15.16Z\" stroke=\"#515167\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"\/><path d=\"M16.37 4.84C15.66 3.73 14.42 3 13 3H5C2.79 3 1 4.79 1 7V8H17V7C17 6.2 16.77 5.46 16.37 4.84Z\" stroke=\"#515167\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"\/><path d=\"M5 1V5\" stroke=\"#515167\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"\/><path d=\"M13 1V5\" stroke=\"#515167\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"\/><\/svg>\n                DELIVERY\n            <\/span>\n            <div class=\"mb-1\">\n                Estimated delivery between<span class=\"heading-color fw-semibold\">\n                {{ 'now' | time_tag: format: 'date_month' }}<\/span> and <span class=\"heading-color fw-semibold\">{{ date | date: \"%s\" | plus: seconds | time_tag: format: 'date_month' }}<\/span>\n            <\/div>\n        <\/div>\n    <\/div>\n<\/div>",
+            "block_margin": "mb-md-3",
+            "block_margin_m": "mb-3"
+          }
+        },
+        "366f2f0f-b45a-4941-8433-f03ff688c8bc": {
+          "type": "product_banner",
+          "settings": {
+            "product_banner_heading": "Guarantee Safe Checkout",
+            "product_banner": "shopify:\/\/shop_images\/payment-card.png",
+            "product_banner_bg_color": "#ffffff",
+            "product_banner_padding": "25px",
+            "block_margin": "mb-md-3",
+            "block_margin_m": "mb-2"
+          }
+        },
+        "gift_box_fNmQNY": {
+          "type": "gift_box",
+          "settings": {
+            "product_gift": "cropped-knit-sweater",
+            "product_gift_heading": "Congratuilations!",
+            "product_gift_text": "Simply copy the code below and use it when you checkout to enjoy an additional 50% OFF sitewide",
+            "product_gift_code": "SH2SN1ZBDFPR"
+          }
+        }
+      },
+      "block_order": [
+        "vendor_WkbfwY",
+        "title",
+        "price",
+        "509eaadc-6fa8-4e60-8a01-f28019888676",
+        "product_count_sale_FXhbtU",
+        "product_real_time_JeJ6zH",
+        "fb8bae5f-a47f-44ca-a4f4-caea832ea54d",
+        "11dfdc72-3642-46dc-9c56-c6ed3777d74d",
+        "variant_picker_aEMEwE",
+        "more_action_hYVzAJ",
+        "border_VXa87j",
+        "buy_buttons",
+        "product_organization",
+        "bb35d3c0-fa32-4b86-9e81-44ce53f148cd",
+        "complementary_yn7kQq",
+        "d2556500-9561-429c-a87a-8081f074e2cb",
+        "366f2f0f-b45a-4941-8433-f03ff688c8bc",
+        "gift_box_fNmQNY"
+      ],
+      "settings": {
+        "full_with": false,
+        "max_with": "",
+        "color_bg": "#ffffff",
+        "padding_block": "0 0 100px",
+        "padding_block_m": "0 0 30px",
+        "product_sticky": false,
+        "media_layout": "thumbnails",
+        "thumbnail_to_show": 6,
+        "enable_image_zoom": true,
+        "enable_image_popup": true,
+        "enable_video_looping": true,
+        "enable_video_autoplay": true,
+        "enable_multi_variant": true,
+        "recommend_product": true,
+        "recommend_product_title": "You Might Also Like",
+        "products_to_show": 6,
+        "show_review": true
+      }
+    },
+    "main_frequently_bought_kMTyEf": {
+      "type": "main-frequently-bought",
+      "settings": {
+        "full_width": false,
+        "max_width": "",
+        "color_bg": "rgba(0,0,0,0)",
+        "padding_block": "0 0 90px",
+        "padding_block_m": "0 0 50px",
+        "margin_block": "",
+        "heading": "Frequently bought",
+        "limit": 4
+      }
+    },
+    "producttab-information": {
+      "type": "vela-product-tab-information",
+      "blocks": {
+        "cc0df252-0d33-495c-82c8-a87d37c17375": {
+          "type": "description",
+          "settings": {
+            "heading": "Description"
+          }
+        },
+        "295fb712-0835-4d66-a307-ba6e6ac207e7": {
+          "type": "extra_tab",
+          "settings": {
+            "heading": "Additional",
+            "content": "<div class=\"table-responsive-sm\">\n<table class=\"table table-striped table-borderless lh-1\">\n  <tbody>\n<tr>\n  <th class=\"p-3 fw-medium\">Weight (w\/o wheels)<\/th>\n  <td class=\"p-3\">20 LBS<\/td>\n  <\/tr>\n  <tr>\n  <th class=\"p-3 fw-medium\">Weight Capacity<\/th>\n  <td class=\"p-3\">60 LBS<\/td>\n  <\/tr>\n  <tr>\n  <th class=\"p-3 fw-medium\">Folded (w\/o wheels)<\/th>\n  <td class=\"p-3\">32.5\"L x 18.5\"W x 16.5\"H<\/td>\n  <\/tr>\n  <tr>\n  <th class=\"p-3 fw-medium\">Folded (w\/ wheels)<\/th>\n  <td class=\"p-3\">32.5\"L x 24\"W x 18.5\"H<\/td>\n  <\/tr>\n  <tr>\n  <th class=\"p-3 fw-medium\">Door Pass Through<\/th>\n  <td class=\"p-3\">24<\/td>\n  <\/tr>\n  <tr>\n  <th class=\"p-3 fw-medium\">Frame<\/th>\n  <td class=\"p-3\">Aluminum<\/td>\n  <\/tr>\n  <tr>\n  <th class=\"p-3 fw-medium\">Stand Up<\/th>\n  <td class=\"p-3\">35\"L x 24\"W x 37-45\"H(front to back wheel)<\/td>\n  <\/tr>\n  <tr>\n  <th class=\"p-3 fw-medium\">Size<\/th>\n  <td class=\"p-3\">S, XL, XS<\/td>\n  <\/tr>\n  <tr>\n  <th class=\"p-3 fw-medium\">Color<\/th>\n  <td class=\"p-3\">Gray 2, Green 2, Orange 1, Orange 2, Violet<\/td>\n  <\/tr>\n  <\/tbody>\n<\/table>\n<\/div>",
+            "content_1": ""
+          }
+        },
+        "extra_tab_U8gVxa": {
+          "type": "extra_tab",
+          "settings": {
+            "heading": "Shipping policies",
+            "content": "<p>Returns will be accepted for up to 10 days of Customer’s receipt or tracking number on unworn items. You, as a Customer, are obliged to inform us via email before you return the item, only in the case of:\n<\/p>\n<p>\n<\/p><ul>\n<li>Received the wrong item.<\/li>\n<li>Item arrived not as expected (ie. damaged packaging).<\/li>\n<li>Item had defects.<\/li>\n<li>Over delivery time.<\/li>\n<li>The shipper does not allow the goods to be inspected before payment.<\/li>\n<\/ul>\n<p><\/p>\n<p><\/p>\n<p>The returned product(s) must be in the original packaging, safety wrapped, undamaged and unworn. This means that the item(s) must be safely packed in a carton box for protection during transport, possibly the same carton used to ship to you as a customer.<\/p>",
+            "content_1": ""
+          }
+        },
+        "review_NiYKaM": {
+          "type": "review",
+          "settings": {
+            "review": "Reviews"
+          }
+        }
+      },
+      "block_order": [
+        "cc0df252-0d33-495c-82c8-a87d37c17375",
+        "295fb712-0835-4d66-a307-ba6e6ac207e7",
+        "extra_tab_U8gVxa",
+        "review_NiYKaM"
+      ],
+      "settings": {
+        "full_with": true,
+        "max_with": "",
+        "color_bg": "rgba(0,0,0,0)",
+        "padding_block": "0 0 90px",
+        "padding_block_m": "0 24px 55px",
+        "margin_block": "",
+        "proTabInfo_style": "Offcanvas"
+      }
+    },
+    "product-recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "full_with": false,
+        "max_with": "",
+        "color_bg": "rgba(0,0,0,0)",
+        "padding_block": "0 0 96px",
+        "padding_block_m": "0 0 60px",
+        "margin_block": "",
+        "heading": "Some Similar Styles",
+        "sub_heading": "Here’s some of our most similar products people are buying. Click to discover trending style.",
+        "layout": "carousel",
+        "products_to_show": 10,
+        "column1": 4,
+        "column2": 3,
+        "column3": 2,
+        "slide_variableWidth": false,
+        "navigation": true,
+        "pagination": true,
+        "infinite": false,
+        "autoplay": false,
+        "autoplay_speed": "10000"
+      }
+    },
+    "border_iQx6MF": {
+      "type": "border",
+      "settings": {
+        "full_with": true,
+        "max_with": "",
+        "color_bg": "rgba(0,0,0,0)",
+        "padding_block": "0 0 96px",
+        "padding_block_m": "0 0 55px",
+        "margin_block": "",
+        "border_style": "solid",
+        "border_width": 1,
+        "border_color": "#dadbe0",
+        "opacity": 100
+      }
+    },
+    "product-viewed": {
+      "type": "product-viewed",
+      "settings": {
+        "full_with": false,
+        "max_with": "",
+        "color_bg": "rgba(0,0,0,0)",
+        "padding_block": "0 0 90px",
+        "padding_block_m": "0 0 60px",
+        "margin_block": "",
+        "heading": "Recently Viewed",
+        "sub_heading": "Explore your recently viewed items, blending quality and style for a refined living experience.",
+        "layout": "carousel",
+        "products_to_show": 6,
+        "column1": 4,
+        "column2": 3,
+        "column3": 2,
+        "navigation": true,
+        "pagination": true,
+        "infinite": false,
+        "autoplay": false,
+        "autoplay_speed": "10000",
+        "slide_variableWidth": false
+      }
+    }
+  },
+  "order": [
+    "breadcrumb",
+    "main",
+    "main_frequently_bought_kMTyEf",
+    "producttab-information",
+    "product-recommendations",
+    "border_iQx6MF",
+    "product-viewed"
+  ]
+}

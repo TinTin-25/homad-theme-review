@@ -1,0 +1,242 @@
+{%- include 'section_style' -%}
+{%- assign proCollection = section.settings.collection_handle -%}
+{%- assign proPage = section.settings.display | plus: 0 -%}
+{%- assign showReview = section.settings.display_reviews -%}
+{%- assign owlColumn1 = section.settings.column1 | plus: 0 -%}
+{%- assign owlColumn2 = section.settings.column2 | plus: 0 -%}
+{%- assign owlColumn3 = section.settings.column3 | plus: 0 -%}
+{%- assign proLimit = section.settings.limit -%}
+<div class="vela-section sectioin-product-more overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}"  style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-fluid{% endif %}">
+        <div class="vela-section__inner">
+            {%- if section.settings.heading != blank -%}
+                <div class="heading-group mb-3 mb-md-4 pb-1 {{ section.settings.text_align }}">
+                    <h2 class="heading mb-0">
+                        <span>{{ section.settings.heading }}</span>
+                    </h2>
+                    {%- if section.settings.sub_heading != blank -%}
+                        <div class="sub-heading pt-1">
+                            {{ section.settings.sub_heading }}
+                        </div>
+                    {%- endif -%}
+                </div>
+            {%- endif -%}
+            <div class="vela-section__content row gx-2 gx-md-3 g-lg-4 gy-4 gy-lg-5">
+                {% paginate collections[proCollection].products by proPage %}
+                    <div class="product-more__content col-12">
+                        <div class="row gx-2 gx-md-3 g-lg-4 gy-4 gy-lg-5 row-cols-{{ owlColumn3 }} row-cols-md-{{ owlColumn2 }} row-cols-lg-{{ owlColumn1 }}">
+                            {%- if proCollection == blank or collections[proCollection] == empty or collections[proCollection].products_count == 0 -%}
+                                {% include 'onboarding-featured-products', product_style: section.settings.product_style, strGridItem: 'col' %}
+                            {%- else -%}
+                                {% for product in collections[proCollection].products %}
+                                    <div class="col">
+                                        {% include 'product-grid-item', product_style: section.settings.product_style %}
+                                    </div>
+                                {% endfor %}
+                            {%- endif-%}
+                        </div>
+                        {%- if paginate.next -%}
+                            <div class="d-flex justify-content-center position-relative">
+                                <a class="btn--viewall product-more__btn fs-6 btn mt-4 mt-md-5" href="{{ paginate.next.url }}" title="{{ section.settings.btn_loadmore | strip_html }}">
+                                    <span class="d-block">{{ section.settings.btn_loadmore }}</span>
+                                    {% render 'preloading', preload_class: 'position-absolute d-none' %}
+                                </a>
+                            </div>
+                        {%- else -%}
+                            <div class="d-flex justify-content-center">
+                                <a class="btn--viewall product-more__btn fs-6 btn mt-4 mt-md-5 disableLoadMore d-none" href="javascript:void(0);" title="{{ section.settings.btn_loadmore | strip_html }}">
+                                    <span class="d-block">{{ section.settings.btn_loadmore }}</span>
+                                </a>
+                            </div>
+                        {%- endif -%}
+                    </div>
+                    <div class="product-more__bottom d-none"></div>
+                {% endpaginate %} 
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+    {
+        "name": "Product load more",
+        "tag": "section",
+        "class": "velaFramework",
+        "disabled_on": {
+            "groups": ["header", "footer"]
+        },
+        "settings":[
+            {
+                "type": "header",
+                "content": "Design Section"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "Make section full width"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "Container max width?(px)",
+                "info": "Ex: 1440px"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "Background Color",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "Padding",
+                "placeholder": "0px 0px",
+                "info": "Ex: 0px 0px 0px 0px and use desktop only"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "Padding on mobile",
+                "placeholder": "0px 0px",
+                "info": "Ex: 0px 0px 0px 0px and use mobile only"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "Margin",
+                "placeholder": "0px 0px",
+                "default": "0 0 30px",
+                "info": "Ex: 0px 0px 30px 0px"
+            },
+            {
+                "type": "header",
+                "content": "General Settings"
+            },
+            {
+                "type": "html",
+                "id": "heading",
+                "label": "Heading",
+                "default": "Heading"
+            },
+            {
+                "type": "text",
+                "id": "sub_heading",
+                "label": "Sub heading",
+                "default": "Sub heading"
+            },
+            {
+                "type": "select",
+                "id": "text_align",
+                "label": "Text alignment",
+                "default": "text-start",
+                "options": [
+                    {
+                        "value": "text-start",
+                        "label": "Left"
+                    },
+                    {
+                        "value": "text-center",
+                        "label": "Center"
+                    },
+                    {
+                        "value": "text-end",
+                        "label": "Right"
+                    }
+                ]
+            },
+            {
+                "type": "collection",
+                "id": "collection_handle",
+                "label": "Collection"
+            },
+			{
+                "type": "range",
+                "id": "display",
+                "min": 2,
+                "max": 50,
+                "step": 2,
+                "label": "Number of displayed products",
+                "default": 8
+            },
+            {
+                "type": "text",
+                "id": "btn_loadmore",
+                "label": "Button read more",
+                "default": "Load more"
+            },
+            {
+                "type": "header",
+                "content": "Layout Settings"
+            },
+            {
+                "type": "range",
+                "id": "column1",
+                "min": 1,
+                "max": 6,
+                "step": 1,
+                "label": "Number of columns on desktop",
+                "default": 6
+            },
+            {
+                "type": "range",
+                "id": "column2",
+                "min": 1,
+                "max": 6,
+                "step": 1,
+                "label": "Number of columns on tablet",
+                "default": 3
+            },
+            {
+                "type": "range",
+                "id": "column3",
+                "min": 1,
+                "max": 5,
+                "step": 1,
+                "label": "Number of columns on mobile",
+                "default": 2
+            },
+            {
+                "type": "header",
+                "content": "Item settings"
+            },
+            {
+                "type": "select",
+                "id": "product_style",
+                "label": "Product style",
+                "default": "style1",
+                "options": [
+                    {
+                        "value": "style1",
+                        "label": "Style1"
+                    },
+                    {
+                        "value": "style2",
+                        "label": "Style2"
+                    },
+                    {
+                        "value": "style3",
+                        "label": "Style3"
+                    },
+                    {
+                        "value": "style4",
+                        "label": "Style4"
+                    },
+                    {
+                        "value": "style5",
+                        "label": "Style5"
+                    }
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name": "Product load more",
+                "category": "2. Products",
+                "settings": {
+                    "heading": "Product load more",
+                    "collection_handle": "frontpage"
+                }
+            }
+        ]
+    }
+{% endschema %}

@@ -1,0 +1,5 @@
+@media (min-width: 992px) {
+  .image-with-text-mirror .row {
+    flex-direction: row-reverse;
+  }
+}

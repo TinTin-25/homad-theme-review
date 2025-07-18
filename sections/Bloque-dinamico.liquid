@@ -1,0 +1,998 @@
+<script>
+let currentMode = null;
+
+function iniciarModoPC(scope = document) {
+  const container = scope.querySelector(".solo-pc");
+  if (!container) return;
+
+  const containerButtons = container.querySelector(".bloque-dinamico-buttons");
+  const buttons = containerButtons?.querySelectorAll(".bloque-dinamico-btn");
+  const images = container.querySelectorAll(".bloque-dinamico-image");
+  const contentRight = container.querySelector(".bloque-dinamico-right");
+  const indicadoresContainer = container.querySelector(".bloque-dinamico-indicadores");
+
+  if (!buttons?.length || !images?.length || !contentRight) return;
+
+  const dynamicTexts = [
+    {% for block in section.blocks %}
+      `{{ block.settings.descripcion | strip_newlines | replace: "\n", "<br>" }}`{% unless forloop.last %}, {% endunless %}
+    {% endfor %}
+  ];
+
+  const ctas = [
+    {% for block in section.blocks %}
+      {
+        text: `{{ block.settings.cta_text | escape }}`,
+        link: `{{ block.settings.cta_link }}`,
+        bg: `{{ block.settings.cta_bg }}`,
+        color: `{{ block.settings.cta_text_color }}`,
+        border: `{{ block.settings.cta_border_color }}`,
+        padding: `{{ section.settings.cta_padding | default: '12px 24px' }}`,
+        radius: `{{ section.settings.cta_radius | default: '8px' }}`,
+        fontSize: `{{ section.settings.cta_font_size | default: '16px' }}`,
+        width: `{{ section.settings.cta_width | default: 'auto' }}`
+      }{% unless forloop.last %}, {% endunless %}
+    {% endfor %}
+  ];
+
+  function updateVisual(index) {
+    buttons.forEach((btn, i) => {
+      const isActive = i === index;
+      btn.classList.toggle("active", isActive);
+      btn.setAttribute("aria-selected", isActive ? "true" : "false");
+    });
+
+    images.forEach((img, i) => {
+      img.classList.toggle("active", i === index);
+    });
+
+    contentRight.innerHTML = `
+      <div class="bloque-dinamico-content">
+        <div class="fade-in bloque-dinamico-texto">
+          ${dynamicTexts[index] || ''}
+        </div>
+        <a href="${ctas[index].link}" class="bloque-dinamico-cta" style="
+          display: inline-block;
+          margin: 0 auto;
+          width: ${ctas[index].width};
+          padding: ${ctas[index].padding};
+          background-color: ${ctas[index].bg};
+          color: ${ctas[index].color};
+          border: 2px solid ${ctas[index].border};
+          text-decoration: none;
+          border-radius: ${ctas[index].radius};
+          font-size: ${ctas[index].fontSize};">
+          ${ctas[index].text}
+        </a>
+      </div>
+    `;
+
+    const puntos = indicadoresContainer?.querySelectorAll(".indicador");
+    if (puntos) {
+      puntos.forEach((p, i) => {
+        p.classList.toggle("active", i === index);
+      });
+    }
+  }
+
+  buttons.forEach((btn, i) => {
+    btn.addEventListener("click", () => updateVisual(i));
+  });
+
+  updateVisual(0);
+}
+
+function iniciarModoMovil(scope = document) {
+  const container = scope.querySelector(".solo-movil");
+  if (!container) return;
+
+  const containerButtons = container.querySelector(".bloque-dinamico-buttons");
+  const buttons = containerButtons?.querySelectorAll(".bloque-dinamico-btn");
+  const images = container.querySelectorAll(".bloque-dinamico-image");
+  const contentRight = container.querySelector(".bloque-dinamico-right");
+  const indicadoresContainer = container.querySelector(".bloque-dinamico-indicadores");
+
+  if (!buttons?.length || !images?.length || !contentRight) return;
+
+  const dynamicTexts = [
+    {% for block in section.blocks %}
+      `{{ block.settings.descripcion | strip_newlines | replace: "\n", "<br>" }}`{% unless forloop.last %}, {% endunless %}
+    {% endfor %}
+  ];
+
+  const ctas = [
+    {% for block in section.blocks %}
+      {
+        text: `{{ block.settings.cta_text | escape }}`,
+        link: `{{ block.settings.cta_link }}`,
+        bg: `{{ block.settings.cta_bg }}`,
+        color: `{{ block.settings.cta_text_color }}`,
+        border: `{{ block.settings.cta_border_color }}`,
+        padding: `{{ section.settings.cta_padding | default: '12px 24px' }}`,
+        radius: `{{ section.settings.cta_radius | default: '8px' }}`,
+        fontSize: `{{ section.settings.cta_font_size | default: '16px' }}`,
+        width: `{{ section.settings.cta_width | default: 'auto' }}`
+      }{% unless forloop.last %}, {% endunless %}
+    {% endfor %}
+  ];
+
+  let scrollTimeout;
+  const realButtons = Array.from(buttons).filter(btn => !btn.classList.contains('clon'));
+
+  setTimeout(() => {
+    const firstReal = realButtons[0];
+    if (firstReal) {
+      containerButtons.scrollLeft = firstReal.offsetLeft + firstReal.offsetWidth / 2 - containerButtons.offsetWidth / 2;
+    }
+  }, 60);
+
+  function updateVisual(index) {
+    buttons.forEach((btn) => {
+      const isActive = parseInt(btn.dataset.index) === index;
+      btn.classList.toggle("active", isActive);
+      btn.setAttribute("aria-selected", isActive ? "true" : "false");
+    });
+
+    images.forEach((img, i) => img.classList.toggle("active", i === index));
+
+    contentRight.innerHTML = `
+      <div class="bloque-dinamico-content">
+        <div class="fade-in bloque-dinamico-texto">
+          ${dynamicTexts[index] || ''}
+        </div>
+        <a href="${ctas[index].link}" class="bloque-dinamico-cta" style="
+          display: inline-block;
+          margin: 0 auto;
+          width: ${ctas[index].width};
+          padding: ${ctas[index].padding};
+          background-color: ${ctas[index].bg};
+          color: ${ctas[index].color};
+          border: 2px solid ${ctas[index].border};
+          text-decoration: none;
+          border-radius: ${ctas[index].radius};
+          font-size: ${ctas[index].fontSize};">
+          ${ctas[index].text}
+        </a>
+      </div>
+    `;
+
+    const puntos = indicadoresContainer?.querySelectorAll(".indicador");
+    if (puntos) {
+      puntos.forEach((p, i) => {
+        p.classList.toggle("active", i === index);
+      });
+    }
+  }
+
+  containerButtons.addEventListener("scroll", () => {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      const center = containerButtons.offsetWidth / 2 + containerButtons.scrollLeft;
+      let closest = null;
+      let minDistance = Infinity;
+
+      buttons.forEach(btn => {
+        const btnCenter = btn.offsetLeft + btn.offsetWidth / 2;
+        const distance = Math.abs(center - btnCenter);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closest = btn;
+        }
+      });
+
+      if (closest) {
+        const realIndex = parseInt(closest.dataset.index);
+        const isClone = closest.classList.contains("clon");
+        updateVisual(realIndex);
+
+        if (isClone) {
+          const realBtn = realButtons.find(btn => parseInt(btn.dataset.index) === realIndex);
+          if (realBtn) {
+            containerButtons.style.scrollSnapType = "none";
+            containerButtons.scrollLeft = realBtn.offsetLeft + realBtn.offsetWidth / 2 - containerButtons.offsetWidth / 2;
+            requestAnimationFrame(() => {
+              containerButtons.style.scrollSnapType = "x mandatory";
+            });
+          }
+        }
+      }
+    }, 30);
+  });
+
+  updateVisual(0);
+}
+
+function iniciarBloqueDinamico(scope = document) {
+  const width = window.innerWidth;
+  const newMode = width >= 769 ? "pc" : "movil";
+
+  if (newMode !== currentMode) {
+    currentMode = newMode;
+
+    if (newMode === "pc") {
+      iniciarModoPC(scope);
+    } else {
+      iniciarModoMovil(scope);
+    }
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => iniciarBloqueDinamico());
+document.addEventListener("shopify:section:load", (e) => iniciarBloqueDinamico(e.target));
+window.addEventListener("resize", () => iniciarBloqueDinamico());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+/* === VISIBILIDAD SEGÚN RESOLUCIÓN === */
+@media screen and (min-width: 769px) {
+  .solo-pc { display: block; }
+  .solo-movil { display: none; }
+}
+@media screen and (max-width: 768px) {
+  .solo-pc { display: none; }
+  .solo-movil { display: block; }
+}
+
+/* === CONTENEDOR GENERAL === */
+.bloque-dinamico {
+  width: 100%;
+  max-width: var(--page-mx-xl, 1320px);
+  margin-inline: auto;
+  padding-inline: var(--bs-gutter-x, 16px);
+  background-color: var(--section-bg, transparent);
+  border-radius: var(--section-border-radius, 0px);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+@media (max-width: 767.98px) {
+  .bloque-dinamico {
+    padding-inline: var(--bs-gutter-x, 16px);
+  }
+}
+
+/* === PC === */
+.solo-pc .bloque-dinamico {
+  display: flex;
+  flex-direction: row;
+  height: var(--section-height, 700px);
+  border-radius: var(--section-border-radius);
+}
+.solo-pc .bloque-dinamico-left,
+.solo-pc .bloque-dinamico-right {
+  overflow: hidden;
+  border-radius: inherit;
+  height: 100%;
+}
+.solo-pc .bloque-dinamico-left {
+  width: var(--bloque-a-width-pc, 50%);
+  position: relative;
+}
+.solo-pc .bloque-dinamico-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  z-index: 1;
+  pointer-events: none;
+}
+.solo-pc .bloque-dinamico-image.active {
+  opacity: 1;
+  z-index: 2;
+}
+.solo-pc .bloque-dinamico-buttons-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding-inline: 8px;
+}
+.solo-pc .bloque-dinamico-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.bloque-dinamico-btn {
+  background-color: var(--glass-color, rgba(255,255,255,0.15));
+  backdrop-filter: blur(var(--glass-blur, 8px));
+  border-radius: var(--radio-bordes, 16px);
+  color: white;
+  border: none;
+  padding: 0 16px;
+  font-size: var(--font-size-pc, 16px);
+  font-family: var(--font-body-family, inherit);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--btn-width-pc, 140px);
+  height: var(--btn-height-pc, 44px);
+  white-space: nowrap;
+  cursor: pointer;
+  scroll-snap-align: center;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.bloque-dinamico-btn.active {
+  background-color: rgba(0, 0, 0, var(--glass-active-opacity, 0.4));
+  transform: scale(1.1);
+}
+.solo-pc .bloque-dinamico-btn.clon {
+  display: none !important;
+}
+.solo-pc .bloque-dinamico-right {
+  width: var(--bloque-b-width-pc, 50%);
+  background-color: var(--bloque-b-bg, #f7f7f7);
+  padding: var(--bloque-b-padding-pc);
+  display: flex;
+  flex-direction: column;
+  justify-content: var(--bloque-b-align, center);
+  color: var(--text-color, #000);
+  font-size: var(--font-size-pc, 18px);
+  overflow-y: auto;
+}
+
+/* === MÓVIL === */
+.solo-movil .bloque-dinamico {
+  display: flex;
+  flex-direction: column;
+  height: var(--section-height-mobile, 600px);
+  border-radius: var(--section-border-radius-mobile, var(--section-border-radius));
+}
+.solo-movil .bloque-dinamico-left {
+  width: 100%;
+  height: var(--bloque-a-height-mobile, 40%);
+  position: relative;
+  overflow: hidden;
+}
+.solo-movil .bloque-dinamico-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  z-index: 1;
+  pointer-events: none;
+}
+.solo-movil .bloque-dinamico-image.active {
+  opacity: 1;
+  z-index: 2;
+}
+.solo-movil .bloque-dinamico-buttons-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding-inline: 8px;
+}
+.solo-movil .bloque-dinamico-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-snap-stop: always;
+  scroll-behavior: smooth;
+  gap: 8px;
+  width: 100%;
+  padding-bottom: 2px;
+}
+.solo-movil .bloque-dinamico-buttons::-webkit-scrollbar {
+  display: none;
+}
+.solo-movil .bloque-dinamico-btn {
+  pointer-events: none;
+  cursor: default;
+  font-family: var(--font-body-family, inherit);
+  font-weight: 700;
+  background-color: var(--glass-color, rgba(255,255,255,0.15));
+  backdrop-filter: blur(var(--glass-blur, 8px));
+  border-radius: var(--radio-bordes, 16px);
+  color: white;
+  border: none;
+  font-size: var(--font-size-movil, 14px);
+  min-width: var(--btn-width-mobile, 120px);
+  max-width: var(--btn-width-mobile, 120px);
+  height: var(--btn-height-mobile, 40px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  scroll-snap-align: center;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.solo-movil .bloque-dinamico-btn.active {
+  background-color: rgba(0, 0, 0, var(--glass-active-opacity, 0.4));
+  transform: scale(1.0);
+}
+.solo-movil .bloque-dinamico-btn.clon {
+  opacity: 0.3;
+  pointer-events: none;
+}
+.solo-movil .bloque-dinamico-right {
+  width: 100%;
+  height: var(--bloque-b-height-mobile, 60%);
+  font-size: var(--font-size-movil, 16px);
+  max-height: calc(100vh - 160px);
+  background-color: var(--bloque-b-bg, #f7f7f7);
+  padding: var(--bloque-b-padding-mobile);
+  overflow-y: auto;
+  color: var(--text-color, #000);
+  display: flex;
+  flex-direction: column;
+  justify-content: var(--bloque-b-align-mobile, center);
+}
+
+/* === CONTENIDO DEL BLOQUE B === */
+.bloque-dinamico-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: inherit;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.bloque-dinamico-texto {
+  font-family: var(--font-body-family, inherit);
+  font-weight: 400;
+  word-break: break-word;
+  white-space: normal;
+  line-height: 1.5;
+  font-size: inherit;
+  color: inherit;
+  max-width: 100%;
+}
+.bloque-dinamico-content::-webkit-scrollbar {
+  width: 6px;
+}
+.bloque-dinamico-content::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+/* === CTA === */
+.bloque-dinamico-cta {
+  margin-top: 24px;
+  display: inline-block;
+  width: var(--cta-width, auto);
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #000;
+  color: #fff;
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  text-decoration: none;
+  text-align: center;
+  font-family: var(--font-body-family, inherit);
+  transition: background-color 0.3s ease;
+}
+.bloque-dinamico-cta:hover {
+  opacity: 0.9;
+}
+
+/* === INDICADORES === */
+.bloque-dinamico-indicadores {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 8px;
+  padding-top: 8px;
+}
+.bloque-dinamico-indicadores .indicador {
+  width: 6px;
+  height: 6px;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.4);
+  transition: all 0.4s ease;
+}
+.bloque-dinamico-indicadores .indicador.active {
+  width: 24px;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+@media (max-width: 768px) {
+  .solo-movil-full {
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .solo-movil-full .bloque-dinamico {
+    padding-inline: 0 !important;
+  }
+}
+
+
+</style>
+
+
+
+
+
+
+
+
+
+<!-- =========================
+🚀 BLOQUE DINÁMICO – PC
+========================= -->
+<div class="solo-pc">
+  <div class="bloque-dinamico vela-section"
+    style="
+      --section-height: {{ section.settings.section_height_pc }};
+      --bloque-a-width-pc: {{ section.settings.bloque_a_width_pc }};
+      --bloque-b-width-pc: {{ section.settings.bloque_b_width_pc }};
+      --bloque-b-bg: {{ section.settings.bloque_b_bg }};
+      --bloque-b-align: {{ section.settings.bloque_b_align }};
+      --bloque-b-padding-pc: {{ section.settings.bloque_b_padding_pc }};
+      --radio-bordes: {{ section.settings.radio_bordes }};
+      --glass-blur: {{ section.settings.glass_blur }}px;
+      --glass-color: {{ section.settings.glass_color | color_modify: 'alpha', 0.15 }};
+      --glass-active-opacity: {{ section.settings.glass_active_opacity }};
+      --font-size-pc: {{ section.settings.font_size_pc }};
+      --text-color: {{ section.settings.text_color }};
+      --btn-width-pc: {{ section.settings.btn_width_pc }};
+      --btn-height-pc: {{ section.settings.btn_height_pc }};
+      --section-bg: {{ section.settings.color_bg }};
+      --bs-gutter-x: {{ section.settings.padding_inline }};
+      --section-border-radius: {{ section.settings.section_border_radius }};
+      --cta-width: {{ section.settings.cta_width }};
+    "
+  >
+    <!-- 🔵 BLOQUE A – Imágenes + Botones -->
+    <div class="bloque-dinamico-left">
+      {% for block in section.blocks %}
+        <div class="bloque-dinamico-image" style="background-image: url({{ block.settings.imagen | img_url: 'master' }});"></div>
+      {% endfor %}
+
+      <div class="bloque-dinamico-buttons-wrapper">
+        <div class="bloque-dinamico-buttons">
+          {% for block in section.blocks %}
+            <button class="bloque-dinamico-btn"
+                    type="button"
+                    data-index="{{ forloop.index0 }}"
+                    aria-selected="false"
+                    role="button">
+              {{ block.settings.titulo }}
+            </button>
+          {% endfor %}
+        </div>
+
+        <div class="bloque-dinamico-indicadores">
+          {% for block in section.blocks %}
+            <span class="indicador {% if forloop.first %}active{% endif %}"></span>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- 🟣 BLOQUE B – Contenido inyectado por JS -->
+    <div class="bloque-dinamico-right"></div>
+  </div>
+</div>
+
+<!-- =========================
+📱 BLOQUE DINÁMICO – MÓVIL
+========================= -->
+<div class="solo-movil">
+  <div class="bloque-dinamico vela-section solo-movil-full"
+    style="
+      --section-height-mobile: {{ section.settings.section_height_mobile }};
+      --bloque-a-height-mobile: {{ section.settings.bloque_a_height_mobile }};
+      --bloque-b-height-mobile: {{ section.settings.bloque_b_height_mobile }};
+      --bloque-b-bg: {{ section.settings.bloque_b_bg }};
+      --bloque-b-align-mobile: {{ section.settings.bloque_b_align_mobile }};
+      --bloque-b-padding-mobile: {{ section.settings.bloque_b_padding_mobile }};
+      --radio-bordes: {{ section.settings.radio_bordes }};
+      --glass-blur: {{ section.settings.glass_blur }}px;
+      --glass-color: {{ section.settings.glass_color | color_modify: 'alpha', 0.15 }};
+      --glass-active-opacity: {{ section.settings.glass_active_opacity }};
+      --font-size-movil: {{ section.settings.font_size_movil }};
+      --text-color: {{ section.settings.text_color }};
+      --btn-width-mobile: {{ section.settings.btn_width_mobile }};
+      --btn-height-mobile: {{ section.settings.btn_height_mobile }};
+      --section-bg: {{ section.settings.color_bg }};
+      --bs-gutter-x: {{ section.settings.padding_inline }};
+      --section-border-radius-mobile: {{ section.settings.section_border_radius_mobile }};
+      --cta-width: {{ section.settings.cta_width }};
+    "
+  >
+    <!-- 🔵 BLOQUE A – Imágenes + Botones Scroll -->
+    <div class="bloque-dinamico-left">
+      {% for block in section.blocks %}
+        <div class="bloque-dinamico-image" style="background-image: url({{ block.settings.imagen | img_url: 'master' }});"></div>
+      {% endfor %}
+
+      <div class="bloque-dinamico-buttons-wrapper">
+        <div class="bloque-dinamico-buttons">
+          <!-- Clones INICIO -->
+          {% for block in section.blocks %}
+            <button class="bloque-dinamico-btn clon"
+                    type="button"
+                    data-clone="true"
+                    data-index="{{ forloop.index0 }}"
+                    aria-selected="false">
+              {{ block.settings.titulo }}
+            </button>
+          {% endfor %}
+
+          <!-- Botones reales -->
+          {% for block in section.blocks %}
+            <button class="bloque-dinamico-btn"
+                    type="button"
+                    data-index="{{ forloop.index0 }}"
+                    aria-selected="false">
+              {{ block.settings.titulo }}
+            </button>
+          {% endfor %}
+
+          <!-- Clones FINAL -->
+          {% for block in section.blocks %}
+            <button class="bloque-dinamico-btn clon"
+                    type="button"
+                    data-clone="true"
+                    data-index="{{ forloop.index0 }}"
+                    aria-selected="false">
+              {{ block.settings.titulo }}
+            </button>
+          {% endfor %}
+        </div>
+
+        <div class="bloque-dinamico-indicadores">
+          {% for block in section.blocks %}
+            <span class="indicador {% if forloop.first %}active{% endif %}"></span>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- 🟣 BLOQUE B – Contenido inyectado por JS -->
+    <div class="bloque-dinamico-right"></div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+{% schema %}
+{
+  "name": "Bloque Dinámico",
+  "tag": "section",
+  "class": "bloque-dinamico-section",
+  "settings": [
+
+    {
+      "type": "header",
+      "content": "🖥️ Vista Escritorio (PC)"
+    },
+    {
+      "type": "text",
+      "id": "section_height_pc",
+      "label": "Altura total de la sección (PC)",
+      "default": "700px"
+    },
+    {
+      "type": "text",
+      "id": "bloque_a_width_pc",
+      "label": "Ancho del bloque A (imagen) – PC",
+      "default": "50%"
+    },
+    {
+      "type": "text",
+      "id": "bloque_b_width_pc",
+      "label": "Ancho del bloque B (contenido) – PC",
+      "default": "50%"
+    },
+    {
+      "type": "text",
+      "id": "font_size_pc",
+      "label": "Tamaño de fuente – PC",
+      "default": "18px"
+    },
+    {
+      "type": "text",
+      "id": "btn_width_pc",
+      "label": "Ancho del botón – PC",
+      "default": "140px"
+    },
+    {
+      "type": "text",
+      "id": "btn_height_pc",
+      "label": "Alto del botón – PC",
+      "default": "44px"
+    },
+    {
+      "type": "text",
+      "id": "bloque_b_padding_pc",
+      "label": "Padding interno del bloque B (PC)",
+      "default": "32px 24px"
+    },
+    {
+      "type": "select",
+      "id": "bloque_b_align",
+      "label": "Alineación vertical del contenido (PC)",
+      "default": "center",
+      "options": [
+        { "value": "flex-start", "label": "Superior" },
+        { "value": "center", "label": "Centro" },
+        { "value": "flex-end", "label": "Inferior" }
+      ]
+    },
+
+    {
+      "type": "header",
+      "content": "📱 Vista Móvil"
+    },
+    {
+      "type": "text",
+      "id": "section_height_mobile",
+      "label": "Altura total de la sección (Móvil)",
+      "default": "600px"
+    },
+    {
+      "type": "text",
+      "id": "bloque_a_height_mobile",
+      "label": "Altura del bloque A (imagen) – Móvil",
+      "default": "40%"
+    },
+    {
+      "type": "text",
+      "id": "bloque_b_height_mobile",
+      "label": "Altura del bloque B (contenido) – Móvil",
+      "default": "60%"
+    },
+    {
+      "type": "text",
+      "id": "font_size_movil",
+      "label": "Tamaño de fuente – Móvil",
+      "default": "16px"
+    },
+    {
+      "type": "text",
+      "id": "btn_width_mobile",
+      "label": "Ancho del botón – Móvil",
+      "default": "120px"
+    },
+    {
+      "type": "text",
+      "id": "btn_height_mobile",
+      "label": "Alto del botón – Móvil",
+      "default": "40px"
+    },
+    {
+      "type": "text",
+      "id": "bloque_b_padding_mobile",
+      "label": "Padding interno del bloque B (Móvil)",
+      "default": "24px 20px"
+    },
+    {
+      "type": "select",
+      "id": "bloque_b_align_mobile",
+      "label": "Alineación vertical del contenido (Móvil)",
+      "default": "center",
+      "options": [
+        { "value": "flex-start", "label": "Superior" },
+        { "value": "center", "label": "Centro" },
+        { "value": "flex-end", "label": "Inferior" }
+      ]
+    },
+
+    {
+      "type": "header",
+      "content": "🎨 Estilos generales"
+    },
+    {
+      "type": "color",
+      "id": "color_bg",
+      "label": "Color de fondo de la sección",
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "bloque_b_bg",
+      "label": "Color de fondo del bloque B",
+      "default": "#f7f7f7"
+    },
+    {
+      "type": "text",
+      "id": "padding_inline",
+      "label": "Padding lateral de la sección (ej. 16px)",
+      "default": "16px"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color del texto",
+      "default": "#000000"
+    },
+
+    {
+      "type": "header",
+      "content": "🧊 Estilo Glass (botones)"
+    },
+    {
+      "type": "color",
+      "id": "glass_color",
+      "label": "Color de fondo Glass",
+      "default": "rgba(255,255,255,0.15)"
+    },
+    {
+      "type": "range",
+      "id": "glass_blur",
+      "label": "Desenfoque Glass",
+      "min": 2,
+      "max": 20,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "glass_active_opacity",
+      "label": "Opacidad del botón activo",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.4
+    },
+    {
+      "type": "text",
+      "id": "radio_bordes",
+      "label": "Radio de bordes de los botones",
+      "default": "16px"
+    },
+
+    {
+      "type": "header",
+      "content": "🪟 Bordes de la sección"
+    },
+    {
+      "type": "text",
+      "id": "section_border_radius",
+      "label": "Radio de borde (PC)",
+      "default": "0px"
+    },
+    {
+      "type": "text",
+      "id": "section_border_radius_mobile",
+      "label": "Radio de borde (Móvil)",
+      "default": "0px"
+    },
+
+    {
+      "type": "header",
+      "content": "🎯 Botón CTA"
+    },
+    {
+      "type": "text",
+      "id": "cta_width",
+      "label": "Ancho del botón CTA (ej. auto, 100%, 200px)",
+      "default": "auto"
+    },
+    {
+      "type": "text",
+      "id": "cta_padding",
+      "label": "Padding CTA",
+      "default": "12px 24px"
+    },
+    {
+      "type": "text",
+      "id": "cta_radius",
+      "label": "Radio CTA",
+      "default": "8px"
+    },
+    {
+      "type": "text",
+      "id": "cta_font_size",
+      "label": "Tamaño de fuente CTA",
+      "default": "16px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "boton",
+      "name": "Bloque dinámico",
+      "settings": [
+        {
+          "type": "text",
+          "id": "titulo",
+          "label": "Texto del botón",
+          "default": "Título"
+        },
+        {
+          "type": "image_picker",
+          "id": "imagen",
+          "label": "Imagen de fondo"
+        },
+        {
+          "type": "textarea",
+          "id": "descripcion",
+          "label": "Texto descriptivo",
+          "default": "Contenido dinámico..."
+        },
+        {
+          "type": "text",
+          "id": "cta_text",
+          "label": "Texto del botón CTA",
+          "default": "Ver más"
+        },
+        {
+          "type": "url",
+          "id": "cta_link",
+          "label": "Enlace del CTA"
+        },
+        {
+          "type": "color",
+          "id": "cta_bg",
+          "label": "Color de fondo CTA",
+          "default": "#000000"
+        },
+        {
+          "type": "color",
+          "id": "cta_text_color",
+          "label": "Color del texto CTA",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "cta_border_color",
+          "label": "Color del borde CTA",
+          "default": "#000000"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bloque Dinámico",
+      "category": "Contenido personalizado",
+      "blocks": [
+        { "type": "boton" },
+        { "type": "boton" }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+
+

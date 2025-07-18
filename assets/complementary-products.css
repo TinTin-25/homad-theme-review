@@ -1,0 +1,107 @@
+.complementary-products__product .slick-list {
+  overflow: inherit; }
+  .complementary-products__product .slick-list .slick-slide {
+    opacity: .5;
+    pointer-events: none; }
+    .complementary-products__product .slick-list .slick-slide.slick-current {
+      opacity: 1;
+      pointer-events: auto; }
+
+.complementary-products__image .slider-nav {
+  position: absolute;
+  height: 100%;
+  top: 0;
+  width: 100%; }
+
+.complementary-products__image .slick-list {
+  overflow: inherit;
+  min-height: 100%;
+  min-width: 100%;
+  position: static;
+  display: flex; }
+
+.complementary-products__image .slick-track {
+  min-height: 100%;
+  min-width: 100%;
+  width: 100% !important;
+  transform: none !important; }
+
+.complementary-products__image .instagram-shop__btn {
+  width: 24px;
+  height: 24px;
+  color: #fff;
+  z-index: 3;
+  opacity: .5;
+  transition: .2s opacity linear;
+  cursor: pointer; }
+  .complementary-products__image .instagram-shop__btn > span {
+    color: var(--heading-color);
+    z-index: 1;
+    min-width: 100%;
+    min-height: 100%; }
+    .complementary-products__image .instagram-shop__btn > span .icon-line1,
+    .complementary-products__image .instagram-shop__btn > span .icon-line {
+      margin-left: -4px;
+      margin-top: -4px; }
+    .complementary-products__image .instagram-shop__btn > span .icon-line {
+      -webkit-transform: rotate(135deg);
+      transform: rotate(135deg); }
+    .complementary-products__image .instagram-shop__btn > span .icon-line1 {
+      -webkit-transform: rotate(45deg);
+      transform: rotate(45deg); }
+  .complementary-products__image .instagram-shop__btn:before, .complementary-products__image .instagram-shop__btn:after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    display: block;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    background-color: #fff;
+    transform: translate(-50%, -50%);
+    transition: all .3s ease; }
+    @media (min-width: 768px) {
+      .complementary-products__image .instagram-shop__btn:before, .complementary-products__image .instagram-shop__btn:after {
+        width: 26px;
+        height: 26px; } }
+  .complementary-products__image .instagram-shop__btn:before {
+    opacity: .3;
+    animation: effect-button 3s infinite; }
+  .complementary-products__image .instagram-shop__btn:hover, .complementary-products__image .instagram-shop__btn.slick-current {
+    opacity: 1; }
+
+@keyframes effect-button {
+  0% {
+    opacity: 1;
+    width: 16px;
+    height: 16px; }
+  50% {
+    opacity: 0.2;
+    width: 40px;
+    height: 40px; }
+  100% {
+    opacity: 1;
+    width: 16px;
+    height: 16px; } }
+
+
+@media (max-width: 767.98px) {
+  .complementary-products__image {
+    /* Esto hace que la altura máxima sea el 70% de la altura total del celular */
+    height: 350px !important;
+    max-height: 70vh !important;
+
+    /* Importante: elimina la variable que fija altura para que no bloquee */
+    --plh-svg-h: auto !important;
+
+    overflow: hidden;
+  }
+  .complementary-products__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Para que la imagen mantenga proporciones */
+  }
+}
+

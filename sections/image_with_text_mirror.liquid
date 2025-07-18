@@ -1,0 +1,835 @@
+{{ 'image_with_text_mirror.css' | asset_url | stylesheet_tag }}
+{%- include 'section_style' -%}
+{%- if section.settings.content_color_bg -%}
+  {%- capture ct-bg-color -%}
+    {%- assign opacity = section.settings.opacity | times: 0.01 -%}
+    {%- assign overlay = section.settings.content_color_bg | color_modify: 'alpha', opacity -%}
+    --iwt-ct-bg: {{ overlay }};
+  {%- endcapture -%}
+{%- endif -%}
+<div class="vela-section image-with-text image-with-text-mirror overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+  <div class="container{% if section.settings.full_with %}-full{% endif %}">
+    <div class="image-with-text__inner overflow-hidden {{ section.settings.border_radius }}">
+      <div class="row g-{{ section.settings.space_between }}">
+        {%- if section.settings.banner_size > 99 -%}
+          {%- assign desktop_layout = 100 -%}
+        {%- else -%}
+          {%- assign desktop_layout = 100 | minus: section.settings.banner_size -%}
+        {%- endif -%}
+        {%- if section.settings.banner_size_ipad > 99 -%}
+          {%- assign tablet_layout = 100 -%}
+        {%- else -%}
+          {%- assign tablet_layout = 100 | minus: section.settings.banner_size_ipad -%}
+        {%- endif -%}
+        {%- if section.settings.banner_size_mobile > 99 -%}
+          {%- assign mobile_layout = 100 -%}
+        {%- else -%}
+          {%- assign mobile_layout = 100 | minus: section.settings.banner_size_mobile -%}
+        {%- endif -%}
+        {%- if section.settings.banner_mobile == 'hidden' %}
+          {%- assign desktop_layout = 100 -%}
+          {%- assign tablet_layout = 100 -%}
+          {%- assign mobile_layout = 100 -%}
+        {%- endif -%}
+        {%- if section.settings.banner_mobile == 'desktop' %}
+          {%- assign tablet_layout = 100 -%}
+          {%- assign mobile_layout = 100 -%}
+        {%- endif -%}
+
+        {%- if section.settings.banner_mobile != 'hidden' and section.settings.banner_position == "left" %}
+          <div class="image-with-text__banner position-relative {% if section.settings.banner_mobile == 'desktop' %} d-none d-md-block{% endif %} col-12" style="--plh-svg-h: 590px; --mx-dt: {{ section.settings.banner_size }}%; --mx-tl: {{ section.settings.banner_size_ipad }}%; --mx-mb: {{ section.settings.banner_size_mobile }}%;">
+            {%- if section.settings.link != blank -%}<a href="{{ section.settings.link }}">{%- endif -%}
+              {%- if section.settings.banner -%}
+                {% render 'img-global', image: section.settings.banner, image_style: true %}
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            {%- if section.settings.link != blank -%}</a>{%- endif -%}
+          </div>
+        {%- endif -%}
+
+        <div class="image-with-text__content d-flex align-items-center text-{{ section.settings.text_align }}{% if section.settings.content_max_with != blank and section.settings.text_align == 'center' %} mx-auto{% endif %} col-12"
+          style="--mx-dt: {{ desktop_layout }}%; --mx-tl: {{ tablet_layout }}%; --mx-mb: {{ mobile_layout }}%;
+          {% if ct-bg-color %}{{- ct-bg-color -}}{% endif %}
+          {%- if section.settings.content_image_bg != blank -%}
+            --iwt-wp-bg-img: url({{ section.settings.content_image_bg | img_url: 'master' }}); background-position: {{ section.settings.bg_align }}; background-repeat: no-repeat;
+          {%- endif -%}
+          {% if section.settings.content_max_with != blank %} --iwt-t-ct-mx: {{ section.settings.content_max_with }};{% endif %}
+          {%- if section.settings.margin_content != blank -%}--iwt-wp-mg: {{ section.settings.margin_content }};{%- endif -%}
+          {% if section.settings.padding_content != blank %}--iwt-wp-pd: {{ section.settings.padding_content }};{% endif %}
+          {% if section.settings.padding_content_m != blank %}--iwt-wp-pd-m: {{ section.settings.padding_content_m }};{% endif %}">
+          <div class="image-with-text__wrapper position-relative w-100">
+            {%- for block in section.blocks -%}
+              {%- case block.type -%}
+                {%- when 'text' -%}
+                  {%- capture text_style -%}
+                    --vl-t-fs-m:{{ block.settings.text_font_size_mobile }}px;
+                    {%- if block.settings.margin_mobile != blank -%}--vl-t-mg-m:{{ block.settings.margin_mobile }};{%- endif -%}
+                    --vl-t-fs-tl:{{ block.settings.text_font_size_tablet }}px;
+                    {%- if block.settings.margin_tablet != blank -%}--vl-t-mg-tl:{{ block.settings.margin_tablet }};{%- endif -%}
+                    --vl-t-cl:{{ block.settings.text_color_desktop }}; --vl-t-fs:{{ block.settings.text_font_size_desktop }}px;
+                    {%- if block.settings.margin_desktop != blank -%}--vl-t-mg:{{ block.settings.margin_desktop }};{%- endif -%}
+                  {%- endcapture -%}
+                  <div class="image-with-text__text vela-text {{ block.settings.text_style }} {{ block.settings.text_font-weight }}" style="{{ text_style }}">
+                    {{ block.settings.text }}
+                  </div>
+                {%- when 'button' -%}
+                  {%- capture btn_style -%}
+                    --vl-b-cl: {{ block.settings.button_color }};
+                    --vl-b-fs: {{ block.settings.button_font_size }}px;
+                    {%- if block.settings.button_padding != blank -%}--vl-b-pd: {{ block.settings.button_padding }};{%- endif -%}
+                    {%- if block.settings.margin != blank -%}--vl-b-mg: {{ block.settings.margin }};{%- endif -%}
+                    --vl-b-bd-cl: {{ block.settings.button_color_border }};
+                    --vl-b-bd-w: {{ block.settings.button_border-width }};
+                    --vl-b-bg-cl: {{ block.settings.button_color_bg }};
+                    --vl-b-cl-h: {{ block.settings.button_color_hover }};
+                    --vl-b-bd-cl-h: {{ block.settings.button_color_border_hover }};
+                    --vl-b-bg-cl-h: {{ block.settings.button_color_bg_hover }};
+                    --vl-b-fs-m: {{ block.settings.button_font_size_mobile }}px;
+                    {%- if block.settings.button_padding_mobile != blank -%}--vl-b-pd-m: {{ block.settings.button_padding_mobile }};{%- endif -%}
+                  {%- endcapture -%}
+                  {%- unless block.settings.button_icon == 'none' -%}
+                    {%- capture buton_icon_size -%}
+                      {%- if block.settings.button_icon_size != blank -%}
+                        {%- assign iwt_b_icon = block.settings.button_icon_size -%}
+                      {%- else -%}
+                        {%- assign iwt_b_icon = '14x14' -%}
+                      {%- endif -%}
+                      {%- assign iwt_b_icon_w = iwt_b_icon | split: 'x' | first -%}
+                      {%- assign iwt_b_icon_h = iwt_b_icon | split: 'x' | last -%}
+                      width="{{ iwt_b_icon_w }}" height="{{ iwt_b_icon_h }}"
+                    {%- endcapture -%}
+                  {%- endunless -%}
+                  <a class="btn position-relative image-with-text__btn vela-btn {{ block.settings.border_radius }}{% if block.settings.button_border-width == '0' %} btn__special-style{% endif %}" href="{{ block.settings.link }}" style="{{ btn_style }}">
+                    <span class="position-relative d-inline-block">{{ block.settings.button }}</span>
+                    {%- unless block.settings.button_icon == 'none' -%}
+                      {% render 'icons', icon: block.settings.button_icon, class: "ms-1 position-relative", attr: buton_icon_size %}
+                    {%- endunless -%}
+                  </a>
+                {%- when 'image' -%}
+                  <div class="image-with-text__image" {% if block.settings.margin != blank %}style="margin: {{ block.settings.margin }};"{% endif %}>
+                    {% if block.settings.image %}
+                      <span class="d-inline-block">
+                        {{ block.settings.image | image_url: width: block.settings.image.width | image_tag: loading: 'lazy', width: block.settings.image.width, height: block.settings.image.height, class: "img-fluid", alt: block.settings.image.alt | escape }}
+                      </span>
+                    {% else %}
+                      <span class="d-inline-block" style="--plh-svg-h: 100px; max-width: 100px;">
+                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                      </span>
+                    {% endif %}
+                  </div>
+                {%- when 'countdown' -%}
+                  {%- if section.settings.countdown_timeend != blank -%}
+                    {% assign countdownTime = section.settings.countdown_timeend %}
+                  {%- else -%}
+                    {% assign date_now = 'now' | date: '%s' %}
+                    {% assign endate = date_now | plus: 2592000 %}
+                    {% assign countdownTime = endate | date: '%Y/%m/%d' %}
+                  {%- endif -%}
+                  <div class="image-with-text__countdown d-flex justify-content-{{ section.settings.text_align }}" style="--iwt-cd-n-cl: {{ block.settings.color_number }}; --iwt-cd-t-col: {{ block.settings.color_text }};" data-countdown="{{ countdownTime }}"></div>
+              {%- endcase -%}
+            {%- endfor -%}
+          </div>
+        </div>
+
+        {%- if section.settings.banner_mobile != 'hidden' and section.settings.banner_position == "right" %}
+          <div class="image-with-text__banner position-relative {% if section.settings.banner_mobile == 'desktop' %} d-none d-md-block{% endif %} col-12" style="--plh-svg-h: 590px; --mx-dt: {{ section.settings.banner_size }}%; --mx-tl: {{ section.settings.banner_size_ipad }}%; --mx-mb: {{ section.settings.banner_size_mobile }}%;">
+            {%- if section.settings.link != blank -%}<a href="{{ section.settings.link }}">{%- endif -%}
+              {%- if section.settings.banner -%}
+                {% render 'img-global', image: section.settings.banner, image_style: true %}
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            {%- if section.settings.link != blank -%}</a>{%- endif -%}
+          </div>
+        {%- endif -%}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+              
+{% schema %}
+    {
+        "name": "Image with text mirror",
+        "tag": "section",
+        "class": "velaFramework",
+        "disabled_on": {
+            "groups": ["header", "footer"]
+        },
+        "settings":[
+            {
+                "type": "header",
+                "content": "Design Section"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "Make section full width"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "Container max width?(px)",
+                "info": "Ex: 1440px"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "Background Color",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "image_picker",
+                "id": "image_bg",
+                "label": "Background Image"
+            },
+            {
+                "type": "select",
+                "id": "bg_align",
+                "label": "Background Alignment",
+                "default": "center",
+                "options": [
+                    {
+                        "value": "top left",
+                        "label": "Top left"
+                    },
+                    {
+                        "value": "top right",
+                        "label": "Top right"
+                    },
+                    {
+                        "value": "center",
+                        "label": "Center"
+                    },
+                    {
+                        "value": "bottom left",
+                        "label": "Bottom left"
+                    },
+                    {
+                        "value": "bottom right",
+                        "label": "Bottom right"
+                    }
+                ]
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "Padding",
+                "placeholder": "0px 0px",
+                "info": "Ex: 0px 0px 0px 0px and use desktop only"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "Padding on mobile",
+                "placeholder": "0px 0px",
+                "info": "Ex: 0px 0px 0px 0px and use mobile only"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "Margin",
+                "placeholder": "0px 0px",
+                "default": "0 0 30px",
+                "info": "Ex: 0px 0px 30px 0px"
+            },
+            {
+                "type": "select",
+                "id": "border_radius",
+                "label": "Border radius",
+                "default": "rounded-0",
+                "options": [
+                    {
+                        "value": "rounded-0",
+                        "label": "Rounded 0"
+                    },
+                    {
+                        "value": "rounded-1",
+                        "label": "Rounded 1"
+                    },
+                    {
+                        "value": "rounded-2",
+                        "label": "Rounded 2"
+                    },
+                    {
+                        "value": "rounded-3",
+                        "label": "Rounded 3"
+                    },
+                    {
+                        "value": "rounded-pill",
+                        "label": "Rounded pill"
+                    },
+                    {
+                        "value": "rounded-circle",
+                        "label": "Rounded circle"
+                    }
+                ]
+            },
+            {
+                "type": "header",
+                "content": "Layout Settings"
+            },
+            {
+                "type": "select",
+                "id": "space_between",
+                "label": "Space between item",
+                "default": "4",
+                "options": [
+                    {
+                        "value": "0",
+                        "label": "0"
+                    },
+                    {
+                        "value": "2",
+                        "label": "10px"
+                    },
+                    {
+                        "value": "3",
+                        "label": "20px"
+                    },
+                    {
+                        "value": "4",
+                        "label": "30px"
+                    },
+                    {
+                        "value": "5",
+                        "label": "40px"
+                    }
+                ]
+            },
+            {
+                "type": "select",
+                "id": "text_align",
+                "label": "Text alignment",
+                "default": "start",
+                "options": [
+                    {
+                        "value": "start",
+                        "label": "Left"
+                    },
+                    {
+                        "value": "center",
+                        "label": "Center"
+                    },
+                    {
+                        "value": "end",
+                        "label": "Right"
+                    }
+                ]
+            },
+            {
+                "type": "header",
+                "content": "Banner Block"
+            },
+            {
+                "type": "select",
+                "id": "banner_mobile",
+                "label": "Banner display",
+                "default": "always",
+                "options": [
+                    {
+                        "value": "always",
+                        "label": "Always"
+                    },
+                    {
+                        "value": "desktop",
+                        "label": "Desktop only"
+                    },
+                    {
+                        "value": "hidden",
+                        "label": "Hidden"
+                    }
+                ]
+            },
+            {
+                "type": "image_picker",
+                "id": "banner",
+                "label": "Banner"
+            },
+            {
+                "type": "url",
+                "id": "banner_url",
+                "label": "Banner url"
+            },
+            {
+                "type": "range",
+                "id": "banner_size",
+                "min": 1,
+                "max": 100,
+                "step": 1,
+                "unit": "%",
+                "label": "Banner Size",
+                "default": 50
+            },
+            {
+                "type": "range",
+                "id": "banner_size_ipad",
+                "min": 1,
+                "max": 100,
+                "step": 1,
+                "unit": "%",
+                "label": "Banner Size",
+                "default": 50
+            },
+            {
+                "type": "range",
+                "id": "banner_size_mobile",
+                "min": 1,
+                "max": 100,
+                "step": 1,
+                "unit": "%",
+                "label": "Banner Size on Mobile",
+                "default": 100
+            },
+            {
+                "type": "select",
+                "id": "banner_position",
+                "label": "Banner Position",
+                "default": "left",
+                "options": [
+                    {
+                        "value": "left",
+                        "label": "Left"
+                    },
+                    {
+                        "value": "right",
+                        "label": "Right"
+                    }
+                ]
+            },
+            {
+                "type": "header",
+                "content": "Content"
+            },
+            {
+				"type": "text",
+				"id": "content_max_with",
+				"label": "Content max width?(px)",
+				"info": "ex: 500px"
+			},
+            {
+                "type": "text",
+                "id": "padding_content",
+                "label": "Padding Content",
+                "placeholder": "0px 0px",
+                "info": "Use desktop only"
+            },
+            {
+                "type": "text",
+                "id": "padding_content_m",
+                "label": "Padding on mobile",
+                "placeholder": "0px 0px",
+                "info": "Ex: 0px 0px 0px 0px and use mobile only"
+            },
+            {
+                "type": "text",
+                "id": "margin_content",
+                "label": "Margin content",
+                "placeholder": "0px 0px",
+                "info": "Ex: 0px 0px 0px 0px"
+            },
+            {
+                "type": "image_picker",
+                "id": "content_image_bg",
+                "label": "Content background image"
+            },
+            {
+                "type": "color",
+                "id": "content_color_bg",
+                "label": "Content Background Color",
+                "default": "#ffffff"
+            },
+            {
+                "type": "range",
+                "id": "opacity",
+                "label": "t:sections.video.settings.opacity.label",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "unit": "%",
+                "default": 0
+            }
+		],
+  		"blocks": [
+			{
+				"type": "image",
+				"name": "Image",
+				"settings": [
+					{
+						"type": "image_picker",
+						"id": "image",
+						"label": "image"
+					},                  
+                    {
+						"type": "text",
+						"id": "margin",
+						"label": "Margin",
+						"info": "Ex: 10px 10px 10px 10px"
+					}
+				]
+			},
+			{
+				"type": "text",
+				"name": "Text",
+				"settings": [
+                    {
+                        "type": "html",
+                        "id": "text",
+                        "label": "Text",
+                        "default": "<div><p>Use HTML to format your text so it can be easily read.<br/>This text can be used to share information about your brand with customers.</p></div>"
+                    },
+					{
+						"type": "select",
+						"id": "text_style",
+						"label": "Font family",
+						"default": "text",
+						"options": [
+							{
+								"value": "text",
+								"label": "Text"
+							},
+							{
+								"value": "ff-heading",
+								"label": "Heading"
+							},
+                            {
+								"value": "ff-special",
+								"label": "Special"
+							}
+						]
+					},
+                    {
+						"type": "select",
+						"id": "text_font-weight",
+						"label": "Font weight",
+						"default": "fw-normal",
+						"options": [
+							{
+								"value": "fw-normal",
+								"label": "Normal"
+							},
+							{
+								"value": "fw-light",
+								"label": "Light"
+							},
+                            {
+								"value": "fw-medium",
+								"label": "Medium"
+							},
+                            {
+								"value": "fw-semibold",
+								"label": "Semibold"
+							},
+                            {
+								"value": "fw-bolder",
+								"label": "Bolder"
+							},
+                            {
+								"value": "fw-bold",
+								"label": "Bold"
+							}
+						]
+					},
+                    {
+                        "type": "color",
+                        "id": "text_color_desktop",
+                        "label": "Color",
+                        "default": "#1F1F27"
+                    },
+                    {
+						"type": "header",
+						"content": "Config for desktop"
+					},
+					{
+						"type": "range",
+						"id": "text_font_size_desktop",
+						"min": 10,
+						"max": 100,
+						"step": 1,
+						"unit": "px",
+						"label": "Font size",
+						"default": 16
+					},
+                    {
+						"type": "text",
+						"id": "margin_desktop",
+						"label": "Margin",
+						"info": "Ex: 10px 10px 10px 10px"
+					},
+                    {
+						"type": "header",
+						"content": "Config for Tablets"
+					},
+					{
+						"type": "range",
+						"id": "text_font_size_tablet",
+						"min": 10,
+						"max": 100,
+						"step": 1,
+						"unit": "px",
+						"label": "Font size",
+						"default": 16
+					},
+                    {
+						"type": "text",
+						"id": "margin_tablet",
+						"label": "Margin",
+						"info": "Ex: 10px 10px 10px 10px"
+					},
+                    {
+						"type": "header",
+						"content": "Config for Mobile"
+					},
+					{
+						"type": "range",
+						"id": "text_font_size_mobile",
+						"min": 10,
+						"max": 100,
+						"step": 1,
+						"unit": "px",
+						"label": "Font size",
+						"default": 16
+					},
+                    {
+						"type": "text",
+						"id": "margin_mobile",
+						"label": "Margin",
+						"info": "Ex: 10px 10px 10px 10px"
+					}
+				]
+			},
+            {
+				"type": "button",
+				"name": "Button",
+				"settings": [
+					{
+						"type": "html",
+						"id": "button",
+						"label": "Text button",
+						"default": "Read More"
+					},
+					{
+						"type": "url",
+						"id": "link",
+						"label": "Link"
+					},
+					{
+						"type": "range",
+						"id": "button_font_size",
+						"min": 10,
+						"max": 30,
+						"step": 1,
+						"unit": "px",
+						"label": "Font size",
+						"default": 14
+					},
+					{
+						"type": "text",
+						"id": "button_padding",
+						"label": "Padding",
+						"placeholder": "6px 20px",
+                        "info": "Ex: 10px 10px 10px 10px"
+					},              
+                    {
+						"type": "text",
+						"id": "margin",
+						"label": "Margin",
+                        "placeholder": "6px 20px",
+						"info": "Ex: 10px 10px 10px 10px"
+					},
+					{
+						"type": "color",
+						"id": "button_color",
+						"label": "Button color",
+						"default": "#ffffff"
+					},
+                    {
+						"type": "text",
+						"id": "button_border-width",
+						"label": "Border width",
+                        "default": "1px 1px 1px 1px",
+						"info": "ex: 1px 1px 1px 1px"
+					},
+					{
+						"type": "color",
+						"id": "button_color_border",
+						"label": "Button border color",
+						"default": "#1F1F27"
+					},
+					{
+						"type": "color",
+						"id": "button_color_bg",
+						"label": "Button background color",
+						"default": "#1F1F27"
+					},
+                    {
+                        "type": "select",
+                        "id": "border_radius",
+                        "label": "Border radius",
+                        "default": "rounded-0",
+                        "options": [
+                            {
+                                "value": "rounded-0",
+                                "label": "Rounded 0"
+                            },
+                            {
+                                "value": "rounded-1",
+                                "label": "Rounded 1"
+                            },
+                            {
+                                "value": "rounded-2",
+                                "label": "Rounded 2"
+                            },
+                            {
+                                "value": "rounded-3",
+                                "label": "Rounded 3"
+                            },
+                            {
+                                "value": "rounded-pill",
+                                "label": "Rounded pill"
+                            },
+                            {
+                                "value": "rounded-circle",
+                                "label": "Rounded circle"
+                            }
+                        ]
+                    },
+					{
+						"type": "color",
+						"id": "button_color_hover",
+						"label": "Button color hover",
+						"default": "#ffffff"
+					},
+					{
+						"type": "color",
+						"id": "button_color_border_hover",
+						"label": "Button border color hover",
+						"default": "#1F1F27"
+					},
+					{
+						"type": "color",
+						"id": "button_color_bg_hover",
+						"label": "Button background color hover",
+						"default": "#1F1F27"
+					},
+                    {
+						"type": "header",
+						"content": "Config for mobile"
+					},
+					{
+						"type": "range",
+						"id": "button_font_size_mobile",
+						"min": 10,
+						"max": 30,
+						"step": 1,
+						"unit": "px",
+						"label": "Font size",
+						"default": 14
+					},
+					{
+						"type": "text",
+						"id": "button_padding_mobile",
+						"label": "Padding",
+						"placeholder": "6px 20px",
+                        "info": "Ex: 10px 10px 10px 10px"
+					},
+                    {
+                        "type": "header",
+                        "content": "Icon"
+                    },
+                    {
+                        "type": "select",
+                        "id": "button_icon",
+                        "label": "Button Icon",
+                        "default": "none",
+                        "options": [
+                            {
+                                "value": "none",
+                                "label": "None"
+                            },
+                            {
+                                "value": "arrow_right",
+                                "label": "Arrow Right"
+                            },
+                            {
+                                "value": "arrow-right-top",
+                                "label": "Arrow Right Top"
+                            },
+                            {
+                                "value": "from-to-left",
+                                "label": "From To Left"
+                            },
+                            {
+                                "value": "angle-right",
+                                "label": "Angle Right"
+                            },
+                            {
+                                "value": "angle-double-right",
+                                "label": "Angle Double Right"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "text",
+                        "id": "button_icon_size",
+                        "label": "Icon Size (px)",
+                        "placeholder": "14x14",
+                        "default": "14x14",
+                        "info": "Ex: 14x14"
+                    }
+				]
+			},
+            {
+                "type": "countdown",
+				"name": "Countdown",
+				"settings": [
+                    {
+                        "type": "text",
+                        "id": "countdown_timeend",
+                        "label": "Time End",
+                        "placeholder": "YYYY\/MM\/DD"
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": "Format: 'Year\/Month\/Day'"
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": "Example: '2028\/12\/30'"
+                    },
+                    {
+                        "type": "color",
+                        "id": "color_number",
+                        "label": "Color number",
+                        "default": "#FF5630"
+                    },
+                    {
+                        "type": "color",
+                        "id": "color_text",
+                        "label": "Color Text",
+                        "default": "#051324"
+                    }
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name": "Image with text mirror",
+                "category": "3. Images",
+                "blocks": [
+                    {
+                        "type": "text"
+                    },
+                    {
+                        "type": "button"
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

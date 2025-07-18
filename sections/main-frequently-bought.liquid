@@ -1,0 +1,212 @@
+{%- assign products = product.metafields.custom.fbt.value -%}
+{%- if products -%}
+  {%- capture styles -%}
+    {%- if section.settings.max_width != blank -%}
+      {%- if section.settings.full_width -%}
+        --st-mx-w: {{ section.settings.max_width }};
+      {%- else -%}
+        --page-mx-xl: {{ section.settings.max_width }};
+      {%- endif -%}
+    {%- endif -%}
+    {%- if section.settings.color_bg != 'rgba(0,0,0,0)' -%}
+      --st-bg-cl: {{ section.settings.color_bg }};
+    {%- endif -%}
+    {%- if section.settings.padding_block != blank -%}
+      --st-pd-dt: {{ section.settings.padding_block }};
+    {%- endif -%}
+    {%- if section.settings.padding_block_m != blank -%}
+      --st-pd-mb: {{ section.settings.padding_block_m }};
+    {%- endif -%}
+    {%- if section.settings.margin_block != blank -%}
+      --st-mg: {{ section.settings.margin_block }};
+    {%- endif -%}
+  {%- endcapture -%}
+
+  {%- if section.settings.full_width and section.settings.max_width -%}
+    {%- assign classes = 'vela-section section-fbt mx-auto' -%}
+  {%- else -%}
+    {%- assign classes = 'vela-section section-fbt' -%}
+  {%- endif -%}
+
+  {%- if section.settings.full_width -%}
+    {%- assign classes_container = 'container-fluid' -%}
+  {%- else -%}
+    {%- assign classes_container = 'container' -%}
+  {%- endif -%}
+
+  {%- assign sub_total = 0 -%}
+  {%- assign sub_total_compare = 0 -%}
+
+  <frequently-bought class="frequently-bought">
+    <div class="{{ classes }}" style="{{ styles }}">
+      <div class="{{ classes_container }}">
+        <div class="vela-section__inner">
+          <div class="vela-section__content p-3 p-md-4">
+            {%- if section.settings.heading != blank -%}
+              <h4 class="lh-1 mb-3">{{ section.settings.heading }}</h4>
+            {%- endif -%}
+            <div class="frequently-bought__content row g-4">
+              <div class="frequently-bought__products col-12 col-lg-9">
+                <div class="frequently-bought__wrapp">
+                  <div
+                    class="js-carousel slick-carousel row g-3 g-lg-4"
+                    data-infinite="{{ true }}"
+                    data-nav="true"
+                    data-columnone="{{ section.settings.limit }}"
+                    data-columntwo="4"
+                    data-columnthree="2"
+                  >
+                    <div class="slick-carousel__item">
+                      {%- render 'product-single-frequently-bought', is_image_card: true, product: product, unique: section.id, index: 0 -%}
+                    </div>
+                    {%- for fb_product in products -%}
+                      <div class="slick-carousel__item">
+                        {%- render 'product-single-frequently-bought', is_image_card: true, product: fb_product, unique: section.id, index: forloop.index -%}
+                      </div>
+                    {%- endfor -%}
+                  </div>
+                </div>
+                <form class="frequently-bought__form" action="#">
+                  <div class="frequently-bought__cards pt-2">
+                    {%- liquid
+                      assign first_variant = product.selected_or_first_available_variant
+                      if first_variant.available
+                        assign sub_total = sub_total | plus: first_variant.price
+                        if first_variant.compare_at_price
+                          assign sub_total_compare = sub_total_compare | plus: first_variant.compare_at_price
+                        else
+                          assign sub_total_compare = sub_total_compare | plus: first_variant.price
+                        endif
+                      endif
+                    -%}
+
+                    {%- render 'product-single-frequently-bought', is_image_card: false, is_main_product: true, product: product, unique: section.id -%}
+                    {%- for fb_product in products -%}
+                      {%- liquid
+                        assign fb_variant = fb_product.selected_or_first_available_variant
+                        if fb_variant.available
+                          assign sub_total = sub_total | plus: fb_variant.price
+                          if fb_variant.compare_at_price
+                            assign sub_total_compare = sub_total_compare | plus: fb_variant.compare_at_price
+                          else
+                            assign sub_total_compare = sub_total_compare | plus: fb_variant.price
+                          endif
+                        endif
+                      -%}
+                      {%- render 'product-single-frequently-bought', is_image_card: false, is_main_product: false, product: fb_product, unique: section.id -%}
+                    {%- endfor -%}
+                  </div>
+                </form>
+              </div>
+              <div class="col-12 col-lg-3">
+                <div class="frequently-bought__subtotal d-flex align-items-center justify-content-center text-center">
+                  <div>
+                    {%- liquid
+                      if sub_total_compare > sub_total
+                        assign sub_total_on_sale = true
+                      else
+                        assign sub_total_on_sale = false
+                      endif
+                    -%}
+                    <div class="fbvela-subtotal">
+                      <p class="fbvela-subtotal__label fw-medium lh-1 mb-2">{{ 'sections.frequently_bought.total_price' | t }}</p>
+                      <div class="fbvela-subtotal__wrap d-flex justify-content-center align-items-center lh-1 w-100">
+                        <div class="fbvela-subtotal__price fbproduct-price fw-medium heading-color{% if sub_total_on_sale %} on-sale{% endif %}" data-sub-total="{{ sub_total }}">{{ sub_total | money }}</div>
+                        <div class="fbvela-subtotal__compare-price fbproduct-price fbproduct-price--compare position-relative ms-1 heading-color{% unless sub_total_on_sale %} d-none{% endunless %}" data-sub-total-compare="{{ sub_total_compare }}">{{ sub_total_compare | money }}</div>
+                      </div>
+                    </div>
+                    <div class="fbvela-actions">
+                      <button type="button" class="fbvela-actions__submit position-relative btn btn-default px-4 mt-2 mt-lg-3">
+                        <span class="text">{{ 'sections.frequently_bought.add_to_cart' | t }}</span>
+                      </button>
+                    </div>
+                    <div class="fbvela-onsale fs-6 fw-medium mt-2{% unless sub_total_on_sale %} d-none{% endunless %}">{{ 'sections.frequently_bought.saving_text' | t }} <span class="fbvela-onsale__price">{{ sub_total_compare | minus: sub_total | money }}</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </frequently-bought>
+
+  <script src="{{ 'frequently-bought.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Frequently bought",
+  "limit": 1,
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.header_section.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:sections.global.settings.full_width.label"
+    },
+    {
+      "type": "text",
+      "id": "max_width",
+      "label": "t:sections.global.settings.max_with.label",
+      "info": "t:sections.global.settings.max_with.info"
+    },
+    {
+      "type": "color",
+      "id": "color_bg",
+      "label": "t:sections.global.settings.bg_color.label",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "text",
+      "id": "padding_block",
+      "label": "t:sections.global.settings.padding.label",
+      "placeholder": "0px 0px",
+      "info": "t:sections.global.settings.padding.info"
+    },
+    {
+      "type": "text",
+      "id": "padding_block_m",
+      "label": "t:sections.global.settings.padding_mobile.label",
+      "placeholder": "0px 0px",
+      "info": "t:sections.global.settings.padding_mobile.info"
+    },
+    {
+      "type": "text",
+      "id": "margin_block",
+      "label": "t:sections.global.settings.margin.label",
+      "placeholder": "0px 0px"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.header_settings.content"
+    },
+    {
+      "type": "html",
+      "id": "heading",
+      "label": "t:sections.global.settings.heading_section.label",
+      "default": "Frequently bought together"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "label": "Maximum products to show",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Frequently bought"
+    }
+  ]
+}
+{% endschema %}

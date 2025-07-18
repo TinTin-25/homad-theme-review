@@ -1,0 +1,66 @@
+{%- assign main_vertical_menu = section.settings.velavermenu_linklist -%}
+{%- assign verticalContent = verticalPosition | default: 'vertical-megamenu-content' -%}
+<div class="vertical-megamenu w-100">
+    <div class="vertical-megamenu__title d-none d-lg-flex align-items-center justify-content-between py-2">
+        <span class="title d-flex text-uppercase">
+            <svg class="icon-vertical-menu me-2 me-xl-3 d-none d-sm-block" xmlns="http://www.w3.org/2000/svg" width="18" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1024 1024"><path fill="currentColor" d="M27 193.6c-8.2-8.2-12.2-18.6-12.2-31.2s4-23 12.2-31.2S45.6 119 58.2 119h912.4c12.6 0 23 4 31.2 12.2s12.2 18.6 12.2 31.2s-4 23-12.2 31.2s-18.6 12.2-31.2 12.2H58.2c-12.6 0-23-4-31.2-12.2zm974.8 285.2c8.2 8.2 12.2 18.6 12.2 31.2s-4 23-12.2 31.2s-18.6 12.2-31.2 12.2H58.2c-12.6 0-23-4-31.2-12.2S14.8 522.6 14.8 510s4-23 12.2-31.2s18.6-12.2 31.2-12.2h912.4c12.6 0 23 4 31.2 12.2zm0 347.4c8.2 8.2 12.2 18.6 12.2 31.2s-4 23-12.2 31.2s-18.6 12.2-31.2 12.2H58.2c-12.6 0-23-4-31.2-12.2S14.8 870 14.8 857.4s4-23 12.2-31.2S45.6 814 58.2 814h912.4c12.6 0 23 4.2 31.2 12.2z"/></svg>
+            {{ section.settings.velavermenu_title }}
+        </span>
+        <i class="icon-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1024 1024"><path fill="currentColor" d="M8.2 275.4c0-8.6 3.4-17.401 10-24.001c13.2-13.2 34.8-13.2 48 0l451.8 451.8l445.2-445.2c13.2-13.2 34.8-13.2 48 0s13.2 34.8 0 48L542 775.399c-13.2 13.2-34.8 13.2-48 0l-475.8-475.8c-6.8-6.8-10-15.4-10-24.199z"/></svg>
+        </i>
+    </div>
+    <div id="{{ verticalContent }}" class="vertical-megamenu-content position-absolute">
+        <nav class="main-vertical-menu__wrap">
+            <ul class="main-vertical-menu__nav list-unstyled d-flex flex-column m-0{% if section.settings.logo_position == 'left' %} justify-content-center{% endif %}">
+                {%- for menu_link in linklists[main_vertical_menu].links -%}
+                    {%- assign is_mega = false -%}
+                    {%- for block in section.blocks -%}
+                    {%- assign menu_item = menu_link.title | strip_html | handle -%}
+			        {%- assign mega_menu_item = block.settings.title | strip_html | handle -%}
+                    {%- if mega_menu_item  == menu_item -%}
+                        {%- assign is_mega = true -%}
+                            {% include 'header-vertical-megamenu' %}
+                        {%- break -%}
+                    {%- endif -%}
+                    {%- endfor -%}
+                    {%- if is_mega == false -%}
+                        {%- if menu_link.links != blank -%}
+                            {% comment %}====== MENU DROPDOWN LEVEL I ======{% endcomment %}
+                            <li class="main-vertical-menu__nav-item menu-dropdown menu-dropdown--basic{% if menu_link.active %} active{% endif %}{% if forloop.index > 9 %} extendlink{% endif %}">
+                                <a class="main-vertical-menu__link d-none d-lg-block" href="{{ menu_link.url }}" title="{{ menu_link.title | strip_html }}"><span>{{ menu_link.title }}{% render 'icons', icon: 'angle-right', class: 'm-0', attr: 'width="12" height="12"' %}</span></a>
+                                <a class="main-vertical-menu__link d-block main-vertical-menu__arrow d-lg-none collapsed" data-bs-toggle="collapse" href="#vertical-megamenu-leve{{ forloop.index}}" role="button" aria-expanded="false" aria-controls="vertical-megamenu-leve{{ forloop.index}}" title="{{ menu_link.title | strip_html }}"><span>{{ menu_link.title }}{% render 'icons', icon: 'arrow-down', class: 'arrow-down m-0', attr: 'width="12" height="12"' %}</span></a>
+                                <ul id="vertical-megamenu-leve{{ forloop.index}}" class="vertical-menu-dropdown__content list-unstyled collapse">
+                                    {%- for menu_link_child in menu_link.links -%}
+                                        {%- if menu_link_child.links != blank -%}
+                                            {% comment %}====== MENU DROPDOWN LEVEL II ======{% endcomment %}
+                                            <li class="menu-dropdown menu-dropdown--basic{% if menu_link_child.active %} active{% endif %}">
+                                                <a  class="main-vertical-menu__link d-none d-lg-block" href="{{ menu_link_child.url }}" title="{{ menu_link_child.title | strip_html }}"><span>{{ menu_link_child.title }}</span>{% render 'icons', icon: 'angle-right', class: 'm-0', attr: 'width="12" height="12"' %}</a>
+                                                <a  class="main-vertical-menu__link d-block main-vertical-menu__arrow d-lg-none collapsed" data-bs-toggle="collapse" href="#vertical-megamenu-leve2{{ forloop.index}}" role="button" aria-expanded="false" aria-controls="vertical-megamenu-leve2{{ forloop.index}}" title="{{ menu_link_child.title | strip_html }}"><span>{{ menu_link_child.title }}</span>{% render 'icons', icon: 'arrow-down', class: 'arrow-down m-0', attr: 'width="12" height="12"' %}</a>
+                                                <ul id="vertical-megamenu-leve2{{ forloop.index}}" class="vertical-menu-dropdown__content list-unstyled collapse">
+                                                    {%- for menu_link_child1 in menu_link_child.links -%}
+                                                            <li class="{% if menu_link_child1.active %}active{% endif %}">
+                                                                <a  class="main-vertical-menu__link" href="{{ menu_link_child1.url }}" title="{{ menu_link_child1.title | strip_html }}"><span>{{ menu_link_child1.title }}</span></a>
+                                                            </li>
+                                                    {%- endfor -%}
+                                                </ul>
+                                            </li>
+                                        {%- else -%}
+                                            <li class="{% if menu_link_child.active %}active{% endif %}">
+                                                <a  class="main-vertical-menu__link" href="{{ menu_link_child.url }}" title="{{ menu_link_child.title | strip_html }}"><span>{{ menu_link_child.title }}</span></a>
+                                            </li>
+                                        {%- endif -%}
+                                    {%- endfor -%}
+                                </ul>
+                            </li>
+                        {%- else -%}
+                            <li class="main-vertical-menu__nav-item{% if menu_link.active %} active{% endif %}">
+                                <a  class="main-vertical-menu__link" href="{{ menu_link.url }}" title="{{ menu_link.title | strip_html }}"><span>{{ menu_link.title }}</span></a>
+                            </li>
+                        {%- endif -%}
+                    {%- endif -%}
+                {%- endfor -%}
+            </ul>
+        </nav>
+    </div>
+</div>

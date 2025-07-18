@@ -1,0 +1,40 @@
+<article class="article blog-simple overflow-hidden rounded-2 position-relative p-4 p-xl-5 border">
+    <div class="article__image position-absolute top-0 start-0 w-100 h-100">
+        <div class="bg-image w-100 h-100" style="background-image: url({{ article.image | img_url: '500x500', crop: 'center'}}); background-size: cover;"></div>
+    </div>
+    <div class="article__content position-relative">
+        {%- if article.tags.size > 0 and show_tags -%}
+            <div class="article__meta-tags d-flex flex-wrap mb-2 mb-lg-3 lh-1">
+                {% for tag in article.tags limit: section.settings.blog_tags_limit %}
+                    <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="tags__item">{{ tag }}</a>{% unless forloop.last %}<span class="lh-1 me-1">,</span>{% endunless %}
+                {% endfor %}
+            </div>
+        {%- endif -%}
+        <h3 class="article__title mb-2 mb-lg-3 line-clamp-2">
+            <a class="line-title" href="{{ article.url }}" title="{{ article.title | strip_html }}"><span>{{ article.title }}</span></a>
+        </h3>
+        {%- if show_excerpt -%}
+            <div class="rte article__excerpt mb-3 mb-lg-4 line-clamp-3">
+                {{ article_content | strip_html | truncate: 146 }}
+            </div>
+        {%- endif -%}
+        <div class="d-flex justify-content-between">
+            <div class="article__meta d-flex flex-wrap align-items-center">
+                {%- if section.settings.blog_date -%}
+                    <div class="article__meta-date d-flex align-items-center">
+                        <span class="icon icon-calender">{% render 'icons', icon: 'calender', attr: 'width="20" height=20' %}</span>
+                        <svg class="icon icon-calender-hover" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.37 16.16C16.66 17.27 15.42 18 14 18H6C3.79 18 2 16.21 2 14V9H18V14C18 14.8 17.77 15.54 17.37 16.16Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 12H8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12H14" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 15H8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 15H14" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.37 5.84C16.66 4.73 15.42 4 14 4H6C3.79 4 2 5.79 2 8V9H18V8C18 7.2 17.77 6.46 17.37 5.84Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 2V6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2V6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        {{ article.published_at | time_tag: format: 'date_month_year' }}
+                    </div>
+                {%- endif -%}
+                {%- if section.settings.blog_author -%}
+                    {%- capture author -%}{{ article.author }}{%- endcapture -%}
+					<div class="article__meta-author d-flex align-items-center">{{ 'blogs.article.author_html' | t: author: author }}</div>
+                {%- endif -%}	
+            </div>
+            {%- if show_readmore -%}
+                <a class="article__btn link fw-medium" href="{{ article.url }}"><span class="d-inline-block">{{ 'blogs.article.read_more' | t }}</span>{% render 'icons', icon: 'arrow-right-top', class: 'icon-arrow-right-top ms-2 position-relative text-primary', attr: 'width="9" height="9"' %}</a>
+            {%- endif -%}
+        </div>
+    </div>
+</article>

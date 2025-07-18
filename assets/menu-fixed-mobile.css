@@ -1,0 +1,11 @@
+@media (max-width: 991.98px) {
+  body.scrolled-past-menuBottom [class*="shopify-section shopify-section-group-footer-"]:last-of-type {
+    margin-bottom: var(--menuFixBottom-height, 0); }
+  .menuFixMobile {
+    box-shadow: 0 0 18px rgba(0, 0, 0, 0.06);
+    z-index: 2;
+    bottom: -64px; }
+    .menuFixMobile.animate {
+      transition: bottom 0.15s ease-out; }
+  .menuBottom-show {
+    bottom: 0; } }

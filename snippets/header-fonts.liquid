@@ -1,0 +1,105 @@
+{% comment %}
+  START: GOOGLE FONTS
+{% endcomment %}
+{%- if settings.type_header_font_select == 'google_header_fonts' or settings.type_body_font_select == 'google_body_fonts' or settings.type_special_type == 'google_fonts' -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+{%- endif -%}
+{%- if settings.type_body_font_select == 'google_body_fonts' and settings.type_body_google_font != blank -%}
+  <link href="{{ settings.type_body_google_font }}" rel="stylesheet">
+{%- endif -%}
+{%- if settings.type_header_font_select == 'google_header_fonts' and settings.type_header_google_font != blank -%}
+  <link href="{{ settings.type_header_google_font }}" rel="stylesheet">
+{%- endif -%}
+{%- if settings.type_special_type == 'google_fonts' and settings.type_special_link != blank -%}
+  <link href="{{ settings.type_special_link }}" rel="stylesheet">
+{%- endif -%}
+{% comment %}
+  END: GOOGLE FONTS
+{% endcomment %}
+
+{% comment %}
+  START: SHOPIFY FONTS
+{% endcomment %}
+{%- liquid
+  assign shopify_font = false
+  assign shopify_header_font_not_system = true
+  assign shopify_body_font_not_system = true
+
+  if settings.type_header_font_select == 'shopify_header_fonts'
+    assign shopify_font = true
+    if settings.type_header_font.system?
+      assign shopify_header_font_not_system = false
+    endif
+
+    if settings.type_header_font.weight == '700'
+      assign header_font_semibold = settings.type_header_font | font_modify: 'weight', '600'
+      assign header_font_medium = settings.type_header_font | font_modify: 'weight', '500'
+    elsif settings.type_header_font.weight == '600'
+      assign header_font_medium = settings.type_header_font | font_modify: 'weight', '500'
+    else
+      assign header_font_semibold = settings.type_header_font | font_modify: 'weight', '600'
+    endif
+  else
+    assign shopify_header_font_not_system = false
+  endif
+
+  if settings.type_body_font_select == 'shopify_body_fonts'
+    assign shopify_font = true
+    if settings.type_body_font.system?
+      assign shopify_body_font_not_system = false
+    endif
+
+    assign body_font_bold = settings.type_body_font | font_modify: 'weight', '700'
+    assign body_font_semibold = settings.type_body_font | font_modify: 'weight', '600'
+    assign body_font_medium = settings.type_body_font | font_modify: 'weight', '500'
+    assign body_font_light = settings.type_body_font | font_modify: 'weight', '300'
+  else
+    assign shopify_body_font_not_system = false
+  endif
+-%}
+
+{% if shopify_font %}
+  {% if shopify_header_font_not_system or shopify_body_font_not_system %}
+    <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+  {% endif %}
+
+  {% if shopify_body_font_not_system %}
+    {% unless request.design_mode %}
+      {{ settings.type_body_font | font_url | preload_tag: as: 'font', type: 'font/woff2' }}
+    {% endunless %}
+  {% endif %}
+
+  {% if shopify_header_font_not_system %}
+    {% unless request.design_mode %}
+      {{ settings.type_header_font | font_url | preload_tag: as: 'font', type: 'font/woff2' }}
+    {% endunless %}
+  {% endif %}
+
+  {% style %}
+    {% if settings.type_body_font_select == 'shopify_body_fonts' %}
+      {{ settings.type_body_font | font_face: font_display: 'swap' }}
+      {{ body_font_light| font_face: font_display: 'swap' }}
+      {{ body_font_medium | font_face: font_display: 'swap' }}
+      {{ body_font_semibold | font_face: font_display: 'swap' }}
+      {{ body_font_bold | font_face: font_display: 'swap' }}
+    {% endif %}
+
+    {% if settings.type_header_font_select == 'shopify_header_fonts' %}
+      {{ settings.type_header_font | font_face: font_display: 'swap' }}
+
+      {%- if settings.type_header_font.weight == '700' -%}
+        {{ header_font_semibold | font_face: font_display: 'swap' }}
+        {{ header_font_medium | font_face: font_display: 'swap' }}
+      {%- elsif settings.type_header_font.weight == '600' -%}
+        {{ header_font_medium | font_face: font_display: 'swap' }}
+      {%- else -%}
+        {{ header_font_semibold | font_face: font_display: 'swap' }}
+      {%- endif -%}
+    {% endif %}
+  {% endstyle %}
+{% endif %}
+
+{% comment %}
+  END: SHOPIFY FONTS
+{% endcomment %}

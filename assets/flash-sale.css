@@ -1,0 +1,165 @@
+.flash-sale {
+  background-attachment: fixed;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat; }
+
+.flash-sale__default .heading {
+  padding-right: 16px;
+  margin-right: 16px; }
+  .flash-sale__default .heading::before {
+    content: "";
+    width: 0;
+    height: 20px;
+    position: absolute;
+    right: 0;
+    top: 5px;
+    display: block;
+    border-right: 1px solid var(--border-color); }
+
+.flash-sale__default .flash-sale__countdown--desc {
+  margin-left: 15px; }
+  @media (max-width: 767.98px) {
+    .flash-sale__default .flash-sale__countdown--desc {
+      margin-left: 0;
+      min-width: 100%;
+      margin-top: 5px; } }
+
+.flash-sale__default .flash-sale__countdown {
+  border-radius: 30px;
+  background-color: var(--secondary);
+  padding: 8px 15px; }
+  .flash-sale__default .flash-sale__countdown .countdown__item {
+    margin: 0;
+    font-size: 18px;
+    line-height: 20px;
+    position: relative;
+    font-weight: 600;
+    color: #fff; }
+    .flash-sale__default .flash-sale__countdown .countdown__item:not(:last-child) {
+      margin-right: 10px; }
+      .flash-sale__default .flash-sale__countdown .countdown__item:not(:last-child):after, .flash-sale__default .flash-sale__countdown .countdown__item:not(:last-child):before {
+        content: "";
+        width: 2px;
+        height: 2px;
+        background: #fff;
+        border-radius: 50%;
+        display: block;
+        position: absolute;
+        right: -6px;
+        top: 5px; }
+      .flash-sale__default .flash-sale__countdown .countdown__item:not(:last-child):after {
+        top: 13px; }
+    .flash-sale__default .flash-sale__countdown .countdown__item span {
+      text-align: center;
+      display: none;
+      text-transform: uppercase; }
+      .flash-sale__default .flash-sale__countdown .countdown__item span:first-child {
+        display: block;
+        min-width: 30px;
+        position: relative; }
+
+.flash-sale__style1 .vela-section__wrapper {
+  padding-top: 40px;
+  position: relative; }
+
+.flash-sale__style1 .heading {
+  font-size: 36px;
+  letter-spacing: -1px; }
+
+.flash-sale__style1 .flash-sale__countdown {
+  margin-top: 30px; }
+
+.flash-sale__style1 .flash-sale__countdown {
+  order: 3;
+  border-radius: 100px;
+  background-color: var(--secondary);
+  padding: 0 35px; }
+  .flash-sale__style1 .flash-sale__countdown .countdown__item {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #fff;
+    font-size: 12px;
+    line-height: 14px;
+    position: relative;
+    font-weight: 600; }
+    .flash-sale__style1 .flash-sale__countdown .countdown__item:not(:last-child) {
+      padding-right: 10px;
+      margin-right: 10px; }
+      .flash-sale__style1 .flash-sale__countdown .countdown__item:not(:last-child):after {
+        position: absolute;
+        content: ":";
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 1;
+        top: 6px;
+        right: 0;
+        font-size: 20px;
+        font-weight: 600; }
+    .flash-sale__style1 .flash-sale__countdown .countdown__item span {
+      text-align: center;
+      display: block;
+      text-transform: uppercase; }
+      .flash-sale__style1 .flash-sale__countdown .countdown__item span:first-child {
+        font-weight: 600;
+        font-size: 24px;
+        line-height: 34px;
+        letter-spacing: -1px;
+        color: #fff;
+        top: -1px;
+        min-width: 40px;
+        position: relative; }
+
+.flash-sale__style1 .vela-section__content {
+  margin-top: -32px; }
+
+.flash-sale__style2 .heading {
+  margin-right: 30px; }
+
+.flash-sale__style2 .flash-sale__countdown--desc {
+  margin-left: 30px; }
+  @media (max-width: 767.98px) {
+    .flash-sale__style2 .flash-sale__countdown--desc {
+      display: none; } }
+
+.flash-sale__style2 .flash-sale__countdown {
+  border-radius: 30px;
+  background-color: var(--secondary);
+  padding: 0 20px; }
+  .flash-sale__style2 .flash-sale__countdown .countdown__item {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #fff;
+    font-size: 10px;
+    line-height: 14px;
+    position: relative;
+    font-weight: 500; }
+    .flash-sale__style2 .flash-sale__countdown .countdown__item:not(:last-child) {
+      padding-right: 10px;
+      margin-right: 10px; }
+      .flash-sale__style2 .flash-sale__countdown .countdown__item:not(:last-child):after {
+        position: absolute;
+        content: ":";
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 1;
+        top: 6px;
+        right: 0;
+        font-size: 20px;
+        font-weight: 600; }
+    .flash-sale__style2 .flash-sale__countdown .countdown__item span {
+      text-align: center;
+      display: block;
+      text-transform: uppercase; }
+      .flash-sale__style2 .flash-sale__countdown .countdown__item span:first-child {
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 20px;
+        letter-spacing: -1px;
+        color: #fff;
+        top: -1px;
+        min-width: 40px;
+        position: relative; }
+
+.flash-sale__style2 .flash-sale__content {
+  border: 2px solid var(--secondary); }

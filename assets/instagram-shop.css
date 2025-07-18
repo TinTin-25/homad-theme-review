@@ -1,0 +1,88 @@
+.instagram-shop .modal-content {
+  max-height: 600px; }
+
+@media (min-width: 576px) {
+  .instagram-shop .modal-dialog {
+    max-width: 408px; } }
+
+.instagram-shop .icon-bag {
+  top: 8px;
+  right: 8px;
+  background: var(--primary);
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  transition: all .3s ease; }
+  .instagram-shop .icon-bag:hover {
+    background: var(--body-color); }
+
+.instagram-shop .vela__btn-close {
+  top: 16px;
+  right: 16px;
+  z-index: 1;
+  background-color: #fff; }
+  .instagram-shop .vela__btn-close:hover {
+    background-color: #eff0f2; }
+
+.instagram-shop .instagram-item__product {
+  padding: 24px; }
+  .instagram-shop .instagram-item__product:empty {
+    display: none !important; }
+  .instagram-shop .instagram-item__product p {
+    margin-bottom: 8px; }
+
+.instagram-shop .instagram-shop__btn {
+  width: 24px;
+  height: 24px;
+  color: #fff;
+  z-index: 3; }
+  @media (min-width: 992px) {
+    .instagram-shop .instagram-shop__btn {
+      pointer-events: none; } }
+  .instagram-shop .instagram-shop__btn > span {
+    color: var(--heading-color);
+    z-index: 1; }
+    .instagram-shop .instagram-shop__btn > span .icon-line1,
+    .instagram-shop .instagram-shop__btn > span .icon-line {
+      margin-left: -4px;
+      margin-top: -4px; }
+    .instagram-shop .instagram-shop__btn > span .icon-line {
+      -webkit-transform: rotate(135deg);
+      transform: rotate(135deg); }
+    .instagram-shop .instagram-shop__btn > span .icon-line1 {
+      -webkit-transform: rotate(45deg);
+      transform: rotate(45deg); }
+  .instagram-shop .instagram-shop__btn:before, .instagram-shop .instagram-shop__btn:after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    display: block;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    background-color: #fff;
+    transform: translate(-50%, -50%);
+    transition: all .3s ease; }
+    @media (min-width: 768px) {
+      .instagram-shop .instagram-shop__btn:before, .instagram-shop .instagram-shop__btn:after {
+        width: 26px;
+        height: 26px; } }
+  .instagram-shop .instagram-shop__btn:before {
+    opacity: .3;
+    animation: effect-button 3s infinite; }
+
+@keyframes effect-button {
+  0% {
+    opacity: 1;
+    width: 16px;
+    height: 16px; }
+  50% {
+    opacity: 0.2;
+    width: 40px;
+    height: 40px; }
+  100% {
+    opacity: 1;
+    width: 16px;
+    height: 16px; } }

@@ -1,0 +1,124 @@
+{{- 'heading-countdown.css' | asset_url | stylesheet_tag -}}
+{%- include 'section_style' -%}
+<div class="vela-section heading-countdown overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-fluid{% endif %}">
+        <div class="vela-section__inner">
+            <div class="d-flex justify-content-between flex-column flex-lg-row">
+                <div class="heading-group mb-3 mb-lg-0">
+                    {%- if section.settings.countdown_title != blank -%}
+                        <h2 class="heading mb-1">
+                            <span>{{ section.settings.countdown_title }}</span>
+                        </h2>
+                    {%- endif -%}
+                    {%- if section.settings.countdown_description != blank -%}
+                        <div class="heading-countdown__countdown--desc">{{ section.settings.countdown_description }}</div>
+                    {%- endif -%}
+                </div>
+                {%- if section.settings.countdown_timeend != blank -%}
+                    {% assign countdownTime = section.settings.countdown_timeend %}
+                {%- else -%}
+                    {% assign date_now = 'now' | date: '%s' %}
+                    {% assign   endate = date_now | plus: 2592000 %}
+                    {% assign countdownTime = endate | date: '%Y/%m/%d' %}
+                {%- endif -%}
+                <div class="heading-countdown__countdown d-flex" data-countdown="{{ countdownTime }}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+    {
+        "name": "Heading - countdown",
+        "tag": "section",
+        "class": "velaFramework",
+        "disabled_on": {
+            "groups": ["header", "footer"]
+        },
+        "settings":[
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "image_picker",
+                "id": "image_bg",
+                "label": "t:sections.global.settings.bg_image.label"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            },
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_settings.content"
+            },
+            {
+		        "type": "html",
+		        "id": "countdown_title",
+		        "label": "Countdown title",
+		        "default": "Featured Products"
+		    },
+            {
+		        "type": "html",
+		        "id": "countdown_description",
+		        "label": "Description",
+                "default": "Remains until the end of the offer"
+		    },
+		    {
+		        "type": "text",
+		        "id": "countdown_timeend",
+		        "label": "Time End",
+		        "placeholder": "YYYY\/MM\/DD"
+		    },
+		    {
+		        "type": "paragraph",
+		        "content": "Format: 'Year\/Month\/Day'"
+		    },
+		    {
+		        "type": "paragraph",
+		        "content": "Example: '2028\/12\/30'"
+		    }
+        ],
+		"presets": [
+            {
+                "name": "Heading countdown",
+                "settings": {
+                    "countdown_timeend": "2028/12/30"
+                }
+            }
+        ]
+    }
+{% endschema %}

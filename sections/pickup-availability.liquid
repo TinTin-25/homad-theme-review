@@ -1,0 +1,112 @@
+{% comment %}theme-check-disable UndefinedObject{% endcomment %}
+{%- assign pick_up_availabilities = product_variant.store_availabilities | where: 'pick_up_enabled', true -%}
+{%- if pick_up_availabilities.size > 0 -%}
+  <pickup-availability-preview class="pickup-availability-preview">
+    {%- assign closest_location = pick_up_availabilities.first -%}
+   
+    <div class="pickup-availability__info">
+      <div class="d-flex flex-wrap lh-lg">
+        {%- if closest_location.available -%}
+          <div class="pickup-availability__icon">{%- render 'icons' with icon: 'available', class: 'icon icon-availability', attr: 'width="20" height="20"' -%}</div>
+        {%- endif -%}
+        {%- if closest_location.available -%}
+          <span class="pickup-availability__heading me-1">
+            {{'products.product.pickup_availability.pick_up_available_at_html' | t: location_name: closest_location.location.name }}
+          </span>
+          <span class="pickup-availability__summary">{{ closest_location.pick_up_time }}</span>
+        {%- else -%}
+          <span class="pickup-availability__heading">
+            {{'products.product.pickup_availability.pick_up_unavailable_at_html' | t: location_name: closest_location.location.name }}
+          </span>
+        {%- endif -%}
+      </div>
+      {%- if closest_location.available or pick_up_availabilities.size > 1 -%}
+        <button
+          class="pickup-availability__link p-0 bg-transparent"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#modal-pickup-availability"
+        >
+          {%- if pick_up_availabilities.size == 1 -%}
+            {{ 'products.product.pickup_availability.view_store_info' | t }}
+          {%- else -%}
+            {{ 'products.product.pickup_availability.check_other_stores' | t }}
+          {%- endif -%}
+        </button>
+      {%- endif -%}
+    </div>
+  </pickup-availability-preview>
+
+  <div id="modal-pickup-availability" class="pickup-availability-modal modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header justify-content-start border-bottom">
+          <div class="pickup-image position-relative overflow-hidden rounded-circle">
+            {% render 'img-global', image: product_variant.product.featured_media.preview_image, image_ratio: 'square', crop: 'center' image_style: true, image_size: '200x' %}
+          </div>
+          <div class="flex-column align-items-start">
+            <div class="heading-color w-100 lh-1 mb-2">{{ product_variant.product.title | escape }}</div>
+            {%- unless product_variant.product.has_only_default_variant -%}
+              <div class="pickup-availability-variant fs-13 fw-medium d-flex flex-wrap lh-1 mb-2">
+                {%- for product_option in product_variant.product.options_with_values -%}
+                  <span class="text-secondary me-1">{{ product_option.name | escape }}:</span>
+                  {%- for value in product_option.values -%}
+                    {%- if product_option.selected_value == value -%}
+                      <span class="me-2 heading-color">{{ value | escape }}</span>
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endfor -%}
+              </div>
+            {%- endunless -%}
+            <div class="pickup-price lh-1">
+              {% render 'product-price', variant: product_variant %}
+            </div>
+          </div>
+          <button type="button" class="vela__btn-close position-absolute end-0 top-0 mt-3 me-3" data-bs-dismiss="modal" aria-label="Close">
+            {% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+            {% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+          </button>
+        </div>
+        <div class="modal-body scroll-style">
+          <ul class="pickup-list list-unstyled mb-0" role="list">
+            {%- for availability in pick_up_availabilities -%}
+              <li class="pickup-list__item{% unless forloop.last %} border-bottom mb-3 pb-3{% endunless %}" style="--border-color: #EFF0F2;">
+                <div class="fs-6 fw-medium mb-2 heading-color lh-1">{{ availability.location.name | escape }}</div>
+                <p class="pickup-list__info">
+                  {%- if availability.available -%}
+                    {%- render 'icons' with icon: 'available', class: 'icon icon-availability', attr: 'width="20" height="20"' -%}
+                    {{ 'products.product.pickup_availability.pick_up_available' | t }},
+                    {{ availability.pick_up_time | downcase }}
+                  {%- endif -%}
+                </p>
+                {%- assign address = availability.location.address -%}
+                <address class="pickup-list__address mb-0">
+                  {%- if address.address1 != blank -%}
+                    <div class="d-flex mb-1">
+                      <span class="text-secondary me-1">{{ 'products.product.pickup_availability.address' | t }}: </span>{{ address.address1 }}
+                    </div>
+                  {%- endif -%}
+                  <div class="d-flex mb-1">
+                    <span class="text-secondary me-1">{{ 'products.product.pickup_availability.city' | t }}: </span>{{ address.city }}
+                  </div>
+                  <div class="d-flex mb-1">
+                    <span class="text-secondary me-1">{{ 'products.product.pickup_availability.country_region' | t }}: </span>{{ address.country }}
+                  </div>
+                  {%- if address.phone.size > 0 -%}
+                    <div class="d-flex mb-1"><span class="text-secondary me-1">{{ 'products.product.pickup_availability.phone' | t }}: </span>{{ address.phone }}</div>
+                  {%- endif -%}
+                  {%- if availability.location.metafields.custom.map != blank -%}
+                    <div class="d-flex align-items-center fs-6 fw-medium py-1">
+                      {%- render 'icons', icon: 'map-marker', class: 'me-1', attr: 'width="18" height="18"' -%}
+                      <a href="{{ availability.location.metafields.custom.map }}" target="_blank">{{ 'products.product.pickup_availability.show_on_google_map' | t }}</a>
+                    </div>
+                  {%- endif -%}
+                </address>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>  
+      </div>
+    </div>
+  </div>
+{%- endif -%}

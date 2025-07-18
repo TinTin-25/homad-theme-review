@@ -1,0 +1,12 @@
+.collection-hero .vela-section__content {
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat; }
+
+.collection-hero__box {
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  padding: var(--ct-pd, 0); }
+  @media (max-width: 767.98px) {
+    .collection-hero__box {
+      padding: var(--ct-pd-m, 0); } }

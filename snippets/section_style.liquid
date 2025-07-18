@@ -1,0 +1,24 @@
+{%- capture section_style -%}
+    {%- if section.settings.max_with != blank -%}
+        {%- if section.settings.full_with -%}
+            --st-mx-w: {{ section.settings.max_with }};
+        {%- else -%}
+            --page-mx-xl: {{ section.settings.max_with }};
+        {%- endif -%}
+    {%- endif -%}
+    {%- if section.settings.color_bg != 'rgba(0,0,0,0)' -%}
+        --st-bg-cl: {{ section.settings.color_bg }};
+    {%- endif -%}
+    {%- if section.settings.padding_block != blank -%}
+       --st-pd-dt: {{ section.settings.padding_block }};
+    {%- endif -%}
+    {%- if section.settings.padding_block_m != blank -%}
+       --st-pd-mb: {{ section.settings.padding_block_m }};
+    {%- endif -%}
+    {%- if section.settings.margin_block != blank -%}
+        --st-mg: {{ section.settings.margin_block }};
+    {%- endif -%}
+    {%- if section.settings.image_bg != blank -%}
+        --st-bg-img: url({{ section.settings.image_bg | img_url: 'master' }});
+    {%- endif -%}
+{%- endcapture -%}

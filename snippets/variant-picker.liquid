@@ -1,0 +1,123 @@
+{%- liquid
+  assign block_classes = 'product-single__variant_picker '
+  assign block_classes = block_classes | append: block.settings.block_margin
+  assign block_classes = block_classes | append: ' ' | append: block.settings.block_margin_m
+
+  assign variant_classes = 'variants-box row g-3'
+  if block.settings.product_selector == 'select'
+    assign variant_classes = 'variants-box__dropdown row g-3'
+  endif
+
+  assign color_names = settings.product_cart_swatch_label | split: ','
+  assign current_variant = product.selected_or_first_available_variant
+-%}
+<div class="{{ block_classes }}">
+  <div class="{{ variant_classes }}" style="--bs-gutter-x: 16px; --bs-gutter-y: 16px;">
+    {%- for option in product.options_with_values -%}
+      {%- assign option_name = option.name | strip | downcase -%}
+      {%- assign option_index = forloop.index -%}
+      <div class="variants-wrapper product-single-form__item">
+        <label class="variants__label lh-1">{{ option.name | escape }}:<span class="js-swatch-display--{{ forloop.index }} text">&nbsp;</span></label>
+        <div class="js-product-select-option--{{ forloop.index }} variants__options">
+          {%- if block.settings.product_selector == 'radio' -%}
+            {%- for value in option.values -%}
+              {%- liquid
+                assign option_label_attributes = ''
+                assign value_escape = value | escape
+                assign option_label_classes = ''
+
+                assign option_disabled = true
+                for variant in product.variants
+                  if variant.available
+                    if option_index == 1 and variant.option1 == value
+                      assign option_disabled = false
+                      break
+                    elsif option_index == 2 and variant.option2 == value and variant.option1 == current_variant.option1
+                      assign option_disabled = false
+                      break
+                    elsif option_index == 3 and variant.option3 == value and variant.option2 == current_variant.option2 and variant.option1 == current_variant.option1
+                      assign option_disabled = false
+                      break
+                    endif
+                  endif
+                endfor
+
+                assign enable_swatch = block.settings.product_color_enable
+                if enable_swatch and color_names contains option_name
+                  assign swatch_type = block.settings.product_swatches_type
+                  assign color_handleize = value | handleize
+                  assign color_name = color_handleize | replace: '-', ''
+
+                  assign style_bg_color = 'background-color: ' | append: color_name | append: ';'
+                  assign style_bg_image = ''
+
+                  if swatch_type == 'variant' and option_name != 'color light'
+                    for variant in product.variants
+                      for variant_option in variant.options
+                        assign variant_option_name = variant_option | handleize | replace: '-', ''
+                        if variant_option_name == color_name and variant.featured_image
+                          assign variant_image_url = variant.featured_image | image_url: width: 100
+                          assign style_bg_image = 'background-image: url(' | append: variant_image_url | append: ');'
+                        endif
+                      endfor
+                    endfor
+
+                  elsif option_name == 'color light'
+                    assign option_label_classes = option_label_classes | append: ' vela-swatch--' | append: color_handleize
+
+                  elsif swatch_type == 'metafields'
+                    assign option_label_classes = option_label_classes | append: ' vela-swatch--' | append: color_handleize
+                  endif
+
+                  assign option_label_attributes = 'style="' | append: style_bg_color | append: style_bg_image | append: '"'
+                  if swatch_type == 'variant' and option_name != 'color light'
+                    assign option_label_attributes = option_label_attributes | append: ' data-variantimage'
+                  endif
+                  assign option_label_attributes = option_label_attributes | append: ' data-color="' | append: color_name | append: '"'
+                  assign option_label_attributes = option_label_attributes | append: ' title="' | append: value_escape | append: '"'
+                endif
+
+                if option_disabled
+                  assign option_label_classes = option_label_classes | append: ' disabled'
+                endif
+              -%}
+
+              <div class="single-option-selector{% if enable_swatch and color_names contains option_name %} show-tooltip{% endif %} variant_{{ block.settings.product_unavailable_variants }}" data-single-option-button>
+                <input
+                  id="ProductSelect-option-{{ option.name | handleize }}-{{ value | handleize }}"
+                  class="js-single-option-selector{% if option_disabled %} disabled{% endif %}"
+                  {% if option.selected_value == value %} checked="checked"{% endif %}
+                  {% if option_disabled %} disabled="disabled"{% endif %}
+                  data-index="option{{ option_index }}"
+                  value="{{ value_escape }}"
+                  name="option{{ option.position }}"
+                  type="radio"
+                />
+                <label
+                  class="{{ option_label_classes }}"
+                  for="ProductSelect-option-{{ option.name | handleize }}-{{ value | handleize }}"
+                  {{ option_label_attributes }}
+                >{{ value_escape }}</label>
+                {% if enable_swatch and color_names contains option_name %}
+                  <div class="tooltip bs-tooltip-top" role="tooltip">
+                    <div class="tooltip-arrow"></div>
+                    <div class="tooltip-inner">{{ value_escape }}</div>
+                  </div>
+                {% endif %}
+              </div>
+            {%- endfor -%}
+          {%- else -%}
+            <select class="js-single-option-selector single-option-selector-{{ section.id }} product-single-form__input form-select"
+              data-id="SingleOptionSelector-{{ forloop.index0 }}"
+              data-index="option{{ forloop.index }}"
+              data-single-option-select>
+              {% for value in option.values %}
+              <option value="{{ value | escape }}"{% if option.selected_value == value %} selected="selected"{% endif %}>{{ value | escape }}</option>
+              {% endfor %}
+            </select>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>

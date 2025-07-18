@@ -1,0 +1,62 @@
+{%- capture media_id -%}{{ section.id }}-{{ media.id }}{%- endcapture -%}
+{%- capture image_size -%}
+  {%- if settings.image_ratio == 'portrait' -%}
+    {% assign media_h = media_w | divided_by: 0.75 | ceil %}
+  {%- elsif settings.image_ratio == 'square' -%}
+    {% assign media_h = media_w  %}
+  {%- else -%}
+    {% assign media_h = media_w | divided_by: media.preview_image.aspect_ratio | ceil %}
+  {%- endif -%}
+  {{- media_w -}}x{{- media_h -}}
+{%- endcapture -%}
+{%- capture img_attr -%}
+  data-media-id="{{ media_id }}" data-zoom="{{ media.preview_image | image_url: width: 2048 }}"
+{%- endcapture -%}
+{%- capture media_ratio -%}
+    {%- if settings.image_ratio == 'portrait' -%}
+      --media-ratio: 133.33%;
+    {%- elsif settings.image_ratio == 'square' -%}
+      --media-ratio: 100%;
+    {%- else -%}
+      --media-ratio: {{ 1 | divided_by: media.preview_image.aspect_ratio | times: 100 }}%;
+    {%- endif -%}
+{%- endcapture -%}
+{%- if section.settings.enable_video_autoplay -%}
+  {%- assign media_autoplay = 1 -%}
+{%- else -%}
+  {%- assign media_autoplay = 0 -%}
+{%- endif -%}
+<div class="js-product-media product-media"
+  {% if media.media_type == 'video' or media.media_type == 'external_video' %}data-product-media-type-video
+  data-enable-video-looping="{{ section.settings.enable_video_looping }}"{% endif %}
+  {% if media.media_type == 'model' %} data-product-media-type-model{% endif %}
+  {% if media.media_type == 'external_video' %} data-video-id="{{ media.external_id }}"{% endif %}
+  data-media-id="{{ media_id }}"
+  tabindex="-1" style="{{  media_ratio }}">
+  {% case media.media_type %}
+    {% when 'image' %}
+      <div class="product-media__wrapper zoom image-container" data-media-id="{{ media.id }}" {% if section.settings.enable_image_popup %} data-mfp-src="{{ media | img_url: '2048x2048' }}"{% endif %}>
+        {% render 'img-global', image: media.preview_image, img_class: 'img-fluid image-zoom', img_attr: img_attr, image_ratio: settings.image_ratio, crop: image_crop, image_style: true %}
+      </div>
+    {% when 'external_video' %}
+      <div class="product-media__wrapper product-media__wrapper--video">
+        {{ media | external_video_tag }}
+      </div>
+  {% when 'video' %}
+    <div class="product-media__wrapper product-media__wrapper--video">
+      {{ media | video_tag: controls: false, class: 'media-video', autoplay: media_autoplay, image_size: image_size }}
+    </div>
+  {% when 'model' %}
+    <div class="product-media__wrapper product-media__wrapper--model">
+      {{ media | model_viewer_tag: image_size: image_size, reveal: 'interaction', toggleable: true, data-model-id: media.id }}
+      {%- if first_3d_model -%}
+        {%- include 'xr-button' with model_id: first_3d_model.id, multi: false -%}
+      {%- endif -%}
+    </div>
+  {% else %}
+    <div class="product-media__wrapper">
+      {{ media | media_tag: class: 'media-item', image_size: image_size }}
+    </div>
+  {% endcase %}
+</div>
+

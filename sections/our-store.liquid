@@ -1,0 +1,184 @@
+{%- include 'section_style' -%}
+<div class="vela-section our-store overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-full{% endif %}">
+        <div class="vela-section__inner">
+            <div class="row g-3 g-lg-4 row-cols-1 row-cols-md-2 row-cols-lg-3 gy-6">
+                {%- for block in section.blocks -%}
+                    <div class="col mb-3">
+                        <div class="store__image mb-2">
+                            {%- if block.settings.button_url != blank -%}
+                                <a href="{{ block.settings.button_url }}" title="{{ block.settings.store_image.alt | default: shop.name }}">
+                            {%- endif -%}
+                                    {%- if block.settings.store_image != blank -%}
+                                        {% render 'img-global', image: block.settings.store_image %}
+                                    {%- else -%}
+                                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                    {%- endif -%}
+                            {%- if block.settings.button_url != blank -%}
+                                </a>
+                            {%- endif -%}
+                        </div>
+                        {%- if block.settings.store_title != blank -%}
+                            <div class="store__title heading-color fs-6 mb-2">
+                                {{ block.settings.store_title }}
+                            </div>
+                        {%- endif -%}
+                        {%- if block.settings.store_add != blank -%}
+                            <div class="store__address text-secondary fs-13 mb-2">
+                                {{ block.settings.store_add }}
+                            </div>
+                        {%- endif -%}
+                        {%- if block.settings.store_phone != blank -%}
+                            <div class="store__phone fs-13 medium mb-2">
+                                {{ block.settings.store_phone }}
+                            </div>
+                        {%- endif -%}
+                        {%- if block.settings.store_email != blank -%}
+                            <div class="store__email fs-13 medium">
+                                {{ block.settings.store_email }}
+                            </div>
+                        {%- endif -%}
+                        {%- if block.settings.store_time != blank -%}
+                            <div class="store__time fs-13 medium mt-2">
+                                {{ block.settings.store_time }}
+                            </div>
+                        {%- endif -%}
+                        {%- if block.settings.button_text != blank  -%}
+                            <a class="btn btn-default mt-3" href="{{ block.settings.button_url }}">
+                                <svg class="me-2" width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.23993 4.26997L13.7799 0.969971L7.11993 7.62997L2.22993 6.18997C1.26993 5.90997 1.27993 4.53997 2.22993 4.26997H2.23993Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10.4801 12.51L13.7801 0.969971L7.12012 7.62997L8.56012 12.52C8.84012 13.48 10.2101 13.47 10.4801 12.52V12.51Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                                {{ block.settings.button_text }}
+                            </a>
+                        {%- endif-%}
+                    </div>
+                {%- endfor-%}
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+    {
+        "name": "Our store",
+        "class": "velaFramework",
+        "tag": "section",
+        "settings":[
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            }
+        ],
+        "blocks": [
+            {
+                "type": "store_info",
+                "name": "Store info",
+                "settings": [
+                    {
+                        "type": "header",
+                        "content": "Map"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "store_image",
+                        "label": "Store image"
+                    },
+                    {
+                        "type": "header",
+                        "content": "Store info"
+                    },
+                    {
+                        "type": "text",
+                        "id": "store_title",
+                        "label": "Store name",
+                        "default": "Av Prsdnt Kennedy"
+                    },
+                    {
+                        "type": "html",
+                        "id": "store_add",
+                        "label": "Adress",
+                        "default": "2118 Thornridge Cir. Syracuse, Connecticut 35624"
+                    },
+                    {
+                        "type": "html",
+                        "id": "store_phone",
+                        "label": "Phone",
+                        "default": "(316) 555-0116"
+                    },
+                    {
+                        "type": "html",
+                        "id": "store_email",
+                        "label": "Email",
+                        "default": "jennings@example.com"
+                    },
+                    {
+                        "type": "html",
+                        "id": "store_time",
+                        "label": "Time"
+                    },
+                    {
+                        "type": "text",
+                        "id": "button_text",
+                        "label": "Button text",
+                        "default": "Get direction"
+                    },
+                    {
+                        "type": "url",
+                        "id": "button_url",
+                        "label": "Store url"
+                    }
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name": "Our store",
+                "blocks": [
+                    {
+                        "type": "store_info"
+                    },
+                    {
+                        "type": "store_info"
+                    },
+                    {
+                        "type": "store_info"
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

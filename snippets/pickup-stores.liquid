@@ -1,0 +1,28 @@
+{%- assign pick_up_availabilities = product.selected_or_first_available_variant.store_availabilities
+  | where: 'pick_up_enabled', true
+-%}
+<pickup-availability
+  class="pickup-availability"
+  {% if product.selected_or_first_available_variant.available and pick_up_availabilities.size > 0 %}
+  available
+  {% endif %}
+  data-root-url="{{ routes.root_url }}"
+  data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+  data-has-only-default-variant="{{ product.has_only_default_variant }}"
+>
+  <template>
+    <pickup-availability-preview class="pickup-availability__preview">
+      <div class="pickup-availability__info d-flex align-items-center">
+        {%- render 'icons' with icon: 'unavailable', class: 'icon icon-unavailability', attr: 'width="20" height="20"' -%}<span class="pickup-availability__heading">{{ 'products.product.pickup_availability.unavailable' | t }}</span>
+      </div>
+      <button
+        class="pickup-availability__link p-0 bg-transparent"
+        type="button"
+        data-bs-toggle="modal"
+        data-bs-target="#modal-pickup-availability"
+      >{{ 'products.product.pickup_availability.refresh' | t }}</button>
+    </pickup-availability-preview>
+  </template>
+</pickup-availability>
+
+<script src="{{ 'pickup-availability.js' | asset_url }}" defer="defer"></script>

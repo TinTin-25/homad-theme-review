@@ -1,0 +1,218 @@
+{%- include 'section_style' -%}
+<div class="vela-section section-product-banner overflow-hidden"  style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-fluid{% endif %}">
+        <div class="vela-section__inner">
+            {%- if section.settings.heading != blank -%}
+                <div class="heading-group mb-3 mb-md-4 pb-1 {{ section.settings.text_align }}">
+                    <h2 class="heading mb-0">
+                        <span>{{ section.settings.heading }}</span>
+                    </h2>
+                    {%- if section.settings.sub_heading != blank -%}
+                        <div class="sub-heading pt-1">
+                            {{ section.settings.sub_heading }}
+                        </div>
+                    {%- endif -%}
+                </div>
+            {%- endif -%}
+            <div class="vela-section__content">
+                <div class="row g-3 g-lg-4">
+                    {% for block in section.blocks %}
+                        {%- assign proLimit = block.settings.limit -%}
+                        {%- assign proCollection = block.settings.collection_handle -%}
+                        <div class="col-12 col-md-6">
+                            <div class="row g-2 g-lg-4 gy-4 gy-lg-5{% if block.settings.banner_position == 'bottom' %} flex-md-column-reverse{% endif %}">
+                                <div class="col-12">
+                                    <div class="banner overflow-hidden">
+                                        {%- if block.settings.banner_url != blank -%}
+                                            <a href="{{ block.settings.banner_url }}" title ="">
+                                        {%- endif -%}
+                                            {%- if block.settings.banner != blank -%}
+                                                {% render 'img-global', image: block.settings.banner %}
+                                            {%- else -%}
+                                                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                            {%- endif -%}
+                                        {%- if block.settings.banner_url != blank -%}
+                                            </a>
+                                        {%- endif -%}
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row g-2  g-lg-4 gy-4 gy-lg-5 row-cols-2">
+                                        {%- if proCollection == blank or collections[proCollection] == empty or collections[proCollection].products_count == 0 -%}
+                                            {% include 'onboarding-featured-products', number: proLimit  %}
+                                        {%- else -%}
+                                            {%- for product in collections[proCollection].products limit: proLimit -%}
+                                                {% include 'product-grid-item' %}
+                                            {%- endfor -%}
+                                        {%- endif -%}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>           
+                    {% endfor %}   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%- assign prostyle = nil -%}
+{% schema %}
+{
+    "name": "Product with two banner",
+    "tag": "section",
+    "class": "velaFramework",
+    "disabled_on": {
+        "groups": ["header", "footer"]
+    },
+    "settings":[
+        {
+            "type": "header",
+            "content": "t:sections.global.settings.header_section.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "full_with",
+            "label": "t:sections.global.settings.full_width.label"
+        },
+        {
+            "type": "text",
+            "id": "max_with",
+            "label": "t:sections.global.settings.max_with.label",
+            "info": "t:sections.global.settings.max_with.info"
+        },
+        {
+            "type": "color",
+            "id": "color_bg",
+            "label": "t:sections.global.settings.bg_color.label",
+            "default": "rgba(0,0,0,0)"
+        },
+        {
+            "type": "text",
+            "id": "padding_block",
+            "label": "t:sections.global.settings.padding.label",
+            "placeholder": "0px 0px",
+            "info": "t:sections.global.settings.padding.info"
+        },
+        {
+            "type": "text",
+            "id": "padding_block_m",
+            "label": "t:sections.global.settings.padding_mobile.label",
+            "placeholder": "0px 0px",
+            "info": "t:sections.global.settings.padding_mobile.info"
+        },
+        {
+            "type": "text",
+            "id": "margin_block",
+            "label": "t:sections.global.settings.margin.label",
+            "placeholder": "0px 0px"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.global.settings.header_settings.content"
+        },
+        {
+            "type": "html",
+            "id": "heading",
+            "label": "t:sections.global.settings.heading_section.label",
+            "default": "Heading"
+        },
+        {
+            "type": "text",
+            "id": "sub_heading",
+            "label": "t:sections.global.settings.subheading_section.label",
+            "default": "sub heading"
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Text alignment",
+            "default": "text-start",
+            "options": [
+                {
+                    "value": "text-start",
+                    "label": "Left"
+                },
+                {
+                    "value": "text-center",
+                    "label": "Center"
+                },
+                {
+                    "value": "text-end",
+                    "label": "Right"
+                }
+            ]
+        }
+    ],
+    "blocks": [
+        {
+            "type": "product",
+            "name": "Block item",
+            "limit": 6,
+            "settings": [
+                {
+                    "type": "collection",
+                    "id": "collection_handle",
+                    "label": "Select a collection"
+                },
+                {
+                    "type": "range",
+                    "id": "limit",
+                    "min": 1,
+                    "max": 12,
+                    "step": 1,
+                    "label": "Maximum products to show",
+                    "default": 2
+                },
+                {
+                    "type": "image_picker",
+                    "id": "banner",
+                    "label": "Banner"
+                },
+                {
+                    "type": "url",
+                    "id": "banner_url",
+                    "label": "Url"
+                },
+                {
+                    "type": "select",
+                    "id": "banner_position",
+                    "label": "Position",
+                    "default": "top",
+                    "options": [
+                        {
+                            "value": "top",
+                            "label": "Top"
+                        },
+                        {
+                            "value": "bottom",
+                            "label": "Bottom"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Product with two banner",
+            "category": "2. Products",
+            "blocks": [
+                {
+                    "type": "product",
+                    "settings": {
+                        "banner_position": "top",
+                        "collection_handle": "frontpage"
+                    }
+                },
+                {
+                    "type": "product",
+                    "settings": {
+                        "banner_position": "bottom",
+                        "collection_handle": "frontpage"
+                    }
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

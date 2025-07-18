@@ -1,0 +1,310 @@
+{{- 'product-list-banner.css' | asset_url | stylesheet_tag -}}
+{%- include 'carousel-settings'-%}
+{%- assign proCollection = section.settings.collection_handle -%}
+{%- assign proLimit = section.settings.limit -%}
+{%- include 'section_style' -%}
+<div class="vela-section product-banner {% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}"  style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-fluid{% endif %}">
+        <div class="vela-section__inner">
+            {%- if section.settings.heading != blank -%}
+                <div class="heading-group mb-3 mb-md-4 pb-1 {{ section.settings.text_align }}">
+                    <h2 class="heading mb-0">
+                        <span>{{ section.settings.heading }}</span>
+                    </h2>
+                    {%- if section.settings.sub_heading != blank -%}
+                        <div class="sub-heading pt-1">
+                            {{ section.settings.sub_heading }}
+                        </div>
+                    {%- endif -%}
+                </div>
+            {%- endif -%}
+            <div class="vela-section__content">
+                <div class="row g-3 g-lg-4 {% if section.settings.banner_position == 'right' %}flex-row-reverse{% endif %}">
+                    <div class="col-12 col-lg-6 d-none d-lg-block">
+                        <a class="product-banner__image sticky-top z-index-1 d-block overflow-hidden rounded-3" href="{{ section.settings.banner_url }}" title="{{ section.settings.banner_title | strip_html }}" style="--plh-svg-h:890px;">
+                            {% if section.settings.banner != blank %}
+                                {% render 'img-global' with image: section.settings.banner %}
+                            {% else %}
+                                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                            {% endif %}
+                        </a>
+                    </div>  
+                    <div class="col-12 col-lg-6 position-relative">
+                        <div class="product-banner__product">
+                            <div
+                                {% if section.settings.layout == 'carousel' %}
+                                    class="js-carousel slick-carousel carousel-custom row g-2 g-md-{{ section.settings.space_between }}"
+                                    data-nav="{{ nav }}"
+                                    data-dots="{{ pagination }}"
+                                    data-infinite="{{ infinite }}"
+                                    data-autoplay="{{ autoplay }}"
+                                    data-autoplayspeed="{{ autoplay_speed }}"
+                                    data-columnone="{{ owlColumn1 }}" 
+                                    data-columntwo="{{ owlColumn2 }}" 
+                                    data-columnthree="{{ owlColumn3 }}" 
+            
+                                {% else %}
+                                    class="row gx-2 gx-md-3 g-lg-4 gy-4 gy-lg-5 g-lg-{{ section.settings.space_between }} row-cols-{{ owlColumn3 }} row-cols-md-{{ owlColumn2 }} row-cols-lg-{{ owlColumn1 }}"
+                                {% endif %}
+                            >
+                                {%- if proCollection == blank or collections[proCollection] == empty or collections[proCollection].products_count == 0 -%}
+                                    {% render 'onboarding-featured-products', anumber: proLimit  %}
+                                {%- else -%}
+                                    {%- for product in collections[proCollection].products limit: proLimit -%}
+                                        <div class="{% if section.settings.layout == 'carousel' %}slick-carousel__item{% else %}col{% endif %}">
+                                            {% render 'product-grid-item', product: product %}
+                                        </div>
+                                    {%- endfor -%}
+                                {%- endif -%}
+                            </div>
+                        </div>   
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+{
+    "name": "Product with banner",
+    "tag": "section",
+    "class": "velaFramework",
+    "disabled_on": {
+        "groups": ["header", "footer"]
+    },
+    "settings":[
+        {
+            "type": "header",
+            "content": "t:sections.global.settings.header_section.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "full_with",
+            "label": "t:sections.global.settings.full_width.label"
+        },
+        {
+            "type": "text",
+            "id": "max_with",
+            "label": "t:sections.global.settings.max_with.label",
+            "info": "t:sections.global.settings.max_with.info"
+        },
+        {
+            "type": "color",
+            "id": "color_bg",
+            "label": "t:sections.global.settings.bg_color.label",
+            "default": "rgba(0,0,0,0)"
+        },
+        {
+            "type": "text",
+            "id": "padding_block",
+            "label": "t:sections.global.settings.padding.label",
+            "placeholder": "0px 0px",
+            "info": "t:sections.global.settings.padding.info"
+        },
+        {
+            "type": "text",
+            "id": "padding_block_m",
+            "label": "t:sections.global.settings.padding_mobile.label",
+            "placeholder": "0px 0px",
+            "info": "t:sections.global.settings.padding_mobile.info"
+        },
+        {
+            "type": "text",
+            "id": "margin_block",
+            "label": "t:sections.global.settings.margin.label",
+            "placeholder": "0px 0px"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.global.settings.header_settings.content"
+        },
+        {
+            "type": "html",
+            "id": "heading",
+            "label": "t:sections.global.settings.heading_section.label",
+            "default": "Heading"
+        },
+        {
+            "type": "text",
+            "id": "sub_heading",
+            "label": "t:sections.global.settings.subheading_section.label",
+            "default": "sub heading"
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Text alignment",
+            "default": "text-start",
+            "options": [
+                {
+                    "value": "text-start",
+                    "label": "Left"
+                },
+                {
+                    "value": "text-center",
+                    "label": "Center"
+                },
+                {
+                    "value": "text-end",
+                    "label": "Right"
+                }
+            ]
+        },
+        {
+            "type": "collection",
+            "id": "collection_handle",
+            "label": "Collection"
+        },
+        {
+            "type": "range",
+            "id": "limit",
+            "min": 1,
+            "max": 12,
+            "step": 1,
+            "label": "Maximum products to show",
+            "default": 6
+        },
+        {
+            "type": "header",
+            "content": "Layout Settings"
+        },
+        {
+            "type": "select",
+            "id": "layout",
+            "label": "Layout",
+            "default": "grid",
+            "options": [
+                {
+                    "value": "grid",
+                    "label": "Grid"
+                },
+                {
+                    "value": "carousel",
+                    "label": "Carousel"
+                }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "space_between",
+            "label": "Space between item",
+            "default": "4",
+            "options": [
+                {
+                    "value": "3",
+                    "label": "20px"
+                },
+                {
+                    "value": "4",
+                    "label": "30px"
+                },
+                {
+                    "value": "5",
+                    "label": "40px"
+                }
+            ]
+        },
+        {
+            "type": "range",
+            "id": "column1",
+            "min": 1,
+            "max": 8,
+            "step": 1,
+            "label": "Number of columns on desktop",
+            "default": 4,
+            "info": "Desktops"
+        },
+        {
+            "type": "range",
+            "id": "column2",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "label": "Number of columns on tablet",
+            "default": 3,
+            "info": "Tablets landscape"
+        },
+        {
+            "type": "range",
+            "id": "column3",
+            "min": 1,
+            "max": 5,
+            "step": 1,
+            "label": "Number of columns on mobile",
+            "default": 2,
+            "info": "Mobile phone landscape"
+        },
+        {
+            "type": "header",
+            "content": "Carousel settings"
+        },
+        {
+            "type": "checkbox",
+            "id": "navigation",
+            "label": "Show navigation",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "pagination",
+            "label": "Show dot indicators",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "infinite",
+            "label": "Infinite loop sliding",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "autoplay",
+            "label": "Enable autoplay",
+            "default": false
+        },
+        {
+            "type": "text",
+            "id": "autoplay_speed",
+            "label": "Autoplay speed",
+            "info": "Autoplay speed in milliseconds. Type: int(ms)",
+            "default": "10000"
+        },
+        {
+            "type": "header",
+            "content": "Banner"
+        },
+        {
+            "type": "image_picker",
+            "id": "banner",
+            "label": "Banner"
+        },
+        {
+            "type": "url",
+            "id": "banner_url",
+            "label": "Banner url"
+        },
+        {
+            "type": "select",
+            "id": "banner_position",
+            "label": "Position",
+            "default": "right",
+            "options": [
+                {
+                    "value": "left",
+                    "label": "Left"
+                },
+                {
+                    "value": "right",
+                    "label": "Right"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Product with banner",
+            "category": "2. Products"
+        }
+    ]
+}
+{% endschema %}

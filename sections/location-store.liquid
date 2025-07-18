@@ -1,0 +1,212 @@
+{%- include 'section_style' -%}
+<div class="vela-section location-store overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-full{% endif %}">
+        <div class="vela-section__inner oveflow-hidden rounded-3">
+            <div class="row g-0">
+                <div class="col-12 col-md-6">
+                    <div class="location-store__wrapper d-flex position-relative">
+                        <div class="location-store__image position-absolute w-100 h-100" style="--plh-svg-h: 720px;">
+                            {%- if section.settings.store_image != blank -%}
+                                {% render 'img-global', image: section.settings.store_image, image_style: true %}
+                            {%- else -%}
+                                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                            {%- endif -%}
+                        </div>
+                        <div class="location-store__info position-relative bg-white rounded-2 p-3 p-lg-5">
+                            <div class="m-1 m-lg-3">
+                                <div class="location-store__content">
+                                    {%- if section.settings.store_title != blank -%}
+                                        <h3 class="store__title mb-2">
+                                            {{ section.settings.store_title }}
+                                        </h3>
+                                    {%- endif -%}
+                                    {%- if section.settings.store_add != blank -%}
+                                        <div class="store__address text-secondary mb-3 pb-1 fs-6 heading-color">
+                                            {{ section.settings.store_add }}
+                                        </div>
+                                    {%- endif -%}
+                                    {%- if section.settings.store_phone != blank -%}
+                                        <div class="store__phone mb-2">
+                                            {{ section.settings.store_phone }}
+                                        </div>
+                                    {%- endif -%}
+                                    {%- if section.settings.store_email != blank -%}
+                                        <div class="store__email mb-2">
+                                            {{ section.settings.store_email }}
+                                        </div>
+                                    {%- endif -%}
+                                    {%- if section.settings.store_time != blank -%}
+                                        <div class="store__time mb-2">
+                                            {{ section.settings.store_time }}
+                                        </div>
+                                    {%- endif -%}
+                                    {%- if section.settings.button_text != blank -%}
+                                        <a class="btn-default d-inline-block mt-4 rounded-pill" target="_blank" href="{{ section.settings.btn_url }}">
+                                            {% render 'icons', class: "me-1", icon: 'plane', attr: 'width="15" height="14"' %}{{- section.settings.button_text -}}
+                                        </a>
+                                    {%- endif -%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content col-12 col-md-6">
+                    <div class="location-store__map google-map__map map_grey d-flex w-100 h-100 overflow-hidden" style="{% if section.settings.min-height != blank %}--gm-h: {{ section.settings.min-height }};{% endif %}{% if section.settings.min-height-m != blank %}--gm-h-m: {{ section.settings.min-height-m }};{% endif %}">
+                        {{ section.settings.googlemap_iframe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+    {
+        "name": "Location store",
+        "class": "velaFramework",
+        "disabled_on": {
+            "groups": ["header"]
+        },
+        "tag": "section",
+        "settings":[
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            },
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_settings.content"
+            },
+            {
+                "type": "html",
+                "id": "heading",
+                "label": "t:sections.global.settings.heading_section.label",
+                "default": "Heading"
+            },
+            {
+                "type": "html",
+                "id": "location_name",
+                "label": "Location"
+            },
+            {
+                "type": "header",
+                "content": "Map"
+            },
+            {
+                "type": "text",
+                "id": "min-height",
+                "label": "Height on desktop(px)",
+                "placeholder": "720px",
+                "default": "720px"
+            },
+            {
+                "type": "text",
+                "id": "min-height-m",
+                "label": "Height on mobile(px)",
+                "placeholder": "382px",
+                "default": "382px"
+            },
+            {
+                "type": "textarea",
+                "id": "googlemap_iframe",
+                "label": "Google Map Code",
+                "placeholder": "Embed Map",
+                "default": "<iframe src=\"https:\/\/www.google.com\/maps\/embed?pb=!1m14!1m8!1m3!1d19867.311686031117!2d-0.111056!3d51.505621!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x4291f3172409ea92!2slastminute.com%20London%20Eye!5e0!3m2!1sen!2sus!4v1631783144736!5m2!1sen!2sus\" width=\"100%\" height=\"600px\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\"><\/iframe>"
+            },
+            {
+                "type": "header",
+                "content": "Store info"
+            },
+            {
+                "type": "image_picker",
+                "id": "store_image",
+                "label": "Store Image"
+            },
+            {
+                "type": "text",
+                "id": "store_title",
+                "label": "Store name",
+                "default": "Av Prsdnt Kennedy"
+            },
+            {
+                "type": "html",
+                "id": "store_add",
+                "label": "Adress",
+                "default": "2118 Thornridge Cir. Syracuse, Connecticut 35624"
+            },
+            {
+                "type": "html",
+                "id": "store_phone",
+                "label": "Phone",
+                "default": "(316) 555-0116"
+            },
+            {
+                "type": "html",
+                "id": "store_email",
+                "label": "Email",
+                "default": "jennings@example.com"
+            },
+            {
+                "type": "html",
+                "id": "store_time",
+                "label": "Time"
+            },
+            {
+                "type": "header",
+                "content": "button"
+            },
+            {
+                "type": "text",
+                "id": "button_text",
+                "label": "Label",
+                "default": "Get direction"
+            },
+            {
+                "type": "url",
+                "id": "btn_url",
+                "label": "Url"
+            }
+        ],
+        "presets": [
+            {
+                "name": "Location store"
+            }
+        ]
+    }
+{% endschema %}

@@ -1,0 +1,82 @@
+.collection-effect__title:hover {
+  color: var(--primary); }
+
+.collection-list__default .collection-list__wrapper {
+  background: #fff;
+  color: var(--heading-color);
+  transition: all .2s ease;
+  min-width: 150px;
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.06);
+  margin-bottom: 24px;
+  line-height: 20px; }
+  .collection-list__default .collection-list__wrapper:hover {
+    color: #fff;
+    background-color: var(--body-color); }
+
+.collection-list__style1 .collection-list--image {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center; }
+
+.collection-list__style1 .collection-list__count {
+  line-height: 21px; }
+
+.collection-list__style2 .collection-list__content {
+  z-index: 2;
+  padding: 24px; }
+
+.collection-list__style2 .collection-list__title {
+  transition: all .3s ease; }
+
+.collection-list__style2 .collection-list--btn {
+  background: #fff;
+  width: 48px;
+  min-width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  color: #000;
+  transition: all .2s ease; }
+  .collection-list__style2 .collection-list--btn:hover {
+    background-color: var(--primary);
+    color: #fff; }
+
+.collection-list__style3 .collection-list__content {
+  z-index: 2;
+  padding: 40px 24px 24px 32px;
+  background: rgba(0, 0, 0, 0);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 100%); }
+
+.collection-list__style3 .collection-list__title {
+  transition: all .3s ease; }
+
+.collection-list__style3 .collection-list--btn {
+  width: 48px;
+  min-width: 48px;
+  height: 48px; }
+
+.collection-list__style4 .collection-list__content {
+  z-index: 2;
+  padding: 40px 24px 26px;
+  min-height: 28%;
+  background: rgba(39, 39, 45, 0);
+  background: linear-gradient(180deg, rgba(39, 39, 45, 0) 0%, rgba(39, 39, 45, 0.4) 100%); }
+
+.collection-list__style4 .collection-list--btn {
+  padding-bottom: 6px;
+  transition: all .3s ease; }
+  .collection-list__style4 .collection-list--btn:after {
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: 0;
+    width: 24px;
+    height: 2px;
+    background-color: currentColor;
+    transition: all .3s ease; }
+  .collection-list__style4 .collection-list--btn:hover:after {
+    width: 100%; }
+
+.collection-list__style4 .collection-list__count {
+  min-width: 48px;
+  height: 48px;
+  background-color: rgba(255, 255, 255, 0.1); }

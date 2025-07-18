@@ -1,0 +1,78 @@
+<div class="gift-box-wrapper position-absolute top-0 mt-4 {% if section.settings.media_layout == 'thumbnails-right' %}start-0 ms-4 ps-3{% else %}end-0 me-4{% endif %}">
+    {{- 'gift-box.css' | asset_url | stylesheet_tag -}}
+      <div class="gift-box position-relative d-inline-block m-0 p-0" id="gift__box">
+        <div class="anchor layer-1"><img src="{{'gift-box.png' | asset_img_url: 'master'}}" alt="" /></div>
+        <div class="anchor layer-2"><img src="{{'gift-box.png' | asset_img_url: 'master'}}" alt="" /></div>
+        <div class="anchor layer-3"><img src="{{'gift-box.png' | asset_img_url: 'master'}}" alt="" /></div>
+        <div class="anchor open"><img src="{{'gift-box-open.png' | asset_img_url: 'master'}}" alt="" /></div>
+        <div id="my-canvas position-absolute top-50 start-50 translate-middle"></div>
+      </div>
+     <div class="gift-content" id="gift__content">
+      <div class="gift__content--wrapp">
+        <button type="button" class="gift__Close vela__btn-close position-absolute" id="gift__Close">
+          {% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+          {% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+      </button>
+        <h3 class="gift-title mb-2 mb-lg-3">{{ block.settings.product_gift_heading }}</h3>
+        <div class="gift-text">{{ block.settings.product_gift_text }}</div>
+       <div class="gift-code">{{ block.settings.product_gift_code }}</div>
+      </div>
+    </div>
+      <div class="gift-overlay position-fixed top-0 start-0 w-100 h-100 bg-transparent"></div>
+      <script src="{{ 'tsparticles.confetti.bundle.min.js' | asset_url }}" defer="defer"></script>
+      <script>
+        
+        document.getElementById("gift__box").addEventListener("click", () => {
+        
+            document.getElementById("gift__box").classList.add("active");
+            document.getElementById("gift__content").classList.add("active");
+            document.getElementsByClassName("gift-overlay")[0].classList.add("active");
+            const count = 200,
+            defaults = { origin: { y: 0.5 }, };
+            function fire(particleRatio, opts) {
+              confetti(
+                Object.assign({}, defaults, opts, {
+                  particleCount: Math.floor(count * particleRatio),
+                })
+              );
+            }
+            
+            fire(0.25, {
+              spread: 26,
+              startVelocity: 55,
+            });
+            
+            fire(0.2, {
+              spread: 60,
+            });
+            
+            fire(0.35, {
+              spread: 100,
+              decay: 0.91,
+              scalar: 0.8,
+            });
+            
+            fire(0.1, {
+              spread: 120,
+              startVelocity: 25,
+              decay: 0.92,
+              scalar: 1.2,
+            });
+            
+            fire(0.1, {
+              spread: 120,
+              startVelocity: 45,
+            });
+        });
+      document.getElementsByClassName("gift__Close")[0].addEventListener("click", () => {
+        document.getElementById("gift__box").classList.remove("active");
+        document.getElementById("gift__content").classList.remove("active");
+        document.getElementsByClassName("gift-overlay")[0].classList.remove("active");
+      });
+      document.getElementsByClassName("gift-overlay")[0].addEventListener("click", () => {
+        document.getElementById("gift__box").classList.remove("active");
+        document.getElementById("gift__content").classList.remove("active");
+        document.getElementsByClassName("gift-overlay")[0].classList.remove("active");
+      });
+    </script>
+</div>

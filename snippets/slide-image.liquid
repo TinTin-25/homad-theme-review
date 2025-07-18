@@ -1,0 +1,41 @@
+{%- liquid
+  assign classes = classes | default: 'd-block lazyload'
+  assign image_width = image.width
+  assign mobile = mobile | default: false
+
+  assign srcset = ''
+  assign image_360 = image | image_url: width: 360
+  assign srcset = srcset | append: image_360 | append: ' 360w'
+  assign image_540 = image | image_url: width: 540
+  assign srcset = srcset | append: ', ' | append: image_540 | append: ' 540w'
+  assign image_720 = image | image_url: width: 720
+  assign srcset = srcset | append: ', ' | append: image_720 | append: ' 720w'
+
+  unless mobile
+    assign image_1080 = image | image_url: width: 1080
+    assign srcset = srcset | append: ', ' | append: image_1080 | append: ' 1080w'
+    assign image_1512 = image | image_url: width: 1512
+    assign srcset = srcset | append: ', ' | append: image_1512 | append: ' 1512w'
+    assign image_1950 = image | image_url: width: 1950
+    assign srcset = srcset | append: ', ' | append: image_1950 | append: ' 1950w'
+    assign image_3000 = image | image_url: width: 3000
+    assign srcset = srcset | append: ', ' | append: image_3000 | append: ' 3000w'
+  endunless
+
+  assign image_regular = image | image_url: width: image_width
+  assign srcset = srcset | append: ', ' | append: image_regular | append: ' ' | append: image_width | append: 'w'
+-%}
+
+<link
+  rel="preload"
+  as="image"
+  href="{{ image | image_url: width: image_width }}"
+  imagesrcset="{{ srcset }}"
+  imagesizes="auto"
+/>
+<div
+  class="{{ classes }}"
+  data-bgset="{{ srcset }}"
+  data-sizes="auto"
+  data-parent-fit="cover">
+</div>

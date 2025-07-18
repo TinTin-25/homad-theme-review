@@ -1,0 +1,141 @@
+{%- include 'section_style' -%}
+<div class="vela-section product-lists overflow-hidden{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+    <div class="container{% if section.settings.full_with %}-fluid{% endif %}">
+        <div class="vela-section__inner">
+            <div class="vela-section__content ">
+                <div class="row g-3 g-lg-4 row-cols-1 row-cols-md-3">
+                    {%- for block in section.blocks -%}
+                        {%- assign proLimit = block.settings.limit -%}
+                        {%- assign proCollection = block.settings.collection_handle -%}
+                        <div class="col">
+                            <div class="product-lists__card">
+                                {%- if block.settings.heading != blank -%}
+                                    <h5 class="heading mb-0 fw-bold"><span>{{ block.settings.heading }}</span></h5>
+                                {%- endif -%}
+                                <div class="product-lists__card--wrapp">
+                                    {%- if proCollection == blank or collections[proCollection] == empty or collections[proCollection].products_count == 0 -%}
+                                        {% include 'onboarding-featured-products', product_style: 'list', number: proLimit %}
+                                    {%- else -%}
+                                        {%- for product in collections[proCollection].products limit: proLimit -%}
+                                            <div class="mt-3 mt-md-4">
+                                                {% include 'product-list-style' %}
+                                            </div>
+                                        {%- endfor -%}
+                                    {%- endif -%}
+                                </div>
+                            </div>
+                        </div>
+                    {%- endfor -%}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%- assign item = nil -%}
+{% schema %}
+    {
+        "name": "Product Lists",
+        "tag": "section",
+        "class": "velaFramework",
+        "disabled_on": {
+            "groups": ["header", "footer"]
+        },
+        "settings":[
+            {
+                "type": "header",
+                "content": "t:sections.global.settings.header_section.content"
+            },
+            {
+                "type": "checkbox",
+                "id": "full_with",
+                "label": "t:sections.global.settings.full_width.label"
+            },
+            {
+                "type": "text",
+                "id": "max_with",
+                "label": "t:sections.global.settings.max_with.label",
+                "info": "t:sections.global.settings.max_with.info"
+            },
+            {
+                "type": "color",
+                "id": "color_bg",
+                "label": "t:sections.global.settings.bg_color.label",
+                "default": "rgba(0,0,0,0)"
+            },
+            {
+                "type": "text",
+                "id": "padding_block",
+                "label": "t:sections.global.settings.padding.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding.info"
+            },
+            {
+                "type": "text",
+                "id": "padding_block_m",
+                "label": "t:sections.global.settings.padding_mobile.label",
+                "placeholder": "0px 0px",
+                "info": "t:sections.global.settings.padding_mobile.info"
+            },
+            {
+                "type": "text",
+                "id": "margin_block",
+                "label": "t:sections.global.settings.margin.label",
+                "placeholder": "0px 0px"
+            }
+        ],
+        "blocks": [
+            {
+                "type": "item",
+                "name": "Product list item",
+                "settings": [
+                    {
+                        "type": "html",
+                        "id": "heading",
+                        "label": "Heading",
+                        "default": "Heading"
+                    },
+                    {
+                        "type": "collection",
+                        "id": "collection_handle",
+                        "label": "Collection"
+                    },
+                    {
+                        "type": "range",
+                        "id": "limit",
+                        "min": 3,
+                        "max": 20,
+                        "step": 1,
+                        "label": "Limit",
+                        "default": 6
+                    }
+                ]
+            }
+            
+        ],
+        "presets": [
+            {
+                "name": "Product Lists",
+                "blocks": [
+                    {
+                        "type":"item",
+                        "settings": {
+                            "collection_handle": "frontpage"
+                        }
+                    },
+                    {
+                        "type":"item",
+                        "settings": {
+                            "collection_handle": "frontpage"
+                        }
+                    },
+                    {
+                        "type":"item",
+                        "settings": {
+                            "collection_handle": "frontpage"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

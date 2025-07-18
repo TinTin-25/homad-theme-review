@@ -1,0 +1,75 @@
+{%- unless product.has_only_default_variant -%}
+  {%- liquid
+    assign class = class | default: ''
+    assign color_names = settings.product_cart_swatch_label | split: ','
+    assign swatch_position = swatch_position | default: 'start'
+    assign swatch_type = settings.product_card_swatches_type
+  -%}
+  <div class="product-card__swatch {{ class }}">
+    {% for option in product.options_with_values %}
+      {%- assign option_name_downcase = option.name | downcase -%}
+
+      {%- if color_names contains option_name_downcase -%}
+        {%- liquid
+          assign variant_option = 'option' | append: forloop.index
+          assign option_index = 0
+          assign more_option = 0
+        -%}
+
+        {%- if product.variants.size > 0 -%}
+          <ul class="product-card__swatch--list d-flex flex-wrap justify-content-{{ swatch_position }} list-unstyled mb-0">
+            {% for value in option.values %}
+              {% for variant in product.variants %}
+                {%- assign value = variant.options[option_index] -%}
+
+                {%- if variant[variant_option] == value -%}
+                  {%- assign option_index = option_index | plus: 1 -%}
+                  <li class="rounded-circle position-relative show-tooltip{% if swatch_type == 'variant' %} variant-has-image{% endif %}{% if option_index == 1 %} is-active{% endif %}{% if option_index > 4 %} extendlink more_option_item{% endif %}">
+
+                    {%- liquid
+                      assign color_handleize = value | handleize
+                      assign color_name = color_handleize | replace: '-', ''
+                      assign style_bg_color = 'background-color: ' | append: color_name | append: ';'
+                      assign style_bg_image = ''
+                      assign option_label_classes = ''
+
+                      if swatch_type == 'variant'
+                        if variant.featured_image
+                          assign variant_image_url = variant.featured_image | image_url: width: 100
+                          assign style_bg_image = 'background-image: url(' | append: variant_image_url | append: ');'
+                        endif
+                      elsif swatch_type == 'metafields'
+                        assign option_label_classes = ' vela-swatch--' | append: color_handleize
+                      endif
+
+                      assign option_label_attributes = 'style="' | append: style_bg_color | append: style_bg_image | append: '"'
+                    -%}
+
+                    <label
+                      class="d-block rounded-circle overflow-hidden{{ option_label_classes }}"
+                      {{ option_label_attributes }}
+                    ></label>
+                    <div class="tooltip bs-tooltip-top" role="tooltip">
+                      <div class="tooltip-arrow"></div>
+                      <div class="tooltip-inner">{{ value | escape }}</div>
+                    </div>
+                    <div class="d-none">
+                      {% if variant.image.src != blank %}
+                        <div class="swatch-variant_item" data-src="{{ variant.image.src | product_img_url: 'master'}}" data-bgset="{% render 'bgset', image: variant.image, crop: image_crop, image_ratio: settings.image_ratio %}"></div>
+                      {%- endif -%}
+                    </div>
+                  </li>
+                  {%- if option_index > 4 -%} {%- assign more_option = more_option | plus: 1 -%} {%- endif -%}
+                  {%- break -%}
+                {%- endif  -%}
+              {% endfor %}
+            {% endfor %}
+            {%- if more_option > 0 -%}
+              <li class="more_option more_option_active bg-transparent position-relative">{{ more_option }}</li>
+            {%- endif -%}
+          </ul>
+        {%- endif -%}
+      {%- endif -%}
+    {% endfor %}
+  </div>
+{%- endunless -%}

@@ -1,0 +1,254 @@
+{% if section.settings.image_bg_parallax %}
+    <script src="{{ 'jarallax.min.js' | asset_url }}"></script>
+    {{- 'jarallax.min.css' | asset_url | stylesheet_tag -}}
+{% endif %}
+{{- 'section-collection-hero.css' | asset_url | stylesheet_tag -}}
+{%- capture section_style -%}
+    {%- if section.settings.color_bg != 'rgba(0,0,0,0)' -%}
+        --st-bg-cl: {{ section.settings.color_bg }};
+    {%- endif -%}
+    {%- if section.settings.padding_block != blank -%}
+       --st-pd-dt: {{ section.settings.padding_block }};
+    {%- endif -%}
+    {%- if section.settings.padding_block_m != blank -%}
+        --st-pd-mb: {{ section.settings.padding_block_m }};
+     {%- endif -%}
+{%- endcapture -%}
+{%- capture extend_style -%}
+    {%- if section.settings.margin_block_d != blank -%}
+        --et-mg: {{ section.settings.margin_block_d }};
+    {%- endif -%}
+    {%- if section.settings.margin_block_m != blank -%}
+        --et-mg-mb: {{ section.settings.margin_block_m }};
+    {%- endif -%}
+{% endcapture %}
+<div class="collection-hero overflow-hidden"{% if extend_style != blank  %} style="{{- extend_style -}}" {% endif %}>
+    <div class="container-full">
+        <div class="vela-section__inner">
+            {%- capture bg_color -%}
+                {% assign opacity = section.settings.opacity | times: 0.01 %}
+                {% assign overlay = section.settings.content_color_bg | color_modify: 'alpha', opacity %}
+                style="background-color: {{ overlay }}; {% if section.settings.content_max_with != blank %}max-width: {{ section.settings.content_max_with }};{% endif %}{% if section.settings.padding_content != blank %}--ct-pd: {{ section.settings.padding_content }};{% endif %}{% if section.settings.padding_content_m != blank %}--ct-pd-m: {{ section.settings.padding_content_m }};{% endif %}"
+            {%- endcapture -%}
+            {%- liquid 
+                assign col-title = ''
+                assign col-desc = ''
+                assign col-img = ''
+                if section.blocks.size > 0
+                    for block in section.blocks
+                        if block.settings.parent_handle == collection.handle 
+                            if block.settings.title != blank
+                                assign col-title = block.settings.title
+                            endif
+                            if block.settings.desc != blank
+                                assign col-desc = block.settings.desc
+                            endif
+                            if block.settings.image
+                                assign col-img = block.settings.image
+                            endif
+                            break
+                        endif
+                    endfor
+                endif
+                if col-title == ''
+                    assign col-title = collection.title
+                endif
+                if col-desc == ''
+                    assign col-desc = collection.description | default: section.settings.desc
+                endif
+                unless col-img != ''
+                    if section.settings.image
+                        assign col-img = section.settings.image
+                    elsif collection.image
+                        assign col-img = collection.image
+                    endif
+                endunless    
+            -%}
+            <div  data-speed="0" class="jarallax vela-section vela-section__content d-flex justify-content-center" style="{% unless section.settings.image_bg_parallax %}{% if col-img %}--st-bg-img: url({{ col-img | img_url: 'master' }});{% endif %}{% endunless %}{{ section_style }}">
+                {% if section.settings.image_bg_parallax and col-img %}
+                    <img class="jarallax-img" src="{{ col-img | img_url: 'master' }}" alt="" loading="lazy" />
+                {% endif %}
+                <div class="collection-hero__box overflow-hidden rounded-2 text-center" {{ bg_color }}>
+                    <h1 class="collection-hero__title h2 lh-1 mb-1 mb-lg-2"> 
+                        {{- col-title -}}
+                    </h1>
+                    {%- if col-desc != blank -%}
+                        <div class="collection-hero__desc heading-color fw-medium">
+                            {{ col-desc }}
+                        </div>
+                    {%- endif -%}
+                </div>
+            </div>
+        </div>       
+    </div>
+</div>
+{% if section.settings.image_bg_parallax %}
+<script type="text/javascript">
+    /* init Jarallax */
+    jarallax(document.querySelectorAll(".jarallax"));
+</script>
+{% endif %}
+{% schema %}
+{
+	"name": "Collection hero",
+    "tag": "section",
+    "class": "velaFramework",
+    "enabled_on": {
+        "templates": ["collection"]
+    },
+	"settings": [
+		{
+            "type": "header",
+            "content": "t:sections.global.settings.header_section.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "full_with",
+            "label": "t:sections.global.settings.full_width.label"
+        },
+        {
+            "type": "text",
+            "id": "max_with",
+            "label": "t:sections.global.settings.max_with.label",
+            "info": "t:sections.global.settings.max_with.info"
+        },
+        {
+            "type": "color",
+            "id": "color_bg",
+            "label": "t:sections.global.settings.bg_color.label",
+            "default": "rgba(0,0,0,0)"
+        },
+        {
+            "type": "text",
+            "id": "padding_block",
+            "label": "t:sections.global.settings.padding.label",
+            "placeholder": "0px 0px",
+            "info": "t:sections.global.settings.padding.info",
+            "default": "80px 0"
+        },
+        {
+            "type": "text",
+            "id": "padding_block_m",
+            "label": "t:sections.global.settings.padding_mobile.label",
+            "placeholder": "0px 0px",
+            "info": "t:sections.global.settings.padding_mobile.info",
+            "default": "60px 0"
+        },
+        {
+            "type": "text",
+            "id": "margin_block_d",
+            "label": "Margin on desktop",
+            "placeholder": "0px 0px",
+            "info": "Ex: 0px 0px 0px 0px and use desktop only"
+        },
+        {
+            "type": "text",
+            "id": "margin_block_m",
+            "label": "Margin on mobile",
+            "placeholder": "0px 0px",
+            "info": "Ex: 0px 0px 0px 0px and use mobile only"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.global.settings.header_settings.content"
+        },
+        {
+            "type": "html",
+            "id": "desc",
+            "label": "Description",
+            "info": "Default description"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image",
+            "info": "Default image"
+        },
+        {
+            "type": "checkbox",
+            "id": "image_bg_parallax",
+            "label": "Background parallax ?",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Content"
+        },
+        {
+            "type": "text",
+            "id": "content_max_with",
+            "label": "Max width?(px)",
+            "default": "600px",
+            "info": "ex: 500px"
+        },
+        {
+            "type": "text",
+            "id": "padding_content",
+            "label": "Padding on desktop",
+            "placeholder": "0px 0px",
+            "default": "40px",
+            "info": "Use desktop only"
+        },
+        {
+            "type": "text",
+            "id": "padding_content_m",
+            "label": "Padding on mobile",
+            "placeholder": "0px 0px",
+            "default": "20px",
+            "info": "Ex: 0px 0px 0px 0px and use mobile only"
+        },
+        {
+            "type": "color",
+            "id": "content_color_bg",
+            "label": "Content Background Color",
+            "default": "#1F1F27"
+        },
+        {
+            "type": "range",
+            "id": "opacity",
+            "label": "Opacity",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "default": 30
+        }
+	],
+	"blocks": [
+		{
+            "type": "collection",
+            "name": "collection",
+            "settings": [
+                {
+                    "type": "collection",
+                    "id": "parent_handle",
+                    "label": "Select collection"
+                },
+                {
+					"type": "text",
+                    "id": "title",
+					"label": "Title",
+                    "info": "Default is collection title if it's blank"
+				},
+                {
+                    "type": "html",
+                    "id": "desc",
+                    "label": "Description",
+                    "info": "Default is collection description if it's blank"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image",
+                    "info": "Default is collection image if it's blank"
+                }
+            ]
+		}
+	],
+    "presets": [
+        {
+            "name": "Collection hero"
+        }
+    ]
+}
+{% endschema %}

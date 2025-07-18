@@ -1,0 +1,310 @@
+{%- if section.blocks.size > 0 -%}
+  <facet-filters-form class="product-filter">
+    <form id="FacetFiltersForm" class="product-filter__form collapse">
+      <div class="product-filter__wrapper row g-0 g-md-4 g-xl-5 row-cols-1 row-cols-md-4 row-cols-lg-5 d-md-flex flex-md-wrap">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'categories' -%}
+              <div  class="product-filter__top">
+                {%- if block.settings.categories_title != blank -%}
+                  <a class="filter-top__title d-flex align-items-center justify-content-between collapsed" data-bs-toggle="collapse" href="#filter-top__categories" role="button" aria-expanded="true" aria-controls="collapseExample">                    
+                    {{ block.settings.categories_title }}
+                    <span class="btn-arrow">
+                      {%- render 'icons', icon: 'angle-down', attr: 'width="10" height="6"' -%}
+                    </span>
+                  </a>
+                {%- endif -%}
+                <div id="filter-top__categories" class="filter-top__content collapse" data-bs-parent="#offcanvasFilterBottom">
+                  <div class="filter-top__inner">
+                    {%- if linklists[collection.handle].levels != empty -%}
+                      {%- assign categoriesHandle = collection.handle -%}
+                    {%- else -%}
+                      {%- assign categoriesHandle = block.settings.categories_handle -%}
+                    {%- endif -%}
+                    {% if linklists[collection.handle].levels != empty %}
+                      <ul class="sidebarListCategories sub-categories m-0 list-unstyled">
+                        <li class="sidebarBlogCateItem">
+                          <a class="active" href="{{ routes.all_products_collection_url }}?{{ layoutview }}">
+                            {% render 'icons', icon: 'square', class: 'icon square', attr: 'width="18" height="18"' %}
+                            {% render 'icons', icon: 'square-checked', class: 'icon square-checked', attr: 'width="18" height="18"' %}
+                            <span class="line-clamp-1">{{- 'sections.collection_template.all_categories' | t -}}</span>
+                            {%- if block.settings.categories_count -%}
+                              <span class="cat-count float-end">{{ collection.all_products_count }}</span>
+                            {%- endif -%}
+                          </a>
+                        </li>
+                        <li class="sidebarBlogCateItem">
+                          <a class="active" href="#">
+                            {% render 'icons', icon: 'square', class: 'icon square', attr: 'width="18" height="18"' %}
+                            {% render 'icons', icon: 'square-checked', class: 'icon square-checked', attr: 'width="18" height="18"' %}
+                            <span class="line-clamp-1">{{- linklists[categoriesHandle].title -}}</span>
+                            {%- if block.settings.categories_count -%}
+                              <span class="cat-count float-end">{{ collections[categoriesHandle].products_count }}</span>
+                            {% endif %}
+                          </a>
+                          <div class="sub-categories__item">
+                    {%-  endif -%}
+                      {%- if linklists[categoriesHandle].levels != empty -%}
+                        <ul class="sidebarListCategories m-0 list-unstyled">
+                          {% for linkItem in linklists[categoriesHandle].links %}
+                            {%- assign hasDropdown = false -%}
+                            {%- assign subItem = forloop.index -%}
+                            {%- if linklists[linkItem.handle] != empty -%}
+                              {%- assign hasDropdown = true -%}
+                            {%- endif -%}
+                            <li class="sidebarBlogCateItem">
+                              <a class="{% if linkItem.active %}active{% endif %}{% if hasDropdown %} pe-4{% endif %}" href="{{ linkItem.url }}?{{ layoutview }}">
+                                {% render 'icons', icon: 'square', class: 'icon square', attr: 'width="18" height="18"' %}
+                                {% render 'icons', icon: 'square-checked', class: 'icon square-checked', attr: 'width="18" height="18"' %}
+                                <span class="line-clamp-1">{{- linkItem.title -}}</span>
+                                {% if block.settings.categories_count %}
+                                  {%- assign cat-handle = linkItem.url | split: "/collections/" | last -%}
+                                  <span class="cat-count float-end">{% if collections[cat-handle].products_count != empty %}{{ collections[cat-handle].products_count }}{% else %}0{% endif %}</span>
+                                {% endif %}
+                              </a>
+                              {%- if hasDropdown -%}
+                                <span class="arrow collapsed" data-bs-toggle="collapse" data-bs-target="#subCategory{{ forloop.index }}" aria-expanded="false"  aria-controls="#subCategory{{ forloop.index }}">
+                                  {% render 'icons', icon: 'arrow-down', class: 'icon arrow-down' %}
+                                </span>
+                                <div id="subCategory{{ forloop.index }}" class="collapse">
+                                  <ul class="sidebarListCategories subListCategories m-0 list-unstyled">
+                                    {% for linkChildItem in linklists[linkItem.handle].links %}
+                                      {%- assign hasDropdown = false -%}
+                                      {%- if linklists[linkChildItem.handle] != empty -%}
+                                        {%- assign hasDropdown = true -%}
+                                      {%- endif -%}
+                                      <li class="sidebarBlogCateItem">
+                                        <a  class="{% if linkChildItem.active %} active{% endif %}{% if hasDropdown %} pe-4{% endif %}" href="{{ linkChildItem.url }}?{{ layoutview }}">
+                                          {% render 'icons', icon: 'square', class: 'icon square', attr: 'width="18" height="18"' %}
+                                          {% render 'icons', icon: 'square-checked', class: 'icon square-checked', attr: 'width="18" height="18"' %}
+                                          <span class="line-clamp-1">{{- linkChildItem.title -}}</span>
+                                          {% if block.settings.categories_count %}
+                                            {%- assign cat-handle = linkChildItem.url | split: "/collections/" | last -%}
+                                            <span class="cat-count float-end">{% if collections[cat-handle].products_count != empty %}{{ collections[cat-handle].products_count }}{% else %}0{% endif %}</span>
+                                          {% endif %}
+                                        </a>
+                                        {%- if hasDropdown -%}
+                                          <span class="arrow collapsed" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#subCategory{{ subItem }}{{ forloop.index }}" aria-controls="#subCategory{{ subItem }}{{ forloop.index }}">
+                                            {% render 'icons', icon: 'arrow-down', class: 'icon arrow-down' %}
+                                          </span>
+                                          <div id="subCategory{{ subItem }}{{ forloop.index }}" class="collapse">
+                                            <ul class="sidebarListCategories subListCategories m-0 list-unstyled">
+                                              {% for linkChildItem2 in linklists[linkChildItem.handle].links %}
+                                                <li class="sidebarBlogCateItem">
+                                                  <a href="{{ linkChildItem2.url }}?{{ layoutview }}">
+                                                    {% render 'icons', icon: 'square', class: 'icon square', attr: 'width="18" height="18"' %}
+                                                    {% render 'icons', icon: 'square-checked', class: 'icon square-checked', attr: 'width="18" height="18"' %}
+                                                    <span class="line-clamp-1">{{- linkChildItem2.title -}}</span>
+                                                    {% if block.settings.categories_count %}
+                                                      {%- assign cat-handle = linkChildItem2.url | split: "/collections/" | last -%}
+                                                      <span class="cat-count float-end">{% if collections[cat-handle].products_count != empty %}{{ collections[cat-handle].products_count }}{% else %}0{% endif %}</span>
+                                                    {% endif %}
+                                                  </a>
+                                                </li>
+                                              {% endfor %}
+                                            </ul>
+                                          </div>
+                                        {%- endif -%}
+                                      </li>
+                                    {% endfor %}
+                                  </ul>
+                                </div>
+                              {%- endif -%}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      {%- endif -%}
+                    {% if linklists[collection.handle].levels != empty %}
+                          </div>
+                        </li>
+                      </ul>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+            {%- when 'filter' -%}
+              {%- if results.terms -%}
+                <input type="hidden" name="type" value="product" />
+                <input type="hidden" name="q" value="{{ results.terms | escape }}">
+                <input name="options[prefix]" type="hidden" value="last">
+              {%- endif -%}
+              {%- if template.suffix != blank -%}
+                <input type="hidden" name="view" value="{{ template.suffix }}" />
+              {%- endif -%}
+              {%- assign color_names = settings.product_cart_swatch_label | split: ',' -%}
+              {%- for filter in results.filters -%}
+                {%- assign total_active_values = total_active_values | plus: filter.active_values.size -%}
+                {% case filter.type %}
+                {% when 'list' %}
+                  <div class="product-filter__top position-relative js-filter" data-index="{{ forloop.index }}">
+                    <a class="filter-top__title d-flex align-items-center justify-content-between collapsed" data-bs-toggle="collapse" href="#filter{{ forloop.index }}" role="button" aria-expanded="true">
+                      {{ filter.label | escape }}
+                      <span class="facets__selected{% if filter.active_values.size == 0 %} d-none{% endif %}">{{ filter.active_values.size }}</span>
+                      <span class="btn-arrow">
+                        {%- render 'icons', icon: 'angle-down', attr: 'width="10" height="6"' -%}
+                      </span>
+                    </a>
+                    <div id="filter{{ forloop.index }}" class="filter-top__content collapse" data-bs-parent="#offcanvasFilterBottom">
+                      {%- assign option_downcased = filter.label | handleize | replace: "-",""  -%}
+                      {%- assign is_color = false -%}
+                      {%- assign is_size = false -%}
+                      {%- if color_names contains option_downcased -%}
+                        {%- assign is_color = true -%}
+                      {% endif %}
+                      {%- if option_downcased contains 'size'-%}
+                        {%- assign is_size = true -%}
+                      {% endif %}
+                      <div class="filter-top__inner{% unless block.settings.filter_style == "filter_inline"%} scroll-style{% endunless %}{% if is_color or is_size %} py-md-2{% endif %}">
+                        <ul class="facets__list list-unstyled{% if is_color or is_size %} {{ block.settings.filter_style }}{% endif %} mb-0" >
+                          {%- for value in filter.values -%}
+                            <li class="list-menu__item facets__item position-relative">
+                              <label for="Filter-{{ filter.label | handleize }}-{{ forloop.index }}" class="facet-checkbox{% if value.count == 0 and value.active == false %} facet-checkbox--disabled{% endif %}{% if is_color %} facet-checkbox--color{% endif %}">
+                                <input type="checkbox"
+                                  id="Filter-{{ filter.label | handleize }}-{{ forloop.index }}"
+                                  name="{{ value.param_name }}"
+                                  value="{{ value.value }}"
+                                  {% if value.active %}checked{% endif %}
+                                  {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                                >
+                                {%- if is_color -%}
+                                  {%- liquid
+                                    assign color_handleize = value.value | handleize
+                                    assign color_name = color_handleize | replace: '-', ''
+                                    assign style_bg_color = 'background-color: ' | append: color_name | append: ';'
+                                    assign color_label_classes = 'd-flex position-relative color-box'
+                                    if block.settings.filter_style == 'filter_list'
+                                      assign color_label_classes = color_label_classes | append: ' me-2'
+                                    endif
+                                    assign color_label_classes = color_label_classes | append: ' vela-swatch--' | append: color_handleize
+                                    assign color_attributes = 'style="' | append: style_bg_color | append: '"'
+                                  -%}
+                                  <span
+                                    class="{{ color_label_classes }}"
+                                    {{ color_attributes }}
+                                  ></span>
+                                  {%- if block.settings.filter_style == "filter_inline" -%}
+                                    <div class="tooltip bs-tooltip-top start-50 translate-middle-x" role="tooltip">
+                                      <div class="tooltip-arrow start-50 translate-middle-x"></div>
+                                      <div class="tooltip-inner">
+                                        {{- value.label | escape -}}
+                                      </div>
+                                    </div>
+                                    <span class="vela__btn-close position-absolute">
+                                      <svg width="8" height="8" class= 'icon-line position-absolute top-50 start-50' viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 7L7 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                      <svg width="8" height="8" class= 'icon-line1 position-absolute top-50 start-50' viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 7L7 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                    </span>
+                                  {%- endif -%}
+                                {%- endif -%}
+                                {% unless is_color %}
+                                  {% render 'icons', icon: 'square', class: 'icon square', attr: 'width="18" height="18"' %}
+                                  {% render 'icons', icon: 'square-checked', class: 'icon square-checked', attr: 'width="18" height="18"' %}
+                                {%- endunless -%}
+                                {%- if block.settings.filter_count -%}
+                                  <span class="number-item position-absolute{% if is_color or is_size %} list-count{% endif %}">{{ value.count }}</span>
+                                {%- endif -%}
+                                <span class="text">{{- value.label | escape -}}</span>
+                              </label>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                {% when 'price_range' %}
+                  <div class="product-filter__top position-relative" data-index="{{ forloop.index }}">
+                    <a class="filter-top__title d-flex align-items-center justify-content-between collapsed" data-bs-toggle="collapse" href="#filter{{ forloop.index }}" role="button" aria-expanded="true">
+                      {{ filter.label | escape }}
+                      <span class="btn-arrow">
+                      {%- render 'icons', icon: 'angle-down', attr: 'width="10" height="6"' -%}
+                      </span>
+                    </a>
+                    <div id="filter{{ forloop.index }}" class="product-filter-price__content filter-top__content collapse" data-bs-parent="#offcanvasFilterBottom">
+                      <div class="filter-top__inner py-md-2">
+                        {%- liquid
+                          assign currencies_using_comma_decimals = 'ANG,ARS,BRL,BYN,BYR,CLF,CLP,COP,CRC,CZK,DKK,EUR,HRK,HUF,IDR,ISK,MZN,NOK,PLN,RON,RUB,SEK,UYU,VES,VND' | split: ','
+                          assign uses_comma_decimals = false
+                          if currencies_using_comma_decimals contains cart.currency.iso_code
+                            assign uses_comma_decimals = true
+                          endif
+                      -%}
+                        <price-range class="facets__price position-relative d-block">
+                          {%- if uses_comma_decimals -%}
+                            {%- assign max_price_amount = filter.range_max | plus: 1 | money_without_currency | replace: '.', '' | split: ',' | first | remove: ' ' -%}
+                          {%- else -%}
+                            {%- assign max_price_amount = filter.range_max | plus: 1 | money_without_currency | replace: ',', '' | split: '.' | first | remove: ' ' -%}
+                          {%- endif -%}
+                          {%- if uses_comma_decimals -%}
+                            {%- if filter.max_value.value -%}
+                              {%- assign range_max = filter.max_value.value | money_without_currency | replace: '.', '' | split: ',' | first -%}
+                            {%- endif -%}
+                            {%- if filter.min_value.value -%}
+                              {% assign range_min =  filter.min_value.value | money_without_currency | replace: '.', '' | split: ',' | first %}
+                            {%- endif -%}
+                          {%- else -%}
+                            {%- assign range_max = filter.max_value.value | money_without_currency | replace: ',', '' | split: '.' | first -%}
+                            {%- if filter.min_value.value -%}
+                              {% assign range_min = filter.min_value.value | money_without_currency | replace: ',', ''  | split: '.' | first %}
+                            {%- endif -%}
+                          {%- endif -%}
+                          <div class="price-slider-range mb-2">   
+                            <div id="slider-range" class="price-filter-range" name="rangeInput" data-min="0" data-prefix="{{ cart.currency.symbol }}" data-max="{{ max_price_amount }}"></div>
+                          </div>
+                          <div class="d-flex align-items-center">
+                            <div class="position-relative">
+                              <span class="prefix position-absolute top-50 start-0 translate-middle-y ms-1 text-secondary">{{ cart.currency.symbol }}</span>
+                              <input
+                                id="min_price"
+                                {% comment %} id="Filter-{{ filter.label | escape }}-GTE" {% endcomment %}
+                                class="text-center rounded-1"
+                                name="{{ filter.min_value.param_name }}"
+                                {%- if filter.min_value.value -%}
+                                  value ="{{ range_min }}"
+                                {%- endif -%}
+                                type="number"
+                                placeholder="0"
+                                min="0"
+                                max="{{ max_price_amount }}"
+                              />
+                            </div>
+                            <div class="position-relative text-center mx-1">{{ 'sections.collection_template.to' | t }}</div>
+                            <div class="position-relative">
+                              <span class="prefix position-absolute top-50 start-0 translate-middle-y ms-1 text-secondary">{{ cart.currency.symbol }}</span>
+                              <input
+                                id="max_price"
+                                {% comment %} id="Filter-{{ filter.label | escape }}-LTE" {% endcomment %}
+                                class="text-center rounded-1"
+                                name="{{ filter.max_value.param_name }}"
+                                value="{{ range_max }}"
+                                type="number"
+                                min="0"
+                                placeholder="{{ max_price_amount }}"
+                                max="{{ max_price_amount }}"
+                              />
+                            </div>
+                          </div>
+                        </price-range>
+                      </div>
+                    </div>
+                  </div>
+                {% endcase %}
+              {%- endfor -%}
+              {%- if template.suffix != blank -%}
+                <input type="hidden" name="view" value="{{ template.suffix }}" />
+              {%- endif -%}
+          {% endcase %}
+        {%- endfor -%}
+      </div>
+      {% if results.current_vendor or results.current_type %}
+        <input type="hidden" name="q" value="{{ results.current_vendor }}{{ results.current_type }}">
+      {% endif %}
+    </form>
+    <button class="collection-filter__button d-none d-md-flex align-items-center border-0 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#FacetFiltersForm" aria-expanded="false">
+      {% render 'icons', icon: 'filter', class: 'icon-filter', attr: 'width="18" height="18"' %}
+      {% render 'icons', icon: 'close', class: 'icon-close', attr: 'width="18" height="18"' %}
+      <span >{{ 'collections.filter.filter' | t }}</span>
+      {%- if total_active_values > 0 -%}
+        <span class="filter-total">{{ total_active_values }}</span>
+      {%- endif -%}
+    </button>
+  </facet-filters-form>
+{%- endif -%}

@@ -1,0 +1,49 @@
+.our-team .our-team__social-list a:hover {
+  color: var(--body-color) !important;
+  border-color: var(--body-color) !important; }
+
+.our-team.grid__style .our-team__social-list a {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  color: #999;
+  border: 1px solid var(--border-color);
+  margin: 5px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  text-align: center; }
+  .our-team.grid__style .our-team__social-list a svg {
+    height: 14px;
+    width: 14px; }
+
+.our-team.grid1__style .our-team__social {
+  visibility: hidden;
+  margin-right: -50px;
+  opacity: 0;
+  transition: all .3s ease; }
+
+.our-team.grid1__style:hover .our-team__social {
+  visibility: visible;
+  margin-right: 0;
+  opacity: 1; }
+
+.our-team.grid1__style .our-team__social-list a {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  color: var(--body-color);
+  margin: 8px 8px 0 0;
+  transition: all 0.2s ease;
+  text-align: center; }
+  .our-team.grid1__style .our-team__social-list a svg {
+    height: 16px;
+    width: 16px; }
+  .our-team.grid1__style .our-team__social-list a:hover {
+    color: var(--primary); }

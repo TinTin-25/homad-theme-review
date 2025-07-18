@@ -1,0 +1,33 @@
+{%- if product.compare_at_price > product.price -%}
+    {%- assign on_sale = true -%}
+{%- endif -%}
+{%- assign image_crop = '' -%}
+{%- if settings.crop -%}
+    {%- assign image_crop = 'center' -%}
+{%- endif -%}
+<div class="product-card product-list__style1 col-12 d-flex">
+    <div class="product-card__image-wrapper position-relative">
+        <a class="product-card__image-link rounded-2" href="{{ product.url }}" title="{{ product.title | strip_html }}">
+            <div class="product-card__img-primary">
+                {% render 'img-global', image: product.featured_media.preview_image, image_ratio: settings.image_ratio, crop: image_crop, image_style: true %}
+            </div>
+        </a>
+    </div>
+    <div class="product-card__content ps-3">
+        <div class="product-card__content position-relative pt-1">
+            <div class="product-card__content--inner">
+                <div class="product-card__name line-clamp-1 mb-2 fs-6">
+                    <a href="{{ product.url }}" title="{{ product.title | strip_html }}">{{ product.title }}</a>
+                </div>
+                {%- if settings.product_reviews_enable and settings.product_card_review -%}
+                    <div class="product-card__review product-review mb-2">
+                        {% render 'product-review-card', product: product %}
+                    </div>
+                {%- endif -%}
+                <div class="product-group-price d-flex align-items-center w-100 lh-1">
+                    {% render 'product-card-price', product: product, on_sale: on_sale %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

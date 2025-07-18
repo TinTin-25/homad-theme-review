@@ -1,0 +1,197 @@
+{%- assign layout_style = layout_style | default: 'grid' -%}
+{%- if layout_style == 'list' -%}
+    <div class="our-team row align-items-center text-{{ section.settings.text_align }}" {{ layout_style }}__style>
+        <div class="our-team__image col-12 col-md-6 col-xl-5 mb-3 mb-sm-0">
+            <div class="aboutIcon overflow-hidden rounded-2">
+                {%- if block.settings.image != blank -%}
+                    {% render 'img-global', image: block.settings.image, image_ratio: section.settings.image_ratio, crop: image_crop %}
+                {%- else -%} 
+                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+            </div>
+        </div>
+        <div class="our-team__content col-12 col-md-6 col-xl-7">
+            {%- if block.settings.title != blank -%}
+                <h5 class="our-team__name mb-1">{{ block.settings.title }}</h5>
+            {%- endif -%}
+            {%- if block.settings.position != blank -%}
+                <div class="our-team__position text-color-light">{{ block.settings.position }}</div>
+            {%- endif -%}
+            {%- if block.settings.desc != blank -%}
+                <div class="our-team__desc mb-3">{{ block.settings.desc }}</div>
+            {%- endif -%}
+            {%- if block.settings.fa_link != blank or block.settings.tw_link != blank or block.settings.in_link != blank  or block.settings.instagram_link != blank -%}
+                <div class="our-team__social text-center">
+                    <ul class="our-team__social-list mb-0 list-unstyled d-flex justify-content-{{ section.settings.text_align }}">
+                        {%- if block.settings.fa_link != blank -%}
+                            <li class="facebook">
+                                <a target="_blank" href="{{ block.settings.fa_link }}" class="d-block   mb-2 btn-social--facebook">
+                                    {%- render 'icons', icon: 'facebook' -%}
+                                </a>
+                            </li>
+                        {%- endif -%}
+                        {%- if block.settings.tw_link != blank -%}
+                            <li class="twitter">
+                                <a target="_blank" href="{{ block.settings.tw_link }}" class="d-block   mb-2 btn-social--twitter">
+                                    {%- render 'icons', icon: 'twitter' -%}
+                                </a>
+                            </li>
+                        {%- endif -%}
+                        {%- if block.settings.in_link != blank -%}
+                            <li class="youtube">
+                                <a target="_blank" href="{{ block.settings.in_link }}"  class="d-block   mb-2 btn-social--youtube">
+                                    <i class="fa fa-youtube"></i>
+                                    {%- render 'icons', icon: 'youtube' -%}
+                                </a>
+                            </li>
+                        {%- endif -%}
+                        {%- if block.settings.instagram_link != blank -%}
+                            <li class="instagram">
+                                <a target="_blank" href="{{ block.settings.instagram_link }}" class="d-block  btn-social--instagram">
+                                    {%- render 'icons', icon: 'instagram' -%}
+                                </a>
+                            </li>
+                        {%- endif -%}
+                        {%- if block.settings.tiktok_link != blank -%}
+                            <li class="tiktok">
+                                <a target="_blank" href="{{ block.settings.tiktok_link }}" class="d-block  btn-social--tiktok">
+                                    {%- render 'icons', icon: 'tiktok' -%}
+                                </a>
+                            </li>
+                        {%- endif -%}
+                    </ul>
+                </div>
+            {%- endif -%}
+        </div>
+    </div>
+{%- elsif layout_style == 'grid1' -%}
+    <div class="our-team text-{{ section.settings.text_align }} {{ layout_style }}__style overflow-hidden">
+        <div class="our-team__image position-relative mb-3 pb-1">
+            <div class="aboutIcon mx-auto overflow-hidden rounded-2">
+                {%- if block.settings.image != blank -%}
+                    {% render 'img-global', image: block.settings.image, image_ratio: section.settings.image_ratio, crop: image_crop %}
+                {%- else -%} 
+                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+            </div>
+            {%- if block.settings.fa_link != blank or block.settings.tw_link != blank or block.settings.in_link != blank  or block.settings.instagram_link != blank -%}
+                <div class="our-team__social position-absolute top-0 end-0">
+                    <ul class="our-team__social-list mb-0 list-unstyled d-flex flex-column">
+                        {%- if block.settings.fa_link != blank -%}
+                            <li class="facebook">
+                                <a target="_blank" href="{{ block.settings.fa_link }}" class="d-flex justify-content-center align-items-center btn-social--facebook">
+                                    {%- render 'icons', icon: 'facebook' -%}
+                                </a>
+                            </li>
+                        {%- endif -%}
+                        {%- if block.settings.tw_link != blank -%}
+                            <li class="twitter">
+                                <a target="_blank" href="{{ block.settings.tw_link }}" class="d-flex justify-content-center align-items-center btn-social--twitter">
+                                    {%- render 'icons', icon: 'twitter' -%}
+                                </a>
+                            </li>
+                        {%- endif -%}
+                        {%- if block.settings.in_link != blank -%}
+                            <li class="youtube">
+                                <a target="_blank" href="{{ block.settings.in_link }}"  class="d-flex justify-content-center align-items-center btn-social--youtube">
+                                    <i class="fa fa-youtube"></i>
+                                    {%- render 'icons', icon: 'youtube' -%}
+                                </a>
+                            </li>
+                        {%- endif -%}
+                        {%- if block.settings.instagram_link != blank -%}
+                            <li class="instagram">
+                                <a target="_blank" href="{{ block.settings.instagram_link }}" class="d-flex justify-content-center align-items-center  btn-social--instagram">
+                                    {%- render 'icons', icon: 'instagram' -%}
+                                </a>
+                            </li>
+                        {%- endif -%}
+                        {%- if block.settings.tiktok_link != blank -%}
+                            <li class="tiktok">
+                                <a target="_blank" href="{{ block.settings.tiktok_link }}" class="d-flex justify-content-center align-items-center btn-social--tiktok">
+                                    {%- render 'icons', icon: 'tiktok' -%}
+                                </a>
+                            </li>
+                        {%- endif -%}
+                    </ul>
+                </div>
+            {%- endif -%}
+        </div>
+        <div class="our-team__content">
+            {%- if block.settings.title != blank -%}
+                <h4 class="our-team__name mb-2 pb-md-1">{{ block.settings.title }}</h4>
+            {%- endif -%}
+            {%- if block.settings.position != blank -%}
+                <div class="our-team__position fs-13 fw-medim text-color-light">{{ block.settings.position }}</div>
+            {%- endif -%}
+            {%- if block.settings.desc != blank -%}
+                <div class="our-team__desc pt-md-1 mt-2">{{ block.settings.desc }}</div>
+            {%- endif -%}
+        </div>
+    </div>
+{% else %}
+    <div class="our-team text-{{ section.settings.text_align }} {{ layout_style }}__style px-2 px-md-3">
+        <div class="our-team__image position-relative mb-3 mb-md-4">
+            <div class="aboutIcon d-flex justify-content-{{ section.settings.text_align }} rounded-circle overflow-hidden">
+                {%- if block.settings.image != blank -%}
+                    {% render 'img-global', image: block.settings.image, image_ratio: section.settings.image_ratio, crop: image_crop, image_style: true %}
+                {%- else -%} 
+                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+            </div>
+        </div>
+        <div class="our-team__content">
+            {%- if block.settings.title != blank -%}
+                <h6 class="our-team__name mb-0 text-uppercase fw-medium">{{ block.settings.title }}</h6>
+            {%- endif -%}
+            {%- if block.settings.position != blank -%}
+                <div class="our-team__position pb-1">{{ block.settings.position }}</div>
+            {%- endif -%}
+            {%- if block.settings.fa_link != blank or block.settings.tw_link != blank or block.settings.in_link != blank  or block.settings.instagram_link != blank or block.settings.tiktok_link != blank -%}
+                <div class="our-team__social mb-3">
+                    <ul class="our-team__social-list mb-0 list-unstyled d-flex justify-content-{{ section.settings.text_align }}">
+                        {%- if block.settings.fa_link != blank -%}
+                            <li class="facebook">
+                                <a target="_blank" href="{{ block.settings.fa_link }}" class="d-flex justify-content-center align-items-center btn-social--facebook">
+                                    {%- render 'icons', icon: 'facebook' -%}
+                                </a>
+                            </li>
+                        {%- endif -%}
+                        {%- if block.settings.tw_link != blank -%}
+                            <li class="twitter">
+                                <a target="_blank" href="{{ block.settings.tw_link }}" class="d-flex justify-content-center align-items-center btn-social--twitter">
+                                    {%- render 'icons', icon: 'twitter' -%}
+                                </a>
+                            </li>
+                        {%- endif -%}
+                        {%- if block.settings.in_link != blank -%}
+                            <li class="youtube">
+                                <a target="_blank" href="{{ block.settings.in_link }}"  class="d-flex justify-content-center align-items-center btn-social--youtube">
+                                    <i class="fa fa-youtube"></i>
+                                    {%- render 'icons', icon: 'youtube' -%}
+                                </a>
+                            </li>
+                        {%- endif -%}
+                        {%- if block.settings.instagram_link != blank -%}
+                            <li class="instagram">
+                                <a target="_blank" href="{{ block.settings.instagram_link }}" class="d-flex justify-content-center align-items-center btn-social--instagram">
+                                    {%- render 'icons', icon: 'instagram' -%}
+                                </a>
+                            </li>
+                        {%- endif -%}
+                        {%- if block.settings.tiktok_link != blank -%}
+                            <li class="tiktok">
+                                <a target="_blank" href="{{ block.settings.tiktok_link }}" class="d-flex justify-content-center align-items-center btn-social--tiktok">
+                                    {%- render 'icons', icon: 'tiktok' -%}
+                                </a>
+                            </li>
+                        {%- endif -%}
+                    </ul>
+                </div>
+            {%- endif -%}
+            {%- if block.settings.desc != blank -%}
+                <div class="our-team__desc">{{ block.settings.desc }}</div>
+            {%- endif -%}
+        </div>
+    </div>
+{%- endif -%}

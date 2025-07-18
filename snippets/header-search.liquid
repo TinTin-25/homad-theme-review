@@ -1,0 +1,100 @@
+
+<div id="searchTop" class="search-modal modal fade"  tabindex="-1" aria-hidden="true" data-bs-backdrop="false">
+	<div class="modal-dialog">
+		<div class="search-modal__content modal-content scroll-style">
+			<button type="button" class="vela__btn-close position-absolute top-0 end-0 d-flex p-1  z-index-1 mt-2 mt-md-3 me-3 mt-md-4" data-bs-dismiss="modal" aria-label="Close">
+				{% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+				{% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="10" height="10"' %}
+			</button>
+			<h2 class="d-block text-center mb-4">{{ 'general.search.search_title' | t }}</h2>
+			{%- if settings.predictive_search_enabled -%}
+				<predictive-search class="search-modal__predictive-search w-100" data-loading-text="{{ 'accessibility.loading' | t }}">
+			{%- else -%}
+				<search-form class="search-modal__form">
+			{%- endif -%}
+				<form action="{{ routes.search_url }}" method="get" role="search" class="search position-relative d-block mx-auto">
+					<input type="hidden" name="type" value="product" />
+					<input type="hidden" name="options[sort_by]" value="price-descending" />
+					<div class="search-form__wrapp d-flex w-100 mx-auto">
+						<div class="d-flex w-100 position-relative">
+							<input class="search__input form-control search-input"
+							id="Search-In-Modal-1"
+							type="search"
+							name="q"
+							value=""
+							placeholder="{{ 'general.search.search_placeholder' | t }}"
+							{%- if settings.predictive_search_enabled -%}
+								role="combobox"
+								aria-expanded="false"
+								aria-owns="predictive-search-results-list"
+								aria-controls="predictive-search-results-list"
+								aria-haspopup="listbox"
+								aria-autocomplete="list"
+								autocorrect="off"
+								autocomplete="off"
+								autocapitalize="off"
+								spellcheck="false"
+							{%- endif -%}
+							>
+							<button type="reset" class="search-reset__button vela__btn-close position-absolute top-0 end-0{% if search.terms == blank %} d-none{% endif %}" aria-label="{{ 'general.search.reset' | t }}">
+								{% render 'icons', icon: 'line', class: 'icon-line position-absolute top-50 start-50', attr: 'width="8" height="8"' %}
+								{% render 'icons', icon: 'line', class: 'icon-line1 position-absolute top-50 start-50', attr: 'width="8" height="8"' %}
+							</button>
+						</div>	
+						<button class="search__button btn btn-default px-3 px-md-5 fw-medium" aria-label="{{ 'general.search.search_placeholder' | t }}">
+							<span class="text">{{ 'general.search.search' | t }}</span>
+						</button>
+					</div>
+					{%- if settings.trending_searches != blank  -%}
+						{%- assign keywords = settings.trending_searches | split: ',' -%}
+						<div class="trending_searches fs-6 d-flex flex-wrap my-2 pb-3 w-100 mx-auto">
+							<div class="trending_searches__title text-secondary">{{ 'general.search.trending_searches' | t }}:</div>
+							<div class="trending_searches__content d-flex flex-wrap">
+								{% for keyword in keywords %}
+									<a href="{{ routes.search_url }}?type=product&options%5Bsort_by%5D=price-descending&q={{ keyword }}">{{ keyword }}</a>
+								{% endfor %}
+							</div>
+						</div>
+					{%- endif -%}
+					{%- if settings.predictive_search_enabled -%}
+						<div class="predictive-search predictive-search--header position-relative" tabindex="-1" data-predictive-search>
+							<div class="predictive-search__loading-state position-absolute top-0 bottom-0 end-0 start-0">
+								{% render 'preloading', preload_class: 'position-absolute' %}
+							</div>
+							{%- if settings.search_collection != blank -%}
+								<div class="container" data-search-proRecommend>
+									<div class="search-proRecommend py-3 border-top">
+										{%- if settings.search_proRecommend_title != blank -%}
+											<p class="lh-1 mb-3 mt-1 mt-lg-3 fs-6 fw-medium heading-color">{{ settings.search_proRecommend_title }}</p>
+										{%- endif -%}
+										<div class="search-proRecommend__content">
+											<div class="row g-3 row-cols-1 row-cols-md-5">
+												{%- for product in collections[settings.search_collection].products limit: 5 -%}
+													<div class="predictive-search__product col">
+														{% render 'product-grid-item', product: product %}
+													</div>
+												{%- endfor -%}
+											</div>
+										</div>
+									</div>
+								</div>
+							{%- endif -%}
+						</div>
+						<span class="predictive-search-status visually-hidden" role="status" aria-hidden="true"></span>
+					{%- endif -%}
+				</form>
+			{%- if settings.predictive_search_enabled -%}
+				</predictive-search>
+			{%- else -%}
+				</search-form>
+			{%- endif -%}
+		</div>
+	</div>
+	<div class="searchTop-backdrop offcanvas-backdrop fade" data-bs-dismiss="modal" aria-label="Close"></div>
+</div>
+<script>
+	var myCollapsible = document.getElementById('searchTop');
+	myCollapsible.addEventListener('shown.bs.modal', function () {
+		document.getElementById('Search-In-Modal-1').focus();
+	});	
+</script>

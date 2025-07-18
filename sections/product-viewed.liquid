@@ -1,0 +1,350 @@
+{%- assign owlColumn1 = section.settings.column1 | plus: 0 -%}
+{%- assign owlColumn2 = section.settings.column2 | plus: 0 -%}
+{%- assign owlColumn3 = section.settings.column3 | plus: 0 -%}
+{%- assign owlColumn4 = section.settings.column4 | plus: 0 -%}
+{%- include 'section_style' -%}
+<product-recently-viewed class="product-viewed d-none" data-limit="{{ section.settings.products_to_show | plus: 0 }}">
+    <div class="vela-section overflow-hidden{% if section.settings.layout == 'carousel'  and section.settings.slide_variableWidth %} slick-carousel__variableWidth{% endif %}{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
+        <div class="container{% if section.settings.full_with %}-fluid{% endif %}">
+            <div class="vela-section__inner">
+                {%- if section.settings.heading != blank -%}
+                    <div class="heading-group mb-3 mb-md-4 text-center">
+                        <h2 class="heading mb-0">
+                            <span>{{ section.settings.heading }}</span>
+                        </h2>
+                        {%- if section.settings.sub_heading != blank -%}
+                            <div class="sub-heading pt-1">
+                                {{ section.settings.sub_heading }}
+                            </div>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+
+                <div class="product-viewed__content">
+                    {%- if section.settings.layout == 'grid' -%}
+                        <div data-products="grid" class="row gx-3 g-lg-4 gy-4row-cols-{{ owlColumn3 }} row-cols-md-{{ owlColumn2 }} row-cols-lg-{{ owlColumn1}}"></div>
+                    {%- else -%}
+                        {% comment %} LAYOUT: Carousel {% endcomment %}
+                        {%- assign nav = section.settings.navigation -%}
+                        {%- assign pagination = section.settings.pagination -%}
+                        {%- assign infinite = section.settings.infinite -%}
+                        {%- assign autoplay = section.settings.autoplay -%}
+                        {%- assign autoplay_speed = section.settings.autoplay_speed | escape -%}
+                        <div data-products="carousel" class="js-recently-viewed slick-carousel carousel-custom row g-3 g-md-4"
+                            data-nav="{{ nav }}"
+                            data-dots="{{ pagination }}"
+                            data-infinite="{{ infinite }}"
+                            data-autoplay="{{ autoplay }}"
+                            data-autoplayspeed="{{ autoplay_speed }}"
+                            data-variableWidth="{{ section.settings.slide_variableWidth }}"
+                            data-columnone="{{ owlColumn1 }}"
+                            data-columntwo="{{ owlColumn2 }}"
+                            data-columnthree="{{ owlColumn3 }}"
+    
+                        ></div>
+                    {%- endif -%}
+                </div>
+            </div>
+        </div>
+    </div>
+</product-recently-viewed>
+
+{% javascript %}
+    var vela = window.vela || {};
+    vela.recentlyViewed = {
+        name: 'vela_recently_viewed',
+        symbol: '|',
+        maximumItems: 10,
+        exists: 365,
+        products: []
+    };
+
+    // Load product handle from cookie
+    var cookieRecentlyViewed = vela.getCookie(vela.recentlyViewed.name);
+    if (cookieRecentlyViewed !== '') {
+        var products = cookieRecentlyViewed.split(vela.recentlyViewed.symbol);
+        products.forEach(function(item) {
+            vela.recentlyViewed.products.push(item);
+        });
+    }
+
+    // Add product handle to cookie.
+    var pathname = window.location.pathname;
+    if (vela && pathname.indexOf('/products/') !== -1) {
+        var productHandle = pathname.match(/\/products\/([a-z0-9\-]+)/)[1];
+        var currentIndex = vela.recentlyViewed.products.indexOf(productHandle);
+        if (currentIndex === -1) {
+            // Insert to first index
+            vela.recentlyViewed.products.unshift(productHandle);
+            // Only take vela.recentlyViewed.maximumItems items
+            vela.recentlyViewed.products = vela.recentlyViewed.products.splice(0, vela.recentlyViewed.maximumItems);
+        } else {
+            // Remove current handle from array
+            vela.recentlyViewed.products.splice(currentIndex, 1);
+            // Insert to first index
+            vela.recentlyViewed.products.unshift(productHandle);
+        }
+
+        // Set cookie
+        if (vela.recentlyViewed.products.length > 0) {
+            var productHandles = vela.recentlyViewed.products.join(vela.recentlyViewed.symbol);
+            vela.setCookie(vela.recentlyViewed.name, productHandles, vela.recentlyViewed.exists);
+        }
+    }
+
+    class ProductRecentlyViewed extends HTMLElement {
+        constructor() {
+            super();
+
+            this.hiddenClass = 'd-none';
+            this.container = this.querySelector('[data-products]');
+            this.limit = parseInt(this.dataset.limit, 10);
+
+            if (this.container) {
+                this.layout = this.container.dataset.products;
+
+                document.addEventListener("DOMContentLoaded", (event) => {
+                    this.initPages();
+                });
+            }
+        }
+
+        initPages() {
+            if (vela && vela.recentlyViewed && vela.recentlyViewed.products) {
+                if (vela.recentlyViewed.products.length > 1) {
+                    this.renderPages();
+                } else {
+                    this.classList.add(this.hiddenClass);
+                }
+            } else {
+                this.classList.add(this.hiddenClass);
+            }
+        }
+
+        async renderPages() {
+            try {
+                let promises = [];
+                vela.recentlyViewed.products.forEach((handle, index) => {
+                    if (handle && index !== 0 && index <= this.limit) {
+                        const url = `${window.Shopify.routes.root}products/${handle}?view=product-card`;
+                        promises.push(
+                            fetch(url)
+                                .then(response => response.text())
+                                .then(text => {
+                                    if (text && text !== '') {
+                                        let productItem = document.createElement('div');
+                                        const productItemClass = this.layout === 'grid' ? 'col' : 'slick-carousel__item';
+                                        productItem.classList.add(productItemClass);
+                                        productItem.innerHTML = text;
+
+                                        return {
+                                            element: productItem,
+                                            handle: handle,
+                                            index: index
+                                        };
+                                    }
+                                })
+                                .catch(e => {
+                                    console.error(e);
+                                })
+                        );
+                    }
+                });
+
+                let data = await Promise.all(promises);
+                data.forEach(item => {
+                    if ('element' in item) {
+                        this.container.append(item.element);
+                    }
+                });
+                this.afterRenderPage();
+            } catch (e) {
+                console.error(e);
+            };
+        }
+
+        afterRenderPage() {
+            this.classList.remove(this.hiddenClass);
+            vela.swatchProduct();
+
+            // Update wishlist button status
+            if ('wishlist' in vela && 'updateWishlist' in vela.wishlist) {
+                vela.wishlist.updateWishlist();
+            }
+
+            if (this.layout === 'carousel') {
+                $('body').trigger('carousel:init', '.js-recently-viewed');
+            }
+            $('body').trigger('vela:countdown', '[data-countdown]');
+        }
+    }
+    customElements.define('product-recently-viewed', ProductRecentlyViewed);
+{% endjavascript %}
+
+{% schema %}
+{
+    "name": "Product viewed",
+    "class": "section-product-viewed",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Design Section"
+        },
+        {
+            "type": "checkbox",
+            "id": "full_with",
+            "label": "Enable Full Width?"
+        },
+        {
+            "type": "text",
+            "id": "max_with",
+            "label": "Container max width?(px)",
+            "info": "Ex: 1440px"
+        },
+        {
+            "type": "color",
+            "id": "color_bg",
+            "label": "Background Color",
+            "default": "rgba(0,0,0,0)"
+        },
+        {
+            "type": "text",
+            "id": "padding_block",
+            "label": "Padding",
+            "placeholder": "0px 0px"
+        },
+        {
+            "type": "text",
+            "id": "padding_block_m",
+            "label": "Padding on mobile",
+            "placeholder": "0px 0px",
+            "info": "Ex: 0px 0px 0px 0px and use mobile only"
+        },
+        {
+            "type": "text",
+            "id": "margin_block",
+            "label": "Margin",
+            "placeholder": "0px 0px"
+        },
+        {
+            "type": "header",
+            "content": "General Settings"
+        },
+        {
+            "type": "html",
+            "id": "heading",
+            "label": "Heading",
+            "default": "Heading"
+        },
+        {
+            "type": "text",
+            "id": "sub_heading",
+            "label": "Sub heading",
+            "default": "sub heading"
+        },
+        {
+            "type": "header",
+            "content": "Layout Settings"
+        },
+        {
+            "type": "select",
+            "id": "layout",
+            "label": "Layout",
+            "default": "grid",
+            "options": [
+                {
+                    "value": "grid",
+                    "label": "Grid"
+                },
+                {
+                    "value": "carousel",
+                    "label": "Carousel"
+                }
+            ]
+        },
+        {
+            "type": "range",
+            "id": "products_to_show",
+            "min": 2,
+            "max": 10,
+            "step": 1,
+            "default": 5,
+            "label": "Maximum products to show"
+        },
+        {
+            "type": "range",
+            "id": "column1",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "label": "Number of columns on desktop",
+            "default": 4
+        },
+        {
+            "type": "range",
+            "id": "column2",
+            "min": 1,
+            "max": 5,
+            "step": 1,
+            "label": "Number of columns on tablet",
+            "default": 3
+        },
+        {
+            "type": "range",
+            "id": "column3",
+            "min": 1,
+            "max": 5,
+            "step": 1,
+            "label": "Number of columns on mobile",
+            "default": 2
+        },
+        {
+            "type": "header",
+            "content": "Carousel settings"
+        },
+        {
+            "type": "checkbox",
+            "id": "navigation",
+            "label": "Show navigation",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "pagination",
+            "label": "Show dot indicators",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "infinite",
+            "label": "Infinite loop sliding",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "autoplay",
+            "label": "Enable autoplay",
+            "default": false
+        },
+        {
+            "type": "text",
+            "id": "autoplay_speed",
+            "label": "Autoplay speed",
+            "info": "Autoplay speed in milliseconds. Type: int(ms)",
+            "default": "10000"
+        },
+        {
+            "type": "checkbox",
+            "id": "slide_variableWidth",
+            "label": "Variable width",
+            "default": false,
+            "info": "Variable width slides on the mobile"
+        }
+    ],
+    "presets": [
+        {
+            "name": "Product viewed"
+        }
+    ]
+}
+{% endschema %}
