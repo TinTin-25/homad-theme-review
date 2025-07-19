@@ -4,12 +4,7 @@
 {%- if settings.font_icon -%}
     {{- 'font-awesome.min.css' | asset_url | stylesheet_tag -}}
 {%- endif -%}
-{{- 'bootstrap-grid.css' | asset_url | stylesheet_tag -}}
-{{- 'bootstrap.css' | asset_url | stylesheet_tag -}}
-{{- 'theme.css' | asset_url | stylesheet_tag -}}
-{{- 'topbar.css' | asset_url | stylesheet_tag -}}	
-{{- 'header.css' | asset_url | stylesheet_tag -}}	
-{{- 'footer.css' | asset_url | stylesheet_tag -}}	
+{{- 'theme-bundle.css' | asset_url | stylesheet_tag -}}
 {{- 'vendor.min.css' | asset_url | stylesheet_tag -}}
 {%- if settings.predictive_search_enabled -%}
     <link rel="stylesheet" href="{{ 'component-predictive-search.css' | asset_url }}" onload="this.media='all'">
