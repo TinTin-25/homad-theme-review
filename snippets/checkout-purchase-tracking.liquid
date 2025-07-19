@@ -1,0 +1,19 @@
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var currency = {{ checkout.currency | json }};
+    var value = {{ checkout.subtotal_price | money_without_currency | json }};
+    var content_ids = [
+      {% for line in checkout.line_items %}
+        {{ line.variant_id }}{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ];
+    var contents = [
+      {% for line in checkout.line_items %}
+        {id: {{ line.variant_id }}, quantity: {{ line.quantity }}}{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ];
+    var payload = {content_ids: content_ids, contents: contents, value: value, currency: currency};
+    fbq('track', 'Purchase', payload);
+    ttq.track('Purchase', payload);
+  });
+</script>

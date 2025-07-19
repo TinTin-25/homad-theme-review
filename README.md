@@ -24,6 +24,21 @@ The theme embeds Meta and TikTok pixels directly via
 
 Modify the snippet if you need to change these values.
 
+## Checkout purchase tracking
+
+To track completed orders with Facebook and TikTok pixels,
+include the new `snippets/checkout-purchase-tracking.liquid` snippet in your
+checkout settings:
+
+1. From your Shopify admin, go to **Settings → Checkout**.
+2. Under **Order status page**, paste the contents of
+   `snippets/checkout-purchase-tracking.liquid` into the **Additional scripts**
+   box. Shopify Plus merchants can instead include the snippet in
+   `checkout.liquid`.
+
+The snippet reads the `checkout` object and fires `fbq('track', 'Purchase')`
+and `ttq.track('Purchase')` once the order status page loads.
+
 ## Debugging
 
 Add `debug=true` to the page URL to enable verbose console output from the pixel
