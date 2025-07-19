@@ -16,13 +16,14 @@ comment out the script tags in that snippet and document the integration.
 
 ## Pixel configuration
 
-The theme embeds Meta and TikTok pixels directly via
-`snippets/tracking-pixel.liquid`. The IDs are hard-coded in that file:
+The theme embeds Meta and TikTok pixels via `snippets/tracking-pixel.liquid`.
+The pixel IDs can be set from the theme editor under **Tracking pixels**:
 
-- Meta pixel ID: `1311883059920720`
-- TikTok pixel ID: `D1ST0CRC77UBFMCUIAKG`
+- **Meta pixel ID** – value for `settings.meta_pixel_id`
+- **TikTok pixel ID** – value for `settings.tiktok_pixel_id`
 
-Modify the snippet if you need to change these values.
+Edit these fields in your theme settings instead of modifying the snippet
+directly.
 
 ## Checkout purchase tracking
 

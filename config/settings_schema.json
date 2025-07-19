@@ -1567,6 +1567,21 @@
     ]
   },
   {
+    "name": "Tracking pixels",
+    "settings": [
+      {
+        "type": "text",
+        "id": "meta_pixel_id",
+        "label": "Meta pixel ID"
+      },
+      {
+        "type": "text",
+        "id": "tiktok_pixel_id",
+        "label": "TikTok pixel ID"
+      }
+    ]
+  },
+  {
     "name": "Favicon",
     "settings": [
       {
