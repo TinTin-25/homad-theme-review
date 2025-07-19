@@ -1,0 +1,23 @@
+{% if checkout and order %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    try {
+      var orderData = {{ order | json }};
+      var contentIds = orderData.line_items.map(function(item) { return item.product_id; });
+      var payload = {
+        value: orderData.total_price,
+        currency: orderData.currency,
+        content_ids: contentIds
+      };
+      if (typeof fbq === 'function') {
+        fbq('track', 'Purchase', payload);
+      }
+      if (typeof ttq === 'object' && typeof ttq.track === 'function') {
+        ttq.track('CompletePayment', payload);
+      }
+    } catch (e) {
+      console.error('Order tracking error', e);
+    }
+  });
+</script>
+{% endif %}
