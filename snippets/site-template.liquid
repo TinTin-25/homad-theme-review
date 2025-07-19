@@ -1036,3 +1036,16 @@
     });
   });
 </script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.body.addEventListener('submit', function (e) {
+      var form = e.target.closest('form');
+      if (!form) return;
+
+      if (form.querySelector('[name="checkout"]')) {
+        if (typeof fbq === 'function') fbq('track', 'InitiateCheckout');
+        if (typeof ttq === 'object' && typeof ttq.track === 'function') ttq.track('InitiateCheckout');
+      }
+    });
+  });
+</script>
