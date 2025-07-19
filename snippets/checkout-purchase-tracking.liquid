@@ -1,7 +1,7 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     var currency = {{ checkout.currency | json }};
-    var value = {{ checkout.subtotal_price | money_without_currency | json }};
+    var value = {{ checkout.total_price | money_without_currency | json }};
     var content_ids = [
       {% for line in checkout.line_items %}
         {{ line.variant_id }}{% unless forloop.last %},{% endunless %}
