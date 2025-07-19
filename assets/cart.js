@@ -246,11 +246,10 @@ class CartItems extends HTMLElement {
     var giftHandle = false;
     items.forEach((item) => {
       let sentence = item.variant_id;
-        if ( sentence == giftButtonHandle ) {
-          giftHandle = true;
-        }
+      if ( sentence == giftButtonHandle ) {
+        giftHandle = true;
       }
-    );
+    });
     if( giftHandle ){
       giftButton.classList.add('d-none');
     } else {
