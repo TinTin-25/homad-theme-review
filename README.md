@@ -16,9 +16,10 @@ comment out the script tags in that snippet and document the integration.
 
 ## Pixel configuration
 
-Update the IDs inside `snippets/tracking-pixel.liquid` to match your Facebook
-and TikTok pixel accounts. Alternatively you can comment out the script tags in
-that snippet and rely on a Shopify pixel app to inject the tracking code.
+Set your Facebook and TikTok pixel IDs under **Theme settings \> Tracking pixels**.
+The values populate `snippets/tracking-pixel.liquid` automatically. Alternatively you can
+comment out the script tags in that snippet and rely on a Shopify pixel app to
+inject the tracking code.
 
 ## Debugging
 
