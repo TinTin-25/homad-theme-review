@@ -12,11 +12,11 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '1311883059920720');
+fbq('init', '{{ settings.facebook_pixel_id }}');
 fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=1311883059920720&ev=PageView&noscript=1"
+src="https://www.facebook.com/tr?id={{ settings.facebook_pixel_id }}&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
 <script async src="https://analytics.tiktok.com/i18n/pixel/events.js"></script>
@@ -30,7 +30,7 @@ src="https://www.facebook.com/tr?id=1311883059920720&ev=PageView&noscript=1"
   for(var i=0;i<ttq.methods.length;i++) ttq.setAndDefer(ttq,ttq.methods[i]);
   ttq.instance=function(t){var e=ttq._i[t]||[];for(var n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e};
   ttq.load=function(e,n){var i='https://analytics.tiktok.com/i18n/pixel/events.js';ttq._i=ttq._i||{};ttq._i[e]=[];ttq._i[e]._u=i;ttq._t=ttq._t||{};ttq._t[e]=+new Date;ttq._o=ttq._o||{};ttq._o[e]=n||{};var o=document.createElement('script');o.type='text/javascript';o.async=true;o.src=i+'?sdkid='+e+'&lib='+t;var a=document.getElementsByTagName('script')[0];a.parentNode.insertBefore(o,a)};
-  ttq.load('D1ST0CRC77UBFMCUIAKG');
+  ttq.load('{{ settings.tiktok_pixel_id }}');
   ttq.page();
 }(window, document, 'ttq');
 </script>
@@ -53,7 +53,7 @@ src="https://www.facebook.com/tr?id=1311883059920720&ev=PageView&noscript=1"
     };
   }
 
-  ttq.load('D1ST0CRC77UBFMCUIAKG');
+  ttq.load('{{ settings.tiktok_pixel_id }}');
   ttq.page();
 
   document.addEventListener('DOMContentLoaded', function() {
