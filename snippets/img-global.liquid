@@ -6,6 +6,7 @@
 
   comment
     image_ratio: adapt, square, portrait
+    crop: enable cropping and set the crop position (independent of image_ratio)
   endcomment
   assign image_ratio = image_ratio | default: 'adapt'
 
