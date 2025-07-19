@@ -1,0 +1,13 @@
+{
+  "name": "homad-theme-review",
+  "version": "1.0.0",
+  "description": "Shopify Aceno theme for pixel tracking and cart debugging",
+  "scripts": {
+    "lint": "eslint assets/**/*.js",
+    "build": "echo Build not configured"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs"
+}

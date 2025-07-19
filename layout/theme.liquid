@@ -169,7 +169,6 @@
     compareEl.textContent = fullText;
     compareEl.style.display = "inline-block";
 
-    console.log("✅ Precios de Rapi aplicados:", discountedText, fullText);
   }
 
   function activarRapiBundles() {
@@ -189,7 +188,6 @@
         document.getElementById("dealeasy-override-price") &&
         document.getElementById("dealeasy-compare-price")
       ) {
-        console.log("🟢 Detectados bundles Rapi");
         activarRapiBundles();
         observer.disconnect();
       }
