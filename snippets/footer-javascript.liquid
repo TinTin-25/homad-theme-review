@@ -1,4 +1,9 @@
 {% comment %} Footer JS {% endcomment %}
+<script>
+  if (new URLSearchParams(window.location.search).has('debug')) {
+    window.themeDebug = true;
+  }
+</script>
 <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer="defer"></script>
 <script src="{{ 'global.min.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'bootstrap.min.js' | asset_url }}" defer="defer"></script>
