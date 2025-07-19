@@ -1024,9 +1024,13 @@
         variant = window.meta.product.variants.find(function(v) { return v.id == Number(variantId); });
       }
 
+      var qtyField = form.querySelector('[name="quantity"]');
+      var quantity = qtyField ? parseInt(qtyField.value, 10) || 1 : 1;
+
       var payload = { content_type: 'product', content_ids: [variantId] };
       if (variant) {
-        payload.value = variant.price / 100;
+        payload.value = (variant.price / 100) * quantity;
+        payload.contents = [{ id: variantId, quantity: quantity }];
         if (window.Shopify && Shopify.currency && Shopify.currency.active)
           payload.currency = Shopify.currency.active;
       }

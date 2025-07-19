@@ -17,12 +17,16 @@ comment out the script tags in that snippet and document the integration.
 ## Pixel configuration
 
 The theme embeds Meta and TikTok pixels directly via
-`snippets/tracking-pixel.liquid`. The IDs are hard-coded in that file:
+`snippets/tracking-pixel.liquid`. Their IDs are now configurable from the Theme
+settings screen. Set **Meta pixel ID** and **TikTok pixel ID** under the Pixels
+section when customizing the theme.
 
-- Meta pixel ID: `1311883059920720`
-- TikTok pixel ID: `D1ST0CRC77UBFMCUIAKG`
+To record purchases on the order status page, copy the contents of
+`snippets/pixel-checkout-script.liquid` into Shopify’s **Additional scripts**
+field (or `checkout.liquid` if you are on Shopify Plus).
 
-Modify the snippet if you need to change these values.
+The purchase value sent to the pixels uses `checkout.subtotal_price`, so
+shipping and taxes are excluded.
 
 ## Debugging
 
