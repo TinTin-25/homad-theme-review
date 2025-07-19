@@ -35,5 +35,6 @@
 {%- endif-%}
 
 {%- if request.design_mode -%}
+  <script>window.themeDebug = true;</script>
   <script src="{{ 'design-mode.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
