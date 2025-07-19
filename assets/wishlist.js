@@ -99,6 +99,11 @@ vela.wishlist = {
         // Update wishlist item count and button status
         vela.wishlist.updateWishlist();
     },
+    trackAddToWishlist: (handle) => {
+        const payload = { content_type: 'product', content_ids: [handle] };
+        if (typeof fbq === 'function') fbq('track', 'AddToWishlist', payload);
+        if (typeof ttq === 'object' && typeof ttq.track === 'function') ttq.track('AddToWishlist', payload);
+    },
     buttons: () => {
         if (jQuery && $) {
             $(document).on('click', vela.wishlist.selectors.button, (e) => {
@@ -124,6 +129,7 @@ vela.wishlist = {
                         const addItem = vela.wishlist.addItem(button.dataset.productHandle);
                         if (addItem) {
                             vela.wishlist.updateButton(button, true);
+                            vela.wishlist.trackAddToWishlist(button.dataset.productHandle);
 
                             if (page) {
                                 vela.wishlist.initPage();
