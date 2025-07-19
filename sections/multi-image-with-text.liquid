@@ -1,4 +1,4 @@
-{{- 'mutil-image-with-text.css' | asset_url | stylesheet_tag -}}
+{{- 'multi-image-with-text.css' | asset_url | stylesheet_tag -}}
 {%- include 'section_style' -%}
 {%- include 'carousel-settings' -%}
 <div class="vela-section multi-image-with-text overflow-hidden{% if section.settings.layout == 'carousel' and section.settings.slide_variableWidth %} slick-carousel__variableWidth{% endif %}{% if section.settings.full_with and section.settings.max_with %} mx-auto{% endif %}" style="{{- section_style -}}">
