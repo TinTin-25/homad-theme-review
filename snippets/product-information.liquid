@@ -483,12 +483,8 @@
       if (typeof ttq === 'object' && typeof ttq.track === 'function') ttq.track(eventName, payload);
     }
 
-    forms.forEach(function(form) {
-      form.addEventListener('submit', function() {
-        var variantId = form.querySelector('[name="id"]').value;
-        sendEvent('AddToCart', variantId);
-      });
-    });
+    // AddToCart pixel events are handled globally in 'site-template'
+    // to avoid duplicate tracking we no longer attach a listener here.
 
     if (forms.length) {
       var initialVariantId = forms[0].querySelector('[name="id"]').value;
