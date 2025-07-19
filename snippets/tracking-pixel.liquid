@@ -23,15 +23,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-    {% if request.page_type == 'product' %}
-      var variantId = {{ product.selected_or_first_available_variant.id }};
-      var value = {{ product.selected_or_first_available_variant.price | divided_by: 100.0 | json }};
-      var currency = {{ cart.currency.iso_code | json }};
-      var quantityInput = document.querySelector('form[action^="/cart/add"] [name="quantity"]');
-      var quantity = quantityInput ? parseInt(quantityInput.value, 10) || 1 : 1;
-      fbq('track', 'ViewContent', {content_id: variantId, value: value, currency: currency, quantity: quantity});
-      ttq.track('ViewContent', {content_id: variantId, value: value, currency: currency, quantity: quantity});
-    {% endif %}
 
     document.body.addEventListener('submit', function(e) {
       var form = e.target;
