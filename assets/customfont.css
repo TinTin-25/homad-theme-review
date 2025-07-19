@@ -1,7 +1,8 @@
 
 @font-face {
     font-family: 'craftwork grotes';
-    src:url('//www.homad.store/cdn/shop/t/4/assets/CraftworkGrotesk-Bold.woff2?3691') format('woff2');
+    src:url('{{ "CraftworkGrotesk-Bold.woff2" | asset_url }}') format('woff2');
     font-weight: 700;
     font-style: normal;
+    font-display: swap;
 }
