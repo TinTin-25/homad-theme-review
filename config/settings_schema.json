@@ -1089,21 +1089,6 @@
     ]
   },
   {
-    "name": "Tracking pixels",
-    "settings": [
-      {
-        "type": "text",
-        "id": "facebook_pixel_id",
-        "label": "Facebook pixel ID"
-      },
-      {
-        "type": "text",
-        "id": "tiktok_pixel_id",
-        "label": "TikTok pixel ID"
-      }
-    ]
-  },
-  {
     "name": "Product card",
     "settings": [
       {
