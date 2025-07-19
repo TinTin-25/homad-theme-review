@@ -40,6 +40,14 @@ checkout settings:
 The snippet reads the `checkout` object and fires `fbq('track', 'Purchase')`
 and `ttq.track('Purchase')` once the order status page loads.
 
+## Checkout payment info tracking
+
+To track when a customer submits their payment details, include
+`snippets/checkout-paymentinfo-tracking.liquid` in your checkout code. Paste it
+into the **Additional scripts** box or, for Shopify Plus stores, add it to
+`checkout.liquid`. The snippet fires `fbq('track', 'AddPaymentInfo')` and
+`ttq.track('AddPaymentInfo')` when the payment method form is submitted.
+
 ## Debugging
 
 Add `debug=true` to the page URL to enable verbose console output from the pixel

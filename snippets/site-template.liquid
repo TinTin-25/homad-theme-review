@@ -1049,3 +1049,19 @@
     });
   });
 </script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.body.addEventListener('submit', function (e) {
+      var form = e.target.closest('form[role="search"]');
+      if (!form) return;
+
+      var input = form.querySelector('input[name="q"]');
+      if (!input) return;
+
+      var query = input.value;
+      var payload = { search_string: query };
+      if (typeof fbq === 'function') fbq('track', 'Search', payload);
+      if (typeof ttq === 'object' && typeof ttq.track === 'function') ttq.track('Search', payload);
+    });
+  });
+</script>
