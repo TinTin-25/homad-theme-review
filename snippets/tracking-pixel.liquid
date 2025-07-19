@@ -3,13 +3,20 @@
 {% endcomment %}
 <script>
 (function() {
-  window.fbq = window.fbq || function(){
-    (window.fbq.callMethod ? window.fbq.callMethod : window.fbq.queue.push).apply(window.fbq, arguments);
-  };
-  window.fbq.queue = window.fbq.queue || [];
+  if (typeof window.fbq !== 'function' || !window.fbq.callMethod) {
+    var fbqQueue = (window.fbq && window.fbq.queue) ? window.fbq.queue : [];
+    window.fbq = function() {
+      (window.fbq.callMethod ? window.fbq.callMethod : fbqQueue.push).apply(window.fbq, arguments);
+    };
+    window.fbq.queue = fbqQueue;
+  }
 
-  if(!window.ttq){
-    window.ttq = {q:[],track:function(){window.ttq.q.push(Array.prototype.slice.call(arguments));}};
+  if (!window.ttq || typeof window.ttq.track !== 'function') {
+    window.ttq = window.ttq || {};
+    window.ttq.q = window.ttq.q || [];
+    window.ttq.track = function() {
+      window.ttq.q.push(Array.prototype.slice.call(arguments));
+    };
   }
 
   document.addEventListener('DOMContentLoaded', function() {
