@@ -78,10 +78,19 @@ src="https://www.facebook.com/tr?id=1311883059920720&ev=PageView&noscript=1"
     {% if request.page_type == 'checkout_thank_you' %}
       var currency = {{ checkout.currency | json }};
       var value = {{ checkout.total_price | money_without_currency | json }};
-      {% for line in checkout.line_items %}
-        fbq('track', 'Purchase', {content_id: {{ line.variant_id }}, value: value, currency: currency, quantity: {{ line.quantity }}});
-        ttq.track('Purchase', {content_id: {{ line.variant_id }}, value: value, currency: currency, quantity: {{ line.quantity }}});
-      {% endfor %}
+      var content_ids = [
+        {% for line in checkout.line_items %}
+          {{ line.variant_id }}{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ];
+      var contents = [
+        {% for line in checkout.line_items %}
+          {id: {{ line.variant_id }}, quantity: {{ line.quantity }}}{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ];
+      var payload = {content_ids: content_ids, contents: contents, value: value, currency: currency};
+      fbq('track', 'Purchase', payload);
+      ttq.track('Purchase', payload);
     {% endif %}
   });
 })();
