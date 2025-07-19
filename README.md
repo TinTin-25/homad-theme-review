@@ -16,10 +16,13 @@ comment out the script tags in that snippet and document the integration.
 
 ## Pixel configuration
 
-Set your Facebook and TikTok pixel IDs under **Theme settings \> Tracking pixels**.
-The values populate `snippets/tracking-pixel.liquid` automatically. Alternatively you can
-comment out the script tags in that snippet and rely on a Shopify pixel app to
-inject the tracking code.
+The theme embeds Meta and TikTok pixels directly via
+`snippets/tracking-pixel.liquid`. The IDs are hard-coded in that file:
+
+- Meta pixel ID: `1311883059920720`
+- TikTok pixel ID: `D1ST0CRC77UBFMCUIAKG`
+
+Modify the snippet if you need to change these values.
 
 ## Debugging
 
