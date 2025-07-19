@@ -1007,6 +1007,12 @@
 
       var variant = null;
 
+      var qtyField = form.querySelector('[name="quantity"]');
+      var qty = 1;
+      if (qtyField) {
+        qty = Number(qtyField.value) || 1;
+      }
+
       var section = form.closest('[id^="shopify-section-"]');
       if (section) {
         var jsonEl = section.querySelector('[id^="ProductJson-"]');
@@ -1026,10 +1032,11 @@
 
       var payload = { content_type: 'product', content_ids: [variantId] };
       if (variant) {
-        payload.value = variant.price / 100;
+        payload.value = variant.price / 100 * qty;
         if (window.Shopify && Shopify.currency && Shopify.currency.active)
           payload.currency = Shopify.currency.active;
       }
+      payload.contents = [{ id: variantId, quantity: qty }];
 
       if (typeof fbq === 'function') fbq('track', 'AddToCart', payload);
       if (typeof ttq === 'object' && typeof ttq.track === 'function') ttq.track('AddToCart', payload);
