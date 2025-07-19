@@ -1,0 +1,50 @@
+{% comment %}
+  Initializes fbq and ttq pixel objects and sends basic ecommerce events.
+{% endcomment %}
+<script>
+(function() {
+  window.fbq = window.fbq || function(){
+    (window.fbq.callMethod ? window.fbq.callMethod : window.fbq.queue.push).apply(window.fbq, arguments);
+  };
+  window.fbq.queue = window.fbq.queue || [];
+
+  if(!window.ttq){
+    window.ttq = {q:[],track:function(){window.ttq.q.push(Array.prototype.slice.call(arguments));}};
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    {% if request.page_type == 'product' %}
+      var variantId = {{ product.selected_or_first_available_variant.id }};
+      var value = {{ product.selected_or_first_available_variant.price | divided_by: 100.0 | json }};
+      var currency = {{ cart.currency.iso_code | json }};
+      var quantityInput = document.querySelector('form[action^="/cart/add"] [name="quantity"]');
+      var quantity = quantityInput ? parseInt(quantityInput.value, 10) || 1 : 1;
+      fbq('track', 'ViewContent', {content_id: variantId, value: value, currency: currency, quantity: quantity});
+      ttq.track('ViewContent', {content_id: variantId, value: value, currency: currency, quantity: quantity});
+    {% endif %}
+
+    document.body.addEventListener('submit', function(e) {
+      var form = e.target;
+      if (form.matches('form[action^="/cart/add"]')) {
+        var variantInput = form.querySelector('[name="id"]');
+        var quantityInput = form.querySelector('[name="quantity"]');
+        var variantId = variantInput ? variantInput.value : undefined;
+        var quantity = quantityInput ? parseInt(quantityInput.value, 10) || 1 : 1;
+        var currency = {{ cart.currency.iso_code | json }};
+        var value = {{ product.selected_or_first_available_variant.price | divided_by: 100.0 | json }};
+        fbq('track', 'AddToCart', {content_id: variantId, value: value, currency: currency, quantity: quantity});
+        ttq.track('AddToCart', {content_id: variantId, value: value, currency: currency, quantity: quantity});
+      }
+    });
+
+    {% if request.page_type == 'checkout_thank_you' %}
+      var currency = {{ checkout.currency | json }};
+      var value = {{ checkout.total_price | money_without_currency | json }};
+      {% for line in checkout.line_items %}
+        fbq('track', 'Purchase', {content_id: {{ line.variant_id }}, value: value, currency: currency, quantity: {{ line.quantity }}});
+        ttq.track('Purchase', {content_id: {{ line.variant_id }}, value: value, currency: currency, quantity: {{ line.quantity }}});
+      {% endfor %}
+    {% endif %}
+  });
+})();
+</script>

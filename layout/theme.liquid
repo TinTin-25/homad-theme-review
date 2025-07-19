@@ -39,8 +39,9 @@
 </style>
 
       
-		<script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
-	</head>
+                <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+                {% render 'tracking-pixel' %}
+        </head>
 	<body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ request.page_type | handle }} {{ template.suffix }} gx-3 gx-md-4">
 		{%- if settings.preloading -%}
 			{% render 'preloading' %}
