@@ -701,10 +701,11 @@
         </div>
       </div>
       <a href="#ajaxcart__gift" class="collapse-backdrop position-absolute" data-bs-toggle="collapse"  role="button" aria-expanded="false" aria-controls="ajaxcart__gift"></a>
-    {% endif %}
+{% endif %}
   </div>
 {%- endif -%}
 </script>
+
 <script id="quickview-template" type="text/template">
     <div class="product-quickview position-relative">
         <div class="product-quickview__images position-relative">
@@ -992,4 +993,28 @@
       </div>
     </form>
   </div>
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.body.addEventListener('submit', function (e) {
+      var form = e.target.closest('form[data-product-form]');
+      if (!form) return;
+      var variantField = form.querySelector('[name="id"]');
+      if (!variantField) return;
+      var variantId = variantField.value;
+      var variant = null;
+      if (window.meta && window.meta.product && Array.isArray(window.meta.product.variants)) {
+        variant = window.meta.product.variants.find(function(v) { return v.id == Number(variantId); });
+      }
+      var payload = { content_type: 'product', content_ids: [variantId] };
+      if (variant) {
+        payload.value = variant.price / 100;
+        if (window.Shopify && Shopify.currency && Shopify.currency.active)
+          payload.currency = Shopify.currency.active;
+      }
+      if (typeof fbq === 'function') fbq('track', 'AddToCart', payload);
+      if (typeof ttq === 'object' && typeof ttq.track === 'function') ttq.track('AddToCart', payload);
+    });
+  });
 </script>

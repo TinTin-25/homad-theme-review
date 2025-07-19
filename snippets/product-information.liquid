@@ -460,6 +460,43 @@
      
 </div>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var productDataEl = document.getElementById('ProductJson-{{ section.id }}');
+    var productData = productDataEl ? JSON.parse(productDataEl.textContent) : null;
+    var forms = document.querySelectorAll('#shopify-section-{{ section.id }} form[data-product-form]');
+
+    function getVariant(id) {
+      if (!productData) return null;
+      return productData.variants.find(function(v) { return v.id == Number(id); });
+    }
+
+    function sendEvent(eventName, variantId) {
+      var variant = getVariant(variantId);
+      var payload = { content_type: 'product', content_ids: [variantId] };
+      if (variant) {
+        payload.value = variant.price / 100;
+        if (window.Shopify && Shopify.currency && Shopify.currency.active)
+          payload.currency = Shopify.currency.active;
+      }
+      if (typeof fbq === 'function') fbq('track', eventName, payload);
+      if (typeof ttq === 'object' && typeof ttq.track === 'function') ttq.track(eventName, payload);
+    }
+
+    forms.forEach(function(form) {
+      form.addEventListener('submit', function() {
+        var variantId = form.querySelector('[name="id"]').value;
+        sendEvent('AddToCart', variantId);
+      });
+    });
+
+    if (forms.length) {
+      var initialVariantId = forms[0].querySelector('[name="id"]').value;
+      sendEvent('ViewContent', initialVariantId);
+    }
+  });
+</script>
+
 
 
                       
