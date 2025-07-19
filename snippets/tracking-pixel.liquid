@@ -1,6 +1,9 @@
 {% comment %}
   Initializes fbq and ttq pixel objects and sends basic ecommerce events.
+  Loads the official Facebook Pixel and TikTok Pixel scripts directly.
 {% endcomment %}
+<script async src="https://connect.facebook.net/en_US/fbevents.js"></script>
+<script async src="https://analytics.tiktok.com/i18n/pixel/events.js"></script>
 <script>
 (function() {
   if (typeof window.fbq !== 'function' || !window.fbq.callMethod) {
