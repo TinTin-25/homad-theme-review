@@ -4,8 +4,6 @@
       var form = document.querySelector('form[action*="/checkouts/"]');
       if (form) {
         form.addEventListener('submit', function() {
-          if (typeof fbq === 'function') fbq('track', 'AddPaymentInfo');
-          if (typeof ttq === 'object' && typeof ttq.track === 'function') ttq.track('AddPaymentInfo');
         });
       }
     }
