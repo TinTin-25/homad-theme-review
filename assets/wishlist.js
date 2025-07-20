@@ -100,9 +100,9 @@ vela.wishlist = {
         vela.wishlist.updateWishlist();
     },
     trackAddToWishlist: (handle) => {
-        const payload = { content_type: 'product', content_ids: [handle] };
-        if (typeof fbq === 'function') fbq('track', 'AddToWishlist', payload);
-        if (typeof ttq === 'object' && typeof ttq.track === 'function') ttq.track('AddToWishlist', payload);
+        if (window.analytics && typeof analytics.publish === 'function') {
+            analytics.publish('add_to_wishlist', { handle: handle });
+        }
     },
     buttons: () => {
         if (jQuery && $) {
