@@ -471,26 +471,8 @@
       return productData.variants.find(function(v) { return v.id == Number(id); });
     }
 
-    function sendEvent(eventName, variantId) {
-      var variant = getVariant(variantId);
-      var payload = { content_type: 'product', content_ids: [variantId] };
-      if (variant) {
-        payload.value = variant.price / 100;
-        if (window.Shopify && Shopify.currency && Shopify.currency.active)
-          payload.currency = Shopify.currency.active;
-      }
-      if (window.analytics && typeof analytics.publish === 'function') {
-        analytics.publish(eventName.toLowerCase(), payload);
-      }
-    }
-
-    // AddToCart pixel events are handled globally in 'site-template'
-    // to avoid duplicate tracking we no longer attach a listener here.
-
-    if (forms.length) {
-      var initialVariantId = forms[0].querySelector('[name="id"]').value;
-      sendEvent('view_content', initialVariantId);
-    }
+    // AddToCart pixel events were handled globally in 'site-template'.
+    // Tracking removed.
   });
 </script>
 
