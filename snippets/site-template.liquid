@@ -1050,6 +1050,8 @@
               payload.value = variant.price / 100 * qty;
             }
 
+            if (typeof fbq === 'function') fbq('track', 'AddToCart', payload);
+            if (typeof ttq === 'object' && typeof ttq.track === 'function') ttq.track('AddToCart', payload);
           });
       }, 500);
     });
@@ -1062,6 +1064,8 @@
       if (!form) return;
 
       if (form.querySelector('[name="checkout"]')) {
+        if (typeof fbq === 'function') fbq('track', 'InitiateCheckout');
+        if (typeof ttq === 'object' && typeof ttq.track === 'function') ttq.track('InitiateCheckout');
       }
     });
   });
@@ -1076,6 +1080,9 @@
       if (!input) return;
 
       var query = input.value;
+      var payload = { search_string: query };
+      if (typeof fbq === 'function') fbq('track', 'Search', payload);
+      if (typeof ttq === 'object' && typeof ttq.track === 'function') ttq.track('Search', payload);
     });
   });
 </script>
