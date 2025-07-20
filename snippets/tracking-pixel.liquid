@@ -1,3 +1,4 @@
+{% if settings.meta_pixel_id != blank %}
 <!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -15,6 +16,8 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id={{ settings.meta_pixel_id }}&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
+{% endif %}
+{% if settings.tiktok_pixel_id != blank %}
 <!-- TikTok Pixel Code Start -->
 <script>
 !function (w, d, t) {
@@ -27,6 +30,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 }(window, document, 'ttq');
 </script>
 <!-- TikTok Pixel Code End -->
+{% endif %}
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     {% if request.page_type == 'checkout_thank_you' %}
@@ -43,8 +47,12 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         {% endfor %}
       ];
       var payload = {content_ids: content_ids, contents: contents, value: value, currency: currency};
+      {% if settings.meta_pixel_id != blank %}
       fbq('track', 'Purchase', payload);
+      {% endif %}
+      {% if settings.tiktok_pixel_id != blank %}
       ttq.track('Purchase', payload);
+      {% endif %}
     {% endif %}
   });
 </script>
