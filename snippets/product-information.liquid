@@ -479,8 +479,9 @@
         if (window.Shopify && Shopify.currency && Shopify.currency.active)
           payload.currency = Shopify.currency.active;
       }
-      if (typeof fbq === 'function') fbq('track', eventName, payload);
-      if (typeof ttq === 'object' && typeof ttq.track === 'function') ttq.track(eventName, payload);
+      if (window.analytics && typeof analytics.publish === 'function') {
+        analytics.publish(eventName.toLowerCase(), payload);
+      }
     }
 
     // AddToCart pixel events are handled globally in 'site-template'
@@ -488,7 +489,7 @@
 
     if (forms.length) {
       var initialVariantId = forms[0].querySelector('[name="id"]').value;
-      sendEvent('ViewContent', initialVariantId);
+      sendEvent('view_content', initialVariantId);
     }
   });
 </script>
