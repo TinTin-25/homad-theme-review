@@ -13,8 +13,5 @@
       {% endfor %}
     ];
     var payload = {content_ids: content_ids, contents: contents, value: value, currency: currency};
-    if (window.analytics && typeof analytics.publish === 'function') {
-      analytics.publish('purchase', payload);
-    }
   });
 </script>
