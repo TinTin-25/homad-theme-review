@@ -33,7 +33,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 {% endif %}
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    {% if request.page_type == 'checkout_thank_you' %}
+    {% if request.page_type == 'thank_you' %}
       var currency = {{ checkout.currency | json }};
       var value = {{ checkout.total_price | money_without_currency | json }};
       var content_ids = [
