@@ -1,9 +1,6 @@
 # homad-theme-review
 Shopify Aceno theme for pixel tracking and cart debugging.
 
-The `snippets/tracking-pixel.liquid` file includes the Facebook and TikTok
-pixel scripts directly. If you need to change the pixel IDs, edit that snippet
-and replace them with your own before the event handlers.
 
 ## Installation
 
@@ -14,35 +11,10 @@ and replace them with your own before the event handlers.
 3. When you are ready to publish, use `shopify theme push` to deploy the theme
    to your store.
 
-## Pixel configuration
 
-The theme fires Meta and TikTok events via `snippets/tracking-pixel.liquid`,
-which already contains example pixel scripts. To use your own IDs, open the
-snippet and replace the sample values with your pixel IDs. No Shopify apps or
-theme settings are required.
+## Pixel tracking
 
-## Checkout purchase tracking
-
-To track completed orders with Facebook and TikTok pixels,
-include the new `snippets/checkout-purchase-tracking.liquid` snippet in your
-checkout settings:
-
-1. From your Shopify admin, go to **Settings → Checkout**.
-2. Under **Order status page**, paste the contents of
-   `snippets/checkout-purchase-tracking.liquid` into the **Additional scripts**
-   box. Shopify Plus merchants can instead include the snippet in
-   `checkout.liquid`.
-
-The snippet reads the `checkout` object and fires `fbq('track', 'Purchase')`
-and `ttq.track('Purchase')` once the order status page loads.
-
-## Checkout payment info tracking
-
-To track when a customer submits their payment details, include
-`snippets/checkout-paymentinfo-tracking.liquid` in your checkout code. Paste it
-into the **Additional scripts** box or, for Shopify Plus stores, add it to
-`checkout.liquid`. The snippet fires `fbq('track', 'AddPaymentInfo')` and
-`ttq.track('AddPaymentInfo')` when the payment method form is submitted.
+The theme includes built-in scripts that fire Meta and TikTok events automatically. No additional code changes are required.
 
 ## Debugging
 
