@@ -1,11 +1,9 @@
 # homad-theme-review
 Shopify Aceno theme for pixel tracking and cart debugging.
 
-The `snippets/tracking-pixel.liquid` file now contains only the event tracking
-logic. Load the Facebook and TikTok pixel libraries through Shopify's pixel
-settings or a dedicated app. If you would rather include the libraries directly
-in the theme, paste the standard scripts into that snippet above the event
-handlers.
+The `snippets/tracking-pixel.liquid` file includes the Facebook and TikTok
+pixel scripts directly. If you need to change the pixel IDs, edit that snippet
+and replace them with your own before the event handlers.
 
 ## Installation
 
@@ -18,15 +16,10 @@ handlers.
 
 ## Pixel configuration
 
-The theme fires Meta and TikTok events via `snippets/tracking-pixel.liquid`.
-Load the pixel scripts through Shopify or an app, then set the IDs under
-**Tracking pixels**:
-
-- **Meta pixel ID** – value for `settings.meta_pixel_id`
-- **TikTok pixel ID** – value for `settings.tiktok_pixel_id`
-
-Edit these fields in your theme settings instead of modifying the snippet
-directly. Leaving an ID blank disables events for that pixel.
+The theme fires Meta and TikTok events via `snippets/tracking-pixel.liquid`,
+which already contains example pixel scripts. To use your own IDs, open the
+snippet and replace the sample values with your pixel IDs. No Shopify apps or
+theme settings are required.
 
 ## Checkout purchase tracking
 
