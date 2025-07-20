@@ -1030,16 +1030,30 @@
         variant = window.meta.product.variants.find(function(v) { return v.id == Number(variantId); });
       }
 
-      var payload = { content_type: 'product', content_ids: [variantId] };
-      if (variant) {
-        payload.value = variant.price / 100 * qty;
-        if (window.Shopify && Shopify.currency && Shopify.currency.active)
-          payload.currency = Shopify.currency.active;
-      }
-      payload.contents = [{ id: variantId, quantity: qty }];
+      var payload = {
+        content_type: 'product',
+        content_ids: [variantId],
+        contents: [{ id: variantId, quantity: qty }]
+      };
+      if (window.Shopify && Shopify.currency && Shopify.currency.active)
+        payload.currency = Shopify.currency.active;
 
-      if (typeof fbq === 'function') fbq('track', 'AddToCart', payload);
-      if (typeof ttq === 'object' && typeof ttq.track === 'function') ttq.track('AddToCart', payload);
+      setTimeout(function() {
+        fetch('/cart.js')
+          .then(function(r) { return r.json(); })
+          .then(function(cart) {
+            var item = cart.items && cart.items.find(function(i) { return i.variant_id == Number(variantId); });
+            if (item) {
+              var price = item.final_line_price || item.line_price || item.price * item.quantity;
+              payload.value = price / 100;
+            } else if (variant) {
+              payload.value = variant.price / 100 * qty;
+            }
+
+            if (typeof fbq === 'function') fbq('track', 'AddToCart', payload);
+            if (typeof ttq === 'object' && typeof ttq.track === 'function') ttq.track('AddToCart', payload);
+          });
+      }, 500);
     });
   });
 </script>
