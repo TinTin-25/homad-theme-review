@@ -1044,10 +1044,13 @@
           .then(function(cart) {
             var item = cart.items && cart.items.find(function(i) { return i.variant_id == Number(variantId); });
             if (item) {
-              var price = item.final_line_price || item.line_price || item.price * item.quantity;
-              payload.value = price / 100;
+              var discount = item.original_line_price - item.final_line_price;
+              payload.value = item.final_line_price / 100;
+              payload.quantity = item.quantity;
+              payload.discount = discount / 100;
             } else if (variant) {
               payload.value = variant.price / 100 * qty;
+              payload.quantity = qty;
             }
 
             if (window.analytics && typeof analytics.publish === 'function') {
