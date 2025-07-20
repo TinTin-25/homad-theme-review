@@ -479,8 +479,6 @@
         if (window.Shopify && Shopify.currency && Shopify.currency.active)
           payload.currency = Shopify.currency.active;
       }
-      if (typeof fbq === 'function') fbq('track', eventName, payload);
-      if (typeof ttq === 'object' && typeof ttq.track === 'function') ttq.track(eventName, payload);
     }
 
     // AddToCart pixel events are handled globally in 'site-template'
