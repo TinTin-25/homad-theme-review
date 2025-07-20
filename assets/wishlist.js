@@ -101,6 +101,8 @@ vela.wishlist = {
     },
     trackAddToWishlist: (handle) => {
         const payload = { content_type: 'product', content_ids: [handle] };
+        if (typeof fbq === 'function') fbq('track', 'AddToWishlist', payload);
+        if (typeof ttq === 'object' && typeof ttq.track === 'function') ttq.track('AddToWishlist', payload);
     },
     buttons: () => {
         if (jQuery && $) {
