@@ -2,7 +2,7 @@
     {{- 'customfont.css' | asset_url | stylesheet_tag -}}
 {%- endif -%}
 {%- if settings.font_icon -%}
-    {{- 'font-awesome.min.css' | asset_url | stylesheet_tag -}}
+    {{- 'font-awesome.min.css.liquid' | asset_url | stylesheet_tag -}}
 {%- endif -%}
 {{- 'bootstrap-grid.css' | asset_url | stylesheet_tag -}}
 {{- 'bootstrap.min.css' | asset_url | stylesheet_tag -}}
