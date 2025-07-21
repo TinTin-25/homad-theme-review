@@ -387,7 +387,7 @@
         "id": "font_icon",
         "label": "Use font icon awesome v4.7",
         "info": "[Find icon](https:\/\/fontawesome.com\/v4.7\/icons\/)",
-        "default": false
+        "default": true
       },
       {
         "type": "header",
