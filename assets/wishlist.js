@@ -100,6 +100,33 @@ vela.wishlist = {
         vela.wishlist.updateWishlist();
     },
     trackAddToWishlist: (handle) => {
+        if (!handle || !window.ultimateShopifyDataLayer ||
+            typeof window.ultimateShopifyDataLayer.ecommerceDataLayer !== 'function') {
+            return;
+        }
+
+        fetch(`${window.Shopify.routes.root}products/${handle}.json`)
+            .then((res) => res.json())
+            .then((result) => {
+                const data = result.product;
+                if (data) {
+                    const variant = data.variants[0];
+                    const dataLayerData = {
+                        product_id: data.id,
+                        variant_id: variant.id,
+                        product_title: data.title,
+                        quantity: 1,
+                        final_price: parseFloat(variant.price) * 100,
+                        total_discount: 0,
+                        product_type: data.product_type,
+                        vendor: data.vendor,
+                        variant_title: (variant.title !== 'Default Title') ? variant.title : undefined,
+                        sku: variant.sku
+                    };
+                    window.ultimateShopifyDataLayer.ecommerceDataLayer('add_to_wishlist', { items: [dataLayerData] });
+                }
+            })
+            .catch(() => {});
     },
     buttons: () => {
         if (jQuery && $) {
