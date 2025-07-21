@@ -809,8 +809,10 @@
         ecommerceDataLayer(event, data) {
           const self = this;
           dataLayer.push({ 'ecommerce': null });
+          const eventId = 'event_' + event + '_' + Math.random().toString(36).substring(2) + '_' + Date.now();
           const dataLayerData = {
             "event": this.eventPrefix + event,
+            "event_id": eventId,
             'ecommerce': {
                'currency': this.cart.currency,
                'items': data.items.map((item, index) => {
