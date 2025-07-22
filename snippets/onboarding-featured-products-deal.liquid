@@ -119,7 +119,7 @@
 								</a>
 							{%- endif -%}
 							{%- if settings.product_wishlist and  settings.product_card_wishlist -%}
-                                                                <button type="button" aria-label="{{ 'products.product.wishlist' | t }}" class="btn--wishlist js-btn-wishlist btn--action border rounded-circle mb-2" data-product-handle="{{ product.handle }}" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="{{ 'products.product.add_to_wishlist' | t }}">
+								<button type="button" aria-label="{{ 'products.product.wishlist' | t }}" class="btn--wishlist btn--action border rounded-circle mb-2" data-product-handle="{{ product.handle }}" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="{{ 'products.product.add_to_wishlist' | t }}">
 									{% render 'icons', icon: 'heart', attr: 'width="14" height="14"' %}
 								</button>
 							{%- endif -%}

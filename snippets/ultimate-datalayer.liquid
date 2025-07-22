@@ -24,8 +24,8 @@
 
           // add to wishlist selectors
           this.addToWishListSelectors = {
-            'addWishListIcon': '.js-btn-wishlist',
-            'gridItemSelector': '.product-card',
+            'addWishListIcon': '',
+            'gridItemSelector': '',
             'productLinkSelector': 'a[href*="/products/"]'
           }
 
@@ -971,7 +971,7 @@
 
       document.addEventListener('DOMContentLoaded', function() {
         try{
-          window.ultimateShopifyDataLayer = new Ultimate_Shopify_DataLayer();
+          new Ultimate_Shopify_DataLayer();
         }catch(error) {
           console.log(error);
         }

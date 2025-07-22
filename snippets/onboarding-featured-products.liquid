@@ -74,7 +74,7 @@
 							{%- endif -%}
 							<div class="shop-action position-absolute top-0 {% if settings.badge_position == 'start' %}end-0{% else %}start-0{% endif %}">
 								{%- if settings.product_wishlist and  settings.product_card_wishlist -%}
-                                                                        <button class="btn btn--action btn--wishlist js-btn-wishlist show-tooltip" type="button">
+									<button class="btn btn--action btn--wishlist show-tooltip" type="button">				
 										{% render 'icons', icon: 'heart', class: 'heart', attr: 'width="18" height="18"' %}
 										<div class="tooltip bs-tooltip-{% if settings.badge_position == 'start' %}start{% else %}end{% endif %}" role="tooltip">
 											<div class="tooltip-arrow"></div>
@@ -195,7 +195,7 @@
 							{%- endif -%}
 							<div class="shop-action position-absolute top-0 {% if settings.badge_position == 'start' %}end-0{% else %}start-0{% endif %}">
 								{%- if settings.product_wishlist and  settings.product_card_wishlist -%}
-                                                                        <a class="btn btn--wishlist js-btn-wishlist show-tooltip">
+									<a class="btn btn--wishlist show-tooltip">				
 										{% render 'icons', icon: 'heart', class: 'heart', attr: 'width="18" height="18"' %}
 										<div class="tooltip bs-tooltip-{% if settings.badge_position == 'start' %}start{% else %}end{% endif %}" role="tooltip">
 											<div class="tooltip-arrow"></div>
@@ -348,7 +348,7 @@
 									</a>
 								{%- endif -%}
 								{%- if settings.product_wishlist and  settings.product_card_wishlist -%}
-                                                                        <a class="btn btn--action btn--wishlist js-btn-wishlist show-tooltip">
+									<a class="btn btn--action btn--wishlist show-tooltip">				
 										{% render 'icons', icon: 'heart', class: 'heart', attr: 'width="18" height="18"' %}
 										<div class="tooltip bs-tooltip-top" role="tooltip">
 											<div class="tooltip-arrow"></div>
@@ -433,7 +433,7 @@
 							{%- endif -%}
 							<div class="shop-action position-absolute top-0 {% if settings.badge_position == 'start' %}end-0{% else %}start-0{% endif %}">
 								{%- if settings.product_wishlist and  settings.product_card_wishlist -%}
-                                                                        <a class="btn btn--wishlist js-btn-wishlist show-tooltip top-0 {% if settings.badge_position == 'start' %}end-0{% else %}start-0{% endif %}">
+									<a class="btn btn--wishlist show-tooltip top-0 {% if settings.badge_position == 'start' %}end-0{% else %}start-0{% endif %}">				
 										{% render 'icons', icon: 'heart', class: 'heart', attr: 'width="18" height="18"' %}
 										<div class="tooltip bs-tooltip-{% if settings.badge_position == 'start' %}start{% else %}end{% endif %}" role="tooltip">
 											<div class="tooltip-arrow"></div>
@@ -553,7 +553,7 @@
 								<div class="product-card__countdown d-flex position-absolute bottom-0 start-50 translate-middle-x bg-white rounded-pill py-1 px-3" data-countdown="{{ countdownTime }}"></div>
 							{%- endif -%}
 							{%- if settings.product_wishlist and  settings.product_card_wishlist -%}
-                                                                <button type="button" aria-label="{{ 'products.product.wishlist' | t }}" class="btn--wishlist js-btn-wishlist position-absolute show-tooltip top-0 {% if settings.badge_position == 'start' %}end-0{% else %}start-0{% endif %}">
+								<button type="button" aria-label="{{ 'products.product.wishlist' | t }}" class="btn--wishlist position-absolute show-tooltip top-0 {% if settings.badge_position == 'start' %}end-0{% else %}start-0{% endif %}">				
 									{% render 'icons', icon: 'heart', class: 'heart', attr: 'width="18" height="18"' %}
 									<div class="tooltip bs-tooltip-{% if settings.badge_position == 'start' %}start{% else %}end{% endif %}" role="tooltip">
 										<div class="tooltip-arrow"></div>
