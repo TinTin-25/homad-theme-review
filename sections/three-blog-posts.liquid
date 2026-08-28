@@ -84,7 +84,7 @@
                                     {%- assign article_content = article.excerpt_or_content -%}
                                     {%- include 'blog-grid-item1' -%}
                                 {%- else -%}
-                                    {%- include 'onboarding-featured-blog', blogstyle: 'grid1', , number: 1, show_date: show_date,show_tags: show_tags,show_author: show_author, show_excerpt: show_excerpt, show_readmore: show_readmore -%}
+                                    {%- include 'onboarding-featured-blog', blogstyle: 'grid1', number: 1, show_date: show_date, show_tags: show_tags, show_author: show_author, show_excerpt: show_excerpt, show_readmore: show_readmore -%}
                                 {%- endif -%}
                             </div>
                         </div>
@@ -241,4 +241,17 @@
             }
         ]
     }
-{% endschema %}
+{% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- include 'onboarding-featured-blog', blogstyle: 'grid1', , number: 1,
+    show_date: show_date,show_tags: show_tags,show_author: show_author, show_excerpt:
+    show_excerpt, show_readmore: show_readmore -%}"
+  to: "{%- include 'onboarding-featured-blog', blogstyle: 'grid1', number: 1, show_date:
+    show_date, show_tags: show_tags, show_author: show_author, show_excerpt: show_excerpt,
+    show_readmore: show_readmore -%}"
+  position: 8084..8285
+{%- endcomment -%}

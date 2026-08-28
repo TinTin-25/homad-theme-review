@@ -9,7 +9,7 @@
                         <div class="position-relative">
                             <div class="overflow-hidden rounded-3">
                                 {%- if section.settings.image1 != blank -%}
-                                    {% render 'img-global' with image: section.settings.image1 %}
+                                    {% render 'img-global' with image, image: section.settings.image1 %}
                                 {%- else -%}
                                     {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
                                 {%- endif -%}
@@ -29,7 +29,7 @@
                         <div class="position-relative">
                             <div class="overflow-hidden rounded-3">
                                 {%- if section.settings.image2 != blank -%}
-                                    {% render 'img-global' with image: section.settings.image2 %}
+                                    {% render 'img-global' with image, image: section.settings.image2 %}
                                 {%- else -%}
                                     {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
                                 {%- endif -%}
@@ -292,4 +292,16 @@
             }
         ]
     }
-{% endschema %}
+{% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'img-global' with image: section.settings.image1 %}"
+  to: "{% render 'img-global' with image, image: section.settings.image1 %}"
+  position: 766..834
+- from: "{% render 'img-global' with image: section.settings.image2 %}"
+  to: "{% render 'img-global' with image, image: section.settings.image2 %}"
+  position: 2149..2217
+{%- endcomment -%}

@@ -7,7 +7,7 @@
                 <div class="col-12 col-lg-6">
                     <div class="collapse-banner__image">
                         {% if section.settings.banner != blank %}
-                            {% render 'img-global' with image: section.settings.banner %}
+                            {% render 'img-global' with image, image: section.settings.banner %}
                         {% else %}
                             {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
                         {% endif %}
@@ -227,4 +227,13 @@
             }
         ]
   	}
-{% endschema %}
+{% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'img-global' with image: section.settings.banner %}"
+  to: "{% render 'img-global' with image, image: section.settings.banner %}"
+  position: 670..738
+{%- endcomment -%}

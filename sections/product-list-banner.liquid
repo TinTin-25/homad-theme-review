@@ -23,7 +23,7 @@
                     <div class="col-12 col-lg-6 d-none d-lg-block">
                         <a class="product-banner__image sticky-top z-index-1 d-block overflow-hidden rounded-3" href="{{ section.settings.banner_url }}" title="{{ section.settings.banner_title | strip_html }}" style="--plh-svg-h:890px;">
                             {% if section.settings.banner != blank %}
-                                {% render 'img-global' with image: section.settings.banner %}
+                                {% render 'img-global' with image, image: section.settings.banner %}
                             {% else %}
                                 {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
                             {% endif %}
@@ -307,4 +307,13 @@
         }
     ]
 }
-{% endschema %}
+{% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'img-global' with image: section.settings.banner %}"
+  to: "{% render 'img-global' with image, image: section.settings.banner %}"
+  position: 1700..1768
+{%- endcomment -%}

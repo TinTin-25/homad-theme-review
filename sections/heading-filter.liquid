@@ -38,7 +38,7 @@
               </select>
             </hvduc-select>
             <button class="btn-link bg-transparent border-0 h3 lh-1 mb-0 p-0 ms-1" hidden data-button="submit" type="submit">
-              {% render 'icons', class="mx-1" icon: 'arrow-right-long', attr: 'width="24" height="24"' %}
+              {% render 'icons', icon: 'arrow-right-long', attr: 'width="24" height="24"' %}
               {{ 'general.search.search' | t }}
             </button>
           </div>
@@ -227,3 +227,15 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: '{% render ''icons'', class="mx-1" icon: ''arrow-right-long'', attr: ''width="24"
+    height="24"'' %}'
+  to: '{% render ''icons'', icon: ''arrow-right-long'', attr: ''width="24" height="24"''
+    %}'
+  position: 2362..2440
+{% endcomment %}

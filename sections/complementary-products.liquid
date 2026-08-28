@@ -29,7 +29,7 @@
           <div class="col-12 col-lg-6">
             <div class="complementary-products__image position-relative overflow-hidden rounded-3" style="--plh-svg-h: 750px;">
               {%- if section.settings.image != blank -%}
-                {% render 'img-global' with image: section.settings.image %}
+                {% render 'img-global' with image, image: section.settings.image %}
               {%- else -%}
                 {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
               {%- endif -%}
@@ -296,3 +296,13 @@
     ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'img-global' with image: section.settings.image %}"
+  to: "{% render 'img-global' with image, image: section.settings.image %}"
+  position: 1326..1393
+{% endcomment %}

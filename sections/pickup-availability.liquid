@@ -7,7 +7,7 @@
     <div class="pickup-availability__info">
       <div class="d-flex flex-wrap lh-lg">
         {%- if closest_location.available -%}
-          <div class="pickup-availability__icon">{%- render 'icons' with icon: 'available', class: 'icon icon-availability', attr: 'width="20" height="20"' -%}</div>
+          <div class="pickup-availability__icon">{%- render 'icons' with icon, icon: 'available', class: 'icon icon-availability', attr: 'width="20" height="20"' -%}</div>
         {%- endif -%}
         {%- if closest_location.available -%}
           <span class="pickup-availability__heading me-1">
@@ -74,7 +74,7 @@
                 <div class="fs-6 fw-medium mb-2 heading-color lh-1">{{ availability.location.name | escape }}</div>
                 <p class="pickup-list__info">
                   {%- if availability.available -%}
-                    {%- render 'icons' with icon: 'available', class: 'icon icon-availability', attr: 'width="20" height="20"' -%}
+                    {%- render 'icons' with icon, icon: 'available', class: 'icon icon-availability', attr: 'width="20" height="20"' -%}
                     {{ 'products.product.pickup_availability.pick_up_available' | t }},
                     {{ availability.pick_up_time | downcase }}
                   {%- endif -%}
@@ -110,3 +110,20 @@
     </div>
   </div>
 {%- endif -%}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: '{%- render ''icons'' with icon: ''available'', class: ''icon icon-availability'',
+    attr: ''width="20" height="20"'' -%}'
+  to: '{%- render ''icons'' with icon, icon: ''available'', class: ''icon icon-availability'',
+    attr: ''width="20" height="20"'' -%}'
+  position: 539..655
+- from: '{%- render ''icons'' with icon: ''available'', class: ''icon icon-availability'',
+    attr: ''width="20" height="20"'' -%}'
+  to: '{%- render ''icons'' with icon, icon: ''available'', class: ''icon icon-availability'',
+    attr: ''width="20" height="20"'' -%}'
+  position: 4522..4638
+{% endcomment %}

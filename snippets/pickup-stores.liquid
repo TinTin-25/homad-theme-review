@@ -13,7 +13,7 @@
   <template>
     <pickup-availability-preview class="pickup-availability__preview">
       <div class="pickup-availability__info d-flex align-items-center">
-        {%- render 'icons' with icon: 'unavailable', class: 'icon icon-unavailability', attr: 'width="20" height="20"' -%}<span class="pickup-availability__heading">{{ 'products.product.pickup_availability.unavailable' | t }}</span>
+        {%- render 'icons' with icon, icon: 'unavailable', class: 'icon icon-unavailability', attr: 'width="20" height="20"' -%}<span class="pickup-availability__heading">{{ 'products.product.pickup_availability.unavailable' | t }}</span>
       </div>
       <button
         class="pickup-availability__link p-0 bg-transparent"
@@ -26,3 +26,15 @@
 </pickup-availability>
 
 <script src="{{ 'pickup-availability.js' | asset_url }}" defer="defer"></script>
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: '{%- render ''icons'' with icon: ''unavailable'', class: ''icon icon-unavailability'',
+    attr: ''width="20" height="20"'' -%}'
+  to: '{%- render ''icons'' with icon, icon: ''unavailable'', class: ''icon icon-unavailability'',
+    attr: ''width="20" height="20"'' -%}'
+  position: 670..790
+{% endcomment %}
